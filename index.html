@@ -1,47 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LRP CAD | Main Terminal</title>
+    <title>LRP CAD | Selection Terminal</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Specific layout for the selection cards */
+        .selection-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+            margin-top: 50px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #3c6e71; /* Matches your London Green */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        .card-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .card-desc {
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+
+        .btn-enter {
+            margin-top: 25px;
+            padding: 10px 30px;
+            border-radius: 30px;
+            border: none;
+            background: #2b3a67; /* London Blue */
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 <body>
 
-    <header style="padding: 20px; text-align: center; background: rgba(0,0,0,0.2);">
-        <h1>LONDON ROLEPLAY COMMUNITY</h1>
-        <p>Main Dispatch & Data Terminal</p>
-    </header>
+    <div style="text-align: center; margin-top: 60px;">
+        <img src="LRPC_favicon_test.jpeg" alt="LRP Logo" style="width: 120px; border-radius: 50%; border: 3px solid #3c6e71;">
+        <h1 style="margin-top: 20px; letter-spacing: 3px;">TERMINAL ACCESS</h1>
+        <p style="opacity: 0.8;">Select your department to begin your session</p>
+    </div>
 
-    <main style="padding: 20px; max-width: 1200px; margin: auto; width: 100%;">
-        
-        <div class="card">
-            <h2>Welcome, Officer</h2>
-            <p>Select a department to initialize the terminal sessions.</p>
+    <div class="selection-container">
+        <div class="login-card" onclick="window.location.href='admin.html'">
+            <div class="icon-circle">🛡️</div>
+            <div class="card-title">ADMINISTRATION</div>
+            <div class="card-desc">Community Management & CAD Controls</div>
+            <button class="btn-enter">Enter Terminal</button>
         </div>
 
-        <div class="grid-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px;">
-            
-            <div class="card sonoran-btn" onclick="location.href='police.html'">
-                <div style="font-size: 2em;">🚓</div>
-                <h3>Police MDT</h3>
-            </div>
-
-            <div class="card sonoran-btn" onclick="location.href='civ.html'">
-                <div style="font-size: 2em;">👤</div>
-                <h3>Civilian Menu</h3>
-            </div>
-
-            <div class="card sonoran-btn" onclick="location.href='dispatch.html'">
-                <div style="font-size: 2em;">🎙️</div>
-                <h3>Dispatch</h3>
-            </div>
-
+        <div class="login-card disabled">
+            <div class="icon-circle">🚓</div>
+            <div class="card-title">LAW ENFORCEMENT</div>
+            <div class="card-desc">MDT Access - MET Police Only</div>
+            <p style="font-size: 0.7em; color: #ffbc00; margin-top: 10px;">MAINTENANCE IN PROGRESS</p>
         </div>
 
-    </main>
+        <div class="login-card disabled">
+            <div class="icon-circle">🚑</div>
+            <div class="card-title">MEDICAL SERVICE</div>
+            <div class="card-desc">Patient Care & Dispatch Logs</div>
+            <p style="font-size: 0.7em; color: #ffbc00; margin-top: 10px;">MAINTENANCE IN PROGRESS</p>
+        </div>
 
-    <script src="main.js"></script>
+        <div class="login-card disabled">
+            <div class="icon-circle">👤</div>
+            <div class="card-title">CIVILIAN PORTAL</div>
+            <div class="card-desc">Character & Vehicle Registration</div>
+            <p style="font-size: 0.7em; color: #ffbc00; margin-top: 10px;">MAINTENANCE IN PROGRESS</p>
+        </div>
+    </div>
+
+    <script src="scripts/main.js"></script>
 </body>
 </html>
