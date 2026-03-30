@@ -1,0 +1,30 @@
+/* style.css */
+:root {
+    /* Defining these as variables makes them easy to change later */
+    --gradient-blue: #2b3a67;
+    --gradient-green: #3c6e71;
+    --glass-effect: rgba(255, 255, 255, 0.1);
+}
+
+body {
+    /* The core blue-green gradient */
+    background: linear-gradient(135deg, var(--gradient-blue), var(--gradient-green));
+    background-attachment: fixed; /* Keeps the gradient from moving when you scroll */
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Reusable card style for your CAD modules */
+.cad-card {
+    background: var(--glass-effect);
+    backdrop-filter: blur(10px); /* Gives that modern 'glass' look */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 15px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
