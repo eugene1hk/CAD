@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LRP CAD | Selection Terminal</title>
+    <title>LRPC CAD | Selection Terminal</title>
     <link rel="stylesheet" href="style.css">
     <style>
         /* Specific layout for the selection cards */
@@ -14,7 +14,7 @@
             padding: 40px;
             max-width: 1200px;
             width: 100%;
-            margin-top: 50px;
+            margin: 0 auto;
         }
 
         .login-card {
@@ -32,52 +32,44 @@
             justify-content: center;
         }
 
-        .login-card:hover {
+        .login-card:hover:not(.disabled) {
             transform: translateY(-10px);
             background: rgba(255, 255, 255, 0.1);
-            border-color: #3c6e71; /* Matches your London Green */
+            border-color: #3c6e71;
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
         }
 
         .icon-circle {
-            width: 80px;
-            height: 80px;
+            width: 80px; height: 80px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 2.5em;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px; font-size: 2.5em;
         }
 
-        .card-title {
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-
-        .card-desc {
-            font-size: 0.9em;
-            opacity: 0.7;
-        }
+        .card-title { font-size: 1.5em; font-weight: bold; margin-bottom: 10px; }
+        .card-desc { font-size: 0.9em; opacity: 0.7; }
 
         .btn-enter {
-            margin-top: 25px;
-            padding: 10px 30px;
-            border-radius: 30px;
-            border: none;
-            background: #2b3a67; /* London Blue */
-            color: white;
-            font-weight: bold;
-            text-transform: uppercase;
+            margin-top: 25px; padding: 10px 30px;
+            border-radius: 30px; border: none;
+            background: #2b3a67; color: white;
+            font-weight: bold; text-transform: uppercase;
             cursor: pointer;
         }
 
+        /* State Styles */
         .disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+            opacity: 0.4;
+            cursor: not-allowed !important;
+            filter: grayscale(1);
+        }
+
+        .status-text {
+            font-size: 0.7em;
+            margin-top: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
         }
     </style>
 </head>
@@ -93,32 +85,66 @@
         <div class="login-card" onclick="window.location.href='backend.html'">
             <div class="icon-circle">🛡️</div>
             <div class="card-title">ADMINISTRATION</div>
-            <div class="card-desc">Community Management & CAD Controls</div>
-            <button class="btn-enter">Enter Terminal</button>
+            <div class="card-desc">System Controls & Backend</div>
+            <button class="btn-enter">Enter</button>
         </div>
 
-        <div class="login-card disabled">
+        <div id="police-card" class="login-card">
             <div class="icon-circle">🚓</div>
             <div class="card-title">LAW ENFORCEMENT</div>
             <div class="card-desc">MDT Access - MET Police Only</div>
-            <p style="font-size: 0.7em; color: #ffbc00; margin-top: 10px;">MAINTENANCE IN PROGRESS</p>
+            <div id="police-status" class="status-text"></div>
         </div>
 
-        <div class="login-card disabled">
+        <div id="ems-card" class="login-card">
             <div class="icon-circle">🚑</div>
             <div class="card-title">MEDICAL SERVICE</div>
             <div class="card-desc">Patient Care & Dispatch Logs</div>
-            <p style="font-size: 0.7em; color: #ffbc00; margin-top: 10px;">MAINTENANCE IN PROGRESS</p>
+            <div id="ems-status" class="status-text"></div>
         </div>
 
-        <div class="login-card disabled">
+        <div id="civ-card" class="login-card">
             <div class="icon-circle">👤</div>
             <div class="card-title">CIVILIAN PORTAL</div>
             <div class="card-desc">Character & Vehicle Registration</div>
-            <p style="font-size: 0.7em; color: #ffbc00; margin-top: 10px;">MAINTENANCE IN PROGRESS</p>
+            <div id="civ-status" class="status-text"></div>
         </div>
     </div>
 
-    <script src="scripts/main.js"></script>
+    <script>
+        function updateHubUI() {
+            // List of departments to check
+            const depts = [
+                { id: 'police', url: 'police.html' },
+                { id: 'ems', url: 'fire.html' },
+                { id: 'civ', url: 'civ.html' }
+            ];
+
+            depts.forEach(dept => {
+                const card = document.getElementById(dept.id + '-card');
+                const statusDiv = document.getElementById(dept.id + '-status');
+                
+                // Get lock status from localStorage (Set by backend.html)
+                // If it's null (first time), we'll assume it's locked (true)
+                const isLocked = localStorage.getItem(dept.id + "_locked") !== "false";
+
+                if (isLocked) {
+                    card.classList.add('disabled');
+                    card.onclick = null;
+                    statusDiv.innerText = "● Maintenance In Progress";
+                    statusDiv.style.color = "#ffbc00";
+                    // Hide the enter button if it exists or just show status
+                } else {
+                    card.classList.remove('disabled');
+                    card.onclick = () => window.location.href = dept.url;
+                    statusDiv.innerText = "● System Online";
+                    statusDiv.style.color = "#4ade80";
+                }
+            });
+        }
+
+        // Run this when the page loads
+        window.onload = updateHubUI;
+    </script>
 </body>
 </html>
