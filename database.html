@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LRP | User Management Database</title>
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 { margin: 0; font-size: 1.8rem; letter-spacing: 1px; }
+        .back-btn {
+            background: #333;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+        .back-btn:hover { background: #444; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1a1a1a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #2b3a67;
+            color: white;
+            text-align: left;
+            padding: 15px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #2a2a2a;
+            font-size: 0.9rem;
+        }
+
+        tr:hover { background: #222; }
+
+        input, select {
+            background: #0f0f0f;
+            border: 1px solid #333;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .save-btn {
+            background: #2ecc71;
+            color: black;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .save-btn:hover { background: #27ae60; }
+
+        .status-dot {
+            height: 8px;
+            width: 8px;
+            background-color: #4ade80;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div>
+            <h1>User Management Registry</h1>
+            <p style="color: #666; margin: 5px 0 0 0;">Modify department credentials and access levels</p>
+        </div>
+        <a href="backend.html" class="back-btn">← Back to Backend</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>Full Name (User)</th>
+                <th>Call-Sign</th>
+                <th>Department</th>
+                <th>Password/PIN</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><span class="status-dot"></span> Online</td>
+                <td><input type="text" value="John Doe"></td>
+                <td><input type="text" value="1-ALPHA-01"></td>
+                <td>
+                    <select>
+                        <option selected>Law Enforcement</option>
+                        <option>Medical Service</option>
+                        <option>DOT</option>
+                        <option>Civilian</option>
+                    </select>
+                </td>
+                <td><input type="password" value="1234"></td>
+                <td><button class="save-btn" onclick="alert('User Updated')">Update</button></td>
+            </tr>
+            <tr>
+                <td><span class="status-dot" style="background: #555;"></span> Offline</td>
+                <td><input type="text" value="Jane Smith"></td>
+                <td><input type="text" value="MED-402"></td>
+                <td>
+                    <select>
+                        <option>Law Enforcement</option>
+                        <option selected>Medical Service</option>
+                        <option>DOT</option>
+                        <option>Civilian</option>
+                    </select>
+                </td>
+                <td><input type="password" value="9999"></td>
+                <td><button class="save-btn" onclick="alert('User Updated')">Update</button></td>
+            </tr>
+            <tr>
+                <td><span class="status-dot"></span> Online</td>
+                <td><input type="text" value="Frank Castle"></td>
+                <td><input type="text" value="CIV-001"></td>
+                <td>
+                    <select>
+                        <option>Law Enforcement</option>
+                        <option>Medical Service</option>
+                        <option>DOT</option>
+                        <option selected>Civilian</option>
+                    </select>
+                </td>
+                <td><input type="password" value="password123"></td>
+                <td><button class="save-btn" onclick="alert('User Updated')">Update</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 30px; text-align: center;">
+        <button style="background: #3c6e71; color: white; border: none; padding: 15px 30px; border-radius: 5px; cursor: pointer; font-weight: bold;">+ Add New User to Registry</button>
+    </div>
+
+</body>
+</html>
