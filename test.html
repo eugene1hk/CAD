@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LRP | Master Backend Control</title>
     <style>
-        /* Sonoran CAD Dark Aesthetic */
+        /* Sonoran CAD Black Aesthetic */
         body {
-            background-color: #0b0b0b;
-            color: #ffffff;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f0f0f;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
             margin: 0;
             display: flex;
             min-height: 100vh;
@@ -17,201 +17,92 @@
 
         /* Sidebar Navigation */
         .sidebar {
-            width: 260px;
-            background-color: #151515;
-            border-right: 1px solid #252525;
-            padding: 25px;
+            width: 240px;
+            background-color: #1a1a1a;
+            border-right: 1px solid #333;
+            padding: 20px;
             display: flex;
             flex-direction: column;
         }
 
-        .main-panel {
-            flex-grow: 1;
-            padding: 40px;
-            background-color: #0b0b0b;
+        .sidebar h3 {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            text-align: center;
         }
 
-        h1 { font-size: 1.8rem; margin-bottom: 5px; font-weight: 600; }
-        h2 { color: #666; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; }
+        /* TAB STYLING */
+        .nav-tabs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
 
-        /* Control Grid */
+        .tab-btn {
+            background: transparent;
+            color: #888;
+            border: none;
+            padding: 12px 15px;
+            text-align: left;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .tab-btn.active {
+            background: #2b3a67; /* London Blue */
+            color: #fff;
+        }
+
+        .main-panel {
+            flex-grow: 1;
+            padding: 30px;
+        }
+
+        /* Content Area Visibility */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h1 { color: #ffffff; font-size: 1.5rem; margin-bottom: 30px; letter-spacing: 1px; }
+        h2 { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; }
+
+        /* Grid & Cards */
         .control-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 20px;
         }
 
         .control-card {
             background-color: #1a1a1a;
-            border: 1px solid #2a2a2a;
+            border: 1px solid #333;
             padding: 25px;
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.2s ease;
         }
 
-        .control-card:hover {
-            border-color: #3a3a3a;
-            background-color: #1f1f1f;
-        }
-
-        .info span {
-            display: block;
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-
-        .info p {
-            margin: 0;
-            font-size: 0.8rem;
-            color: #777;
-        }
-
-        /* --- THE TOGGLE SWITCH --- */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 54px;
-            height: 28px;
-        }
-
-        .switch input { opacity: 0; width: 0; height: 0; }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #333;
-            transition: .4s;
-            border-radius: 34px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px; width: 20px;
-            left: 4px; bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-        }
-
-        input:checked + .slider { background-color: #2ecc71; }
-        input:checked + .slider:before { transform: translateX(26px); }
-
-        /* Exit Button */
-        .exit-btn {
-            margin-top: auto;
-            background-color: #c0392b;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            transition: 0.3s;
-        }
-
-        .exit-btn:hover { background-color: #e74c3c; }
-    </style>
-</head>
-<body>
-
-    <div class="sidebar">
-        <div style="text-align: center; margin-bottom: 40px;">
-            <img src="LRPC_favicon_test.jpeg" alt="Logo" style="width: 80px; border-radius: 50%; border: 2px solid #3c6e71;">
-            <p style="margin-top: 15px; font-weight: bold; letter-spacing: 1px;">STORM BACKEND</p>
-        </div>
-        
-        <div style="color: #444; font-size: 0.75rem; margin-bottom: 20px;">SYSTEM TOOLS</div>
-        <button class="exit-btn" onclick="window.location.href='index.html'">Return to Hub</button>
-    </div>
-
-    <div class="main-panel">
-        <h1>Master Access Controls</h1>
-        <h2>Department Toggles</h2>
-
-        <div class="control-grid">
-            <div class="control-card">
-                <div class="info">
-                    <span>Police MDT</span>
-                    <p>Metropolitan Police Access</p>
-                </div>
-                <label class="switch">
-                    <input type="checkbox" id="police_toggle" onchange="updateAccess('police')">
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <div class="control-card">
-                <div class="info">
-                    <span>Medical / Fire</span>
-                    <p>London Ambulance Service</p>
-                </div>
-                <label class="switch">
-                    <input type="checkbox" id="ems_toggle" onchange="updateAccess('ems')">
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <div class="control-card">
-                <div class="info">
-                    <span>DOT / Highways</span>
-                    <p>Department of Transport</p>
-                </div>
-                <label class="switch">
-                    <input type="checkbox" id="dot_toggle" onchange="updateAccess('dot')">
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <div class="control-card">
-                <div class="info">
-                    <span>Civilian Portal</span>
-                    <p>DMV & Character Creation</p>
-                </div>
-                <label class="switch">
-                    <input type="checkbox" id="civ_toggle" onchange="updateAccess('civ')">
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-
-        <div style="margin-top: 50px;">
-            <h2 style="margin-bottom: 10px;">Quick Info</h2>
-            <div style="background: #151515; border: 1px solid #252525; padding: 20px; border-radius: 8px;">
-                <p style="color: #666; font-size: 0.9rem; margin: 0;">Logged in as: <span style="color: #fff;">Community Lead</span></p>
-                <p style="color: #666; font-size: 0.9rem; margin: 10px 0 0 0;">Last Toggle: <span id="last-update" style="color: #fff;">Never</span></p>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Load the states from local storage when page opens
-        window.onload = function() {
-            const depts = ['police', 'ems', 'dot', 'civ'];
-            depts.forEach(dept => {
-                // Check if dept is NOT locked (Online)
-                const isOnline = localStorage.getItem(dept + "_locked") === "false";
-                document.getElementById(dept + '_toggle').checked = isOnline;
-            });
-        };
-
-        function updateAccess(dept) {
-            const isChecked = document.getElementById(dept + '_toggle').checked;
-            // If switch is ON (checked), it is NOT locked.
-            localStorage.setItem(dept + "_locked", isChecked ? "false" : "true");
-            
-            // Update time log
-            const now = new Date();
-            document.getElementById('last-update').innerText = now.toLocaleTimeString();
-        }
-    </script>
-</body>
-</html>
+        .card-info span { display: block; font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; }
+        .card-info p { margin: 0
