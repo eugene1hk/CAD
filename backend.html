@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LRPC | Master Backend Control</title>
+    <title>LRP | Master Backend Control</title>
     <style>
         /* Sonoran CAD Black Aesthetic */
         body {
@@ -12,15 +12,17 @@
             font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
             margin: 0;
             display: flex;
+            min-height: 100vh;
         }
 
         /* Sidebar Navigation */
         .sidebar {
             width: 240px;
             background-color: #1a1a1a;
-            height: 100vh;
             border-right: 1px solid #333;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
         .main-panel {
@@ -28,27 +30,45 @@
             padding: 30px;
         }
 
-        h1 { color: #ffffff; font-size: 1.5rem; margin-bottom: 30px; }
-        h2 { color: #888; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        h1 { color: #ffffff; font-size: 1.5rem; margin-bottom: 30px; letter-spacing: 1px; }
+        h2 { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; }
 
         /* The Dashboard Grid */
         .control-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 20px;
         }
 
         .control-card {
             background-color: #1a1a1a;
             border: 1px solid #333;
-            padding: 20px;
-            border-radius: 4px;
+            padding: 25px;
+            border-radius: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: border-color 0.3s;
         }
 
-        /* --- THE TOGGLE SWITCH (Circle in Semi-Circle) --- */
+        .control-card:hover {
+            border-color: #444;
+        }
+
+        .card-info span {
+            display: block;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .card-info p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* --- THE TOGGLE SWITCH (iOS Style) --- */
         .switch {
             position: relative;
             display: inline-block;
@@ -64,7 +84,7 @@
             top: 0; left: 0; right: 0; bottom: 0;
             background-color: #333;
             transition: .4s;
-            border-radius: 34px; /* Makes it the "semi-circle" track */
+            border-radius: 34px;
         }
 
         .slider:before {
@@ -74,32 +94,46 @@
             left: 4px; bottom: 4px;
             background-color: white;
             transition: .4s;
-            border-radius: 50%; /* The "Circle" inside */
+            border-radius: 50%;
         }
 
-        input:checked + .slider { background-color: #2ecc71; } /* Green when on */
+        input:checked + .slider { background-color: #2ecc71; }
         input:checked + .slider:before { transform: translateX(24px); }
 
-        .status-label { font-weight: bold; }
+        .btn-nav {
+            background: #2b3a67;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-top: auto;
+        }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <h2 style="color: #fff;">LRPC STORM CAD ADMIN</h2>
-        <p style="color: #666; font-size: 0.8rem;">System Version 1.0.4</p>
-        <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
-        <button onclick="window.location.href='police.html'" style="background:none; border:1px solid #444; color:white; cursor:pointer; padding:5px 10px; width:100%;">Return to Hub</button>
+        <div style="text-align: center; margin-bottom: 30px;">
+            <img src="LRPC_favicon_test.jpeg" alt="Logo" style="width: 60px; border-radius: 50%; border: 2px solid #3c6e71;">
+            <h3 style="margin-top: 10px; font-size: 0.9rem;">ADMIN PANEL</h3>
+        </div>
+        <hr style="border: 0; border-top: 1px solid #333; width: 100%; margin-bottom: 20px;">
+        <button class="btn-nav" onclick="window.location.href='index.html'">Exit to Hub</button>
     </div>
 
     <div class="main-panel">
         <h1>Master System Control</h1>
+        <h2>Department Maintenance Toggles</h2>
         
         <div class="control-grid">
             <div class="control-card">
-                <div>
-                    <span class="status-label">Police MDT Access</span>
-                    <p style="font-size: 0.8rem; color: #666; margin: 5px 0 0 0;">Toggle Law Enforcement Bubble</p>
+                <div class="card-info">
+                    <span>Police MDT</span>
+                    <p>Metropolitan Police Service</p>
                 </div>
                 <label class="switch">
                     <input type="checkbox" id="police_toggle" onchange="updateAccess('police')">
@@ -108,9 +142,9 @@
             </div>
 
             <div class="control-card">
-                <div>
-                    <span class="status-label">EMS/Fire Access</span>
-                    <p style="font-size: 0.8rem; color: #666; margin: 5px 0 0 0;">Toggle Medical Bubble</p>
+                <div class="card-info">
+                    <span>Medical / Fire</span>
+                    <p>London Ambulance & Fire</p>
                 </div>
                 <label class="switch">
                     <input type="checkbox" id="ems_toggle" onchange="updateAccess('ems')">
@@ -119,9 +153,20 @@
             </div>
 
             <div class="control-card">
-                <div>
-                    <span class="status-label">Civilian Portal</span>
-                    <p style="font-size: 0.8rem; color: #666; margin: 5px 0 0 0;">Toggle Character Management</p>
+                <div class="card-info">
+                    <span>DOT Access</span>
+                    <p>Highways & Transport Agency</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="dot_toggle" onchange="updateAccess('dot')">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="control-card">
+                <div class="card-info">
+                    <span>Civilian Portal</span>
+                    <p>DMV & Character Records</p>
                 </div>
                 <label class="switch">
                     <input type="checkbox" id="civ_toggle" onchange="updateAccess('civ')">
@@ -130,29 +175,31 @@
             </div>
         </div>
 
-        <div style="margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
-            <h2>System Logs</h2>
-            <p style="color: #555; font-style: italic;">No recent system changes detected.</p>
+        <div style="margin-top: 50px;">
+            <h2>Server Status</h2>
+            <div style="background: #1a1a1a; padding: 20px; border-radius: 8px; border: 1px solid #333;">
+                <p style="color: #4ade80; font-family: monospace;">> API Connection: STABLE</p>
+                <p style="color: #4ade80; font-family: monospace;">> Database Sync: ACTIVE</p>
+                <p style="color: #888; font-family: monospace;">> Local Storage Link: READY</p>
+            </div>
         </div>
     </div>
 
     <script>
         // Load existing states on page open
         window.onload = function() {
-            const depts = ['police', 'ems', 'civ'];
+            const depts = ['police', 'ems', 'dot', 'civ'];
             depts.forEach(dept => {
-                // Check if it was saved as "locked"
-                const isLocked = localStorage.getItem(dept + "_locked") === "true";
-                // If it is NOT locked, check the switch to "ON"
+                // If the value doesn't exist yet, we'll default it to LOCKED (switch OFF)
+                const isLocked = localStorage.getItem(dept + "_locked") !== "false";
                 document.getElementById(dept + '_toggle').checked = !isLocked;
             });
         };
 
         function updateAccess(dept) {
             const isChecked = document.getElementById(dept + '_toggle').checked;
-            // If switch is ON, locked is FALSE. If switch is OFF, locked is TRUE.
+            // ON = NOT LOCKED (false), OFF = LOCKED (true)
             localStorage.setItem(dept + "_locked", !isChecked);
-            console.log(dept + " is now " + (isChecked ? "ONLINE" : "OFFLINE"));
         }
     </script>
 </body>
