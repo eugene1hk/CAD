@@ -1,1 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LRP CAD | Selection Terminal</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .selection-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 350px;
+        }
+
+        /* Only allow hover effects if the card is NOT disabled */
+        .login-card:not(.disabled):hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #3c6e71;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .icon-circle {
+            width: 80px; height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px; font-size: 2.5em;
+        }
+
+        .card-title { font-size: 1.5em; font-weight: bold; margin-bottom: 10px; }
+        .card-desc { font-size: 0.9em; opacity: 0.7; margin-bottom: 15px; height: 40px;}
+
+        .btn-enter {
+            margin-top: 15px; padding: 10px 40px;
+            border-radius: 30px; border: none;
+            background: #2b3a67; color: white;
+            font-weight: bold; text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-enter:hover { background: #3c6e71; }
+
+        .disabled {
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+
+        .status-tag {
+            font-size: 0.75em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div style="text-align: center; margin-top: 60px;">
+        <img src="LRPC_favicon_test.jpeg" alt="LRP Logo" style="width: 120px; border-radius: 50%; border: 3px solid #3c6e71;">
+        <h1 style="margin-top: 20px; letter-spacing: 3px;">TERMINAL ACCESS</h1>
+        <p style="opacity: 0.8;">Select your department to begin your session</p>
+    </div>
+
+    <div class="selection-container">
+        <div class="login-card">
+            <div class="icon-circle">🛡️</div>
+            <div class="card-title">ADMINISTRATION</div>
+            <div class="card-desc">System Controls & Backend</div>
+            <div class="status-tag" style="color: #4ade80;">● System Online</div>
+            <button class="btn-enter" onclick="window.location.href='backend.html'">Enter</button>
+        </div>
+
+        <div id="police-card" class="login-card">
+            <div class="icon-circle">🚓</div>
+            <div class="card-title">LAW ENFORCEMENT</div>
+            <div class="card-desc">MDT Access - MET Police Only</div>
+            <div id="police-status" class="status-tag"></div>
+            <button id="police-btn" class="btn-enter" style="display:none;">Enter</button>
+        </div>
+
+        <div id="ems-card" class="login-card">
+            <div class="icon-circle">🚑</div>
+            <div class="card-title">MEDICAL SERVICE</div>
+            <div class="card-desc">Patient Care & Dispatch Logs</div>
+            <div id="ems-status" class="status-tag"></div>
+            <button id="ems-btn" class="btn-enter" style="display:none;">Enter</button>
+        </div>
+
+        <div id="civ-card" class="login-card">
+            <div class="icon-circle">👤</div>
+            <div class="card-title">CIVILIAN PORTAL</div>
+            <div class="card-desc">Character & Vehicle Registration</div>
+            <div id="civ-status" class="status-tag"></div>
+            <button id="civ-btn" class="btn-enter" style="display:none;">Enter</button>
+        </div>
+    </div>
+
+    <script>
+        function updateHubUI() {
+            const depts = [
+                { id: 'police', url: 'police.html' },
+                { id: 'ems', url: 'fire.html' },
+                { id: 'civ', url: 'civ.html' }
+            ];
+
+            depts.forEach(dept => {
+                const card = document.getElementById(dept.id + '-card');
+                const statusDiv = document.getElementById(dept.id + '-status');
+                const btn = document.getElementById(dept.id + '-btn');
+                
+                // Get lock status from backend (Default to locked/true)
+                const isLocked = localStorage.getItem(dept.id + "_locked") !== "false";
+
+                if (isLocked) {
+                    card.classList.add('disabled');
+                    statusDiv.innerText = "● Maintenance In Progress";
+                    statusDiv.style.color = "#ffbc00";
+                    btn.style.display = "none"; // Hide button
+                } else {
+                    card.classList.remove('disabled');
+                    statusDiv.innerText = "● System Online";
+                    statusDiv.style.color = "#4ade80";
+                    btn.style.display = "block"; // Show button
+                    btn.onclick = () => window.location.href = dept.url;
+                }
+            });
+        }
+
+        window.onload = updateHubUI;
+    </script>
+</body>
+</html>
 
