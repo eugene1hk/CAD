@@ -135,46 +135,47 @@
         </div>
     </div>
 
-    <button class="admin-secret-btn" title="Admin Access" onclick="window.location.href='backend.html'"></button>
-<script>
-        function updateHubUI() {
-            const depts = [
-                { id: 'police', name: 'Law Enforcement', url: 'police.html' },
-                { id: 'ems', name: 'Medical Service', url: 'fire.html' },
-                { id: 'dot', name: 'Department of Transport', url: 'dot.html' },
-                { id: 'civ', name: 'Civilian Portal', url: 'civ.html' }
-            ];
+    <button class="admin-secret-btn" title="Admin Access" onclick="window.location.href='backend.html'"></button
 
-            depts.forEach(dept => {
-                const card = document.getElementById(dept.id + '-card');
-                const statusDiv = document.getElementById(dept.id + '-status');
-                const btn = document.getElementById(dept.id + '-btn');
-                
-                const isLocked = localStorage.getItem(dept.id + "_locked") !== "false";
+    <script>
+    function updateHubUI() {
+        const depts = [
+            { id: 'police', name: 'Law Enforcement', url: 'police.html' },
+            { id: 'ems', name: 'Medical Service', url: 'fire.html' },
+            { id: 'dot', name: 'Department of Transport', url: 'dot.html' },
+            { id: 'civ', name: 'Civilian Portal', url: 'civ.html' }
+        ];
 
-                if (isLocked) {
-                    card.classList.add('disabled');
-                    statusDiv.innerText = "● Maintenance In Progress";
-                    statusDiv.style.color = "#ffbc00";
-                    btn.style.display = "none";
-                } else {
-                    card.classList.remove('disabled');
-                    statusDiv.innerText = "● System Online";
-                    statusDiv.style.color = "#4ade80";
-                    btn.style.display = "block";
+        depts.forEach(dept => {
+            const card = document.getElementById(dept.id + '-card');
+            const statusDiv = document.getElementById(dept.id + '-status');
+            const btn = document.getElementById(dept.id + '-btn');
+            
+            const isLocked = localStorage.getItem(dept.id + "_locked") !== "false";
 
-                    // UPDATED: Save context and redirect to login
-                    btn.onclick = () => {
-                        localStorage.setItem("selected_dept_id", dept.id);
-                        localStorage.setItem("selected_dept_name", dept.name);
-                        localStorage.setItem("selected_dept_url", dept.url);
-                        window.location.href = 'login.html';
-                    };
-                }
-            });
-        }
+            if (isLocked) {
+                card.classList.add('disabled');
+                statusDiv.innerText = "● Maintenance In Progress";
+                statusDiv.style.color = "#ffbc00";
+                btn.style.display = "none";
+            } else {
+                card.classList.remove('disabled');
+                statusDiv.innerText = "● System Online";
+                statusDiv.style.color = "#4ade80";
+                btn.style.display = "block";
 
-        window.onload = updateHubUI;
-    </script>
+                btn.onclick = () => {
+                    // Save context so login.html knows where we are going
+                    localStorage.setItem("selected_dept_id", dept.id);
+                    localStorage.setItem("selected_dept_name", dept.name);
+                    localStorage.setItem("selected_dept_url", dept.url);
+                    window.location.href = 'login.html';
+                };
+            }
+        });
+    }
+
+    window.onload = updateHubUI;
+</script>
 </body>
 </html>
