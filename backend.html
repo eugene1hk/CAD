@@ -12,9 +12,10 @@
             margin: 0;
             display: flex;
             min-height: 100vh;
+            overflow: hidden;
         }
 
-        /* Sidebar */
+        /* Sidebar Navigation */
         .sidebar {
             width: 250px;
             background-color: #1a1a1a;
@@ -23,6 +24,14 @@
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
+        }
+
+        .sidebar h3 {
+            font-size: 0.8rem;
+            margin-top: 10px;
+            letter-spacing: 1px;
+            text-align: center;
+            color: #fff;
         }
 
         .nav-tabs {
@@ -52,17 +61,21 @@
         .tab-btn.active { background: #2b3a67; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
 
         /* Main Content */
-        .main-panel { flex-grow: 1; padding: 40px; overflow-y: auto; }
+        .main-panel { 
+            flex-grow: 1; 
+            padding: 40px; 
+            overflow-y: auto; 
+            background-color: #0f0f0f;
+        }
         
         .tab-content { display: none; }
         .tab-content.active-tab { display: block; animation: fadeIn 0.3s ease; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        h1 { color: #ffffff; font-size: 1.6rem; margin-bottom: 5px; }
+        h1 { color: #ffffff; font-size: 1.6rem; margin: 0 0 5px 0; }
         h2 { color: #666; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
 
-        /* Grid for Toggles */
         .control-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -79,7 +92,7 @@
             align-items: center;
         }
 
-        /* Toggle Switch */
+        /* Toggle Switches */
         .switch { position: relative; width: 46px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
@@ -93,14 +106,14 @@
         input:checked + .slider { background-color: #2ecc71; }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        /* Placeholder boxes */
         .placeholder-box {
             background: #151515;
             border: 1px dashed #333;
-            padding: 40px;
+            padding: 50px;
             border-radius: 10px;
             text-align: center;
             color: #555;
+            margin-top: 20px;
         }
 
         .btn-exit {
@@ -108,6 +121,13 @@
             padding: 12px; border-radius: 5px; cursor: pointer;
             font-weight: bold; margin-top: auto; text-transform: uppercase; font-size: 0.75rem;
         }
+        
+        .btn-primary {
+            background: #2b3a67; color: white; border: none;
+            padding: 12px 25px; border-radius: 5px; cursor: pointer;
+            font-weight: bold; text-transform: uppercase; margin-top: 15px;
+        }
+        .btn-primary:hover { background: #3c6e71; }
     </style>
 </head>
 <body>
@@ -115,18 +135,18 @@
     <div class="sidebar">
         <div style="text-align: center;">
             <img src="LRPC_favicon_test.jpeg" alt="Logo" style="width: 65px; border-radius: 50%; border: 2px solid #3c6e71;">
-            <h3 style="font-size: 0.8rem; margin-top: 10px; letter-spacing: 1px;">STORM BACKEND</h3>
+            <h3>STORM BACKEND</h3>
         </div>
         
         <nav class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('controls', this)">⚙️ System Controls</button>
+            <button id="default-btn" class="tab-btn active" onclick="switchTab('controls', this)">⚙️ System Controls</button>
             <button class="tab-btn" onclick="switchTab('database', this)">📂 Master Database</button>
             <button class="tab-btn" onclick="switchTab('map', this)">🗺️ Map Editor</button>
             <button class="tab-btn" onclick="switchTab('logs', this)">📜 System Logs</button>
             <button class="tab-btn" onclick="switchTab('settings', this)">🛡️ Settings</button>
         </nav>
 
-        <button class="btn-exit" onclick="window.location.href='index.html'">Exit Terminal</button>
+        <button class="btn-exit" onclick="window.location.href='option.html'">Exit Terminal</button>
     </div>
 
     <div class="main-panel">
@@ -137,29 +157,30 @@
             <div class="control-grid">
                 <div class="control-card">
                     <div><b>Police MDT</b><p style="font-size: 0.75rem; color: #666; margin: 0;">Metropolitan Police</p></div>
-                    <label class="switch"><input type="checkbox" id="police_toggle" onchange="toggle('police')"><span class="slider"></span></label>
+                    <label class="switch"><input type="checkbox" id="police_toggle" onchange="toggleAccess('police')"><span class="slider"></span></label>
                 </div>
                 <div class="control-card">
                     <div><b>Medical/Fire</b><p style="font-size: 0.75rem; color: #666; margin: 0;">L.A.S / L.F.B</p></div>
-                    <label class="switch"><input type="checkbox" id="ems_toggle" onchange="toggle('ems')"><span class="slider"></span></label>
+                    <label class="switch"><input type="checkbox" id="ems_toggle" onchange="toggleAccess('ems')"><span class="slider"></span></label>
                 </div>
                 <div class="control-card">
                     <div><b>DOT Access</b><p style="font-size: 0.75rem; color: #666; margin: 0;">Highways Agency</p></div>
-                    <label class="switch"><input type="checkbox" id="dot_toggle" onchange="toggle('dot')"><span class="slider"></span></label>
+                    <label class="switch"><input type="checkbox" id="dot_toggle" onchange="toggleAccess('dot')"><span class="slider"></span></label>
                 </div>
                 <div class="control-card">
                     <div><b>Civilian Portal</b><p style="font-size: 0.75rem; color: #666; margin: 0;">Citizen Registry</p></div>
-                    <label class="switch"><input type="checkbox" id="civ_toggle" onchange="toggle('civ')"><span class="slider"></span></label>
+                    <label class="switch"><input type="checkbox" id="civ_toggle" onchange="toggleAccess('civ')"><span class="slider"></span></label>
                 </div>
             </div>
         </div>
 
         <div id="database" class="tab-content">
             <h1>Master Database</h1>
-            <h2>Global Citizen & Vehicle Records</h2>
+            <h2>Global Citizen & User Management</h2>
             <div class="placeholder-box">
-                <p>Database Query Engine Standby...</p>
-                <button style="background:#2b3a67; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer;">Initialize Global Search</button>
+                <p>User Directory & Credential Manager</p>
+                <p style="font-size: 0.8rem; color: #888; margin-bottom: 10px;">Access the central registry to modify department assignments, callsigns, and security passwords.</p>
+                <button onclick="window.location.href='database.html'" class="btn-primary">Initialize Master Registry</button>
             </div>
         </div>
 
@@ -167,30 +188,40 @@
             <h1>Map Editor</h1>
             <h2>Live Dispatch Coordinate Management</h2>
             <div class="placeholder-box">
-                <p>Map Render Engine Offline</p>
-                <p style="font-size: 0.8rem;">Drag and drop dispatch markers to update live MDT maps.</p>
+                <p>Map Render Engine Standby</p>
+                <p style="font-size: 0.8rem; color: #666;">Drag and drop dispatch markers to update live MDT maps for all units.</p>
+                <button class="btn-primary" disabled style="opacity: 0.5; cursor: not-allowed;">Open Map Canvas</button>
             </div>
         </div>
 
         <div id="logs" class="tab-content">
             <h1>System Logs</h1>
             <h2>Recent Administrative Actions</h2>
-            <div style="background: #1a1a1a; padding: 20px; border-radius: 8px; font-family: monospace; color: #4ade80; font-size: 0.85rem; border: 1px solid #333;">
-                [INFO] System initialized successfully.<br>
-                [WARN] Database sync delayed by 12ms...<br>
-                [INFO] Administrative Session Started.
+            <div style="background: #111; padding: 20px; border-radius: 8px; font-family: monospace; color: #4ade80; font-size: 0.85rem; border: 1px solid #222; line-height: 1.6;">
+                > [INFO] System initialized successfully.<br>
+                > [INFO] Connection to LocalStorage: STABLE.<br>
+                > [AUTH] Administrative Session Started.<br>
+                > [DEBUG] Tab listener active.
             </div>
         </div>
 
         <div id="settings" class="tab-content">
             <h1>Settings</h1>
             <h2>Core Security Configurations</h2>
-            <p style="color:#888;">Global API Keys and Permission Nodes are managed here.</p>
+            <div class="control-card" style="margin-bottom: 10px;">
+                <div><b>Admin Debug Mode</b><p style="font-size: 0.75rem; color: #666; margin: 0;">Show technical errors in console</p></div>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div class="control-card">
+                <div><b>Auto-Sync LocalStorage</b><p style="font-size: 0.75rem; color: #666; margin: 0;">Update selection page in real-time</p></div>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
         </div>
 
     </div>
 
     <script>
+        // Tab Navigation Logic
         function switchTab(tabId, element) {
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(c => c.classList.remove('active-tab'));
@@ -202,6 +233,7 @@
             element.classList.add('active');
         }
 
+        // Load Toggles from Memory
         window.onload = function() {
             ['police', 'ems', 'dot', 'civ'].forEach(dept => {
                 const isOnline = localStorage.getItem(dept + "_locked") === "false";
@@ -210,7 +242,8 @@
             });
         };
 
-        function toggle(dept) {
+        // Update Access Logic
+        function toggleAccess(dept) {
             const isChecked = document.getElementById(dept + '_toggle').checked;
             localStorage.setItem(dept + "_locked", isChecked ? "false" : "true");
         }
