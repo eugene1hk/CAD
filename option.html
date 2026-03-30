@@ -8,7 +8,7 @@
     <style>
         .selection-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 25px;
             padding: 40px;
             max-width: 1200px;
@@ -31,7 +31,6 @@
             min-height: 350px;
         }
 
-        /* Only allow hover effects if the card is NOT disabled */
         .login-card:not(.disabled):hover {
             transform: translateY(-10px);
             background: rgba(255, 255, 255, 0.1);
@@ -73,6 +72,25 @@
             letter-spacing: 1px;
             margin-top: 10px;
         }
+
+        /* Tiny Secret Admin Button */
+        .admin-secret-btn {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            width: 12px;
+            height: 12px;
+            background: #dc3545; /* Red */
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+
+        .admin-secret-btn:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -84,14 +102,6 @@
     </div>
 
     <div class="selection-container">
-        <div class="login-card">
-            <div class="icon-circle">🛡️</div>
-            <div class="card-title">ADMINISTRATION</div>
-            <div class="card-desc">System Controls & Backend</div>
-            <div class="status-tag" style="color: #4ade80;">● System Online</div>
-            <button class="btn-enter" onclick="window.location.href='backend.html'">Enter</button>
-        </div>
-
         <div id="police-card" class="login-card">
             <div class="icon-circle">🚓</div>
             <div class="card-title">LAW ENFORCEMENT</div>
@@ -108,6 +118,14 @@
             <button id="ems-btn" class="btn-enter" style="display:none;">Enter</button>
         </div>
 
+        <div id="dot-card" class="login-card">
+            <div class="icon-circle">🚧</div>
+            <div class="card-title">DOT</div>
+            <div class="card-desc">Highways Agency & Transport MDT</div>
+            <div id="dot-status" class="status-tag"></div>
+            <button id="dot-btn" class="btn-enter" style="display:none;">Enter</button>
+        </div>
+
         <div id="civ-card" class="login-card">
             <div class="icon-circle">👤</div>
             <div class="card-title">CIVILIAN PORTAL</div>
@@ -117,11 +135,14 @@
         </div>
     </div>
 
+    <button class="admin-secret-btn" title="Admin Access" onclick="window.location.href='backend.html'"></button>
+
     <script>
         function updateHubUI() {
             const depts = [
                 { id: 'police', url: 'police.html' },
                 { id: 'ems', url: 'fire.html' },
+                { id: 'dot', url: 'dot.html' },
                 { id: 'civ', url: 'civ.html' }
             ];
 
@@ -130,19 +151,18 @@
                 const statusDiv = document.getElementById(dept.id + '-status');
                 const btn = document.getElementById(dept.id + '-btn');
                 
-                // Get lock status from backend (Default to locked/true)
                 const isLocked = localStorage.getItem(dept.id + "_locked") !== "false";
 
                 if (isLocked) {
                     card.classList.add('disabled');
                     statusDiv.innerText = "● Maintenance In Progress";
                     statusDiv.style.color = "#ffbc00";
-                    btn.style.display = "none"; // Hide button
+                    btn.style.display = "none";
                 } else {
                     card.classList.remove('disabled');
                     statusDiv.innerText = "● System Online";
                     statusDiv.style.color = "#4ade80";
-                    btn.style.display = "block"; // Show button
+                    btn.style.display = "block";
                     btn.onclick = () => window.location.href = dept.url;
                 }
             });
@@ -152,4 +172,3 @@
     </script>
 </body>
 </html>
-
