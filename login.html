@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LRP | Secure Access</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: #0b0b0b;
+        }
+
+        .login-card {
+            background: rgba(25, 25, 25, 0.95);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 40px;
+            width: 360px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        }
+
+        .logo-small {
+            width: 80px;
+            border-radius: 50%;
+            border: 2px solid #3c6e71;
+            margin-bottom: 20px;
+        }
+
+        .dept-tag {
+            color: #3c6e71;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin-top: 0;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 0.7rem;
+            color: #666;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 5px;
+            color: white;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #3c6e71;
+            background: #151515;
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 14px;
+            background: #2b3a67;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-auth:hover {
+            background: #3c6e71;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 25px;
+            font-size: 0.75rem;
+            color: #555;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <img src="LRPC_favicon_test.jpeg" class="logo-small">
+        
+        <span id="dept-tag" class="dept-tag">Loading...</span>
+        <h2 id="login-title">Secure Portal</h2>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label>Identifier / Callsign</label>
+                <input type="text" placeholder="e.g. 1A-01" required>
+            </div>
+            
+            <div class="input-group">
+                <label>Access Pin</label>
+                <input type="password" placeholder="••••" required>
+            </div>
+
+            <button type="submit" class="btn-auth">Authorize Session</button>
+        </form>
+
+        <a href="option.html" class="back-link">Return to Selection</a>
+    </div>
+
+    <script>
+        // Check which department we came from
+        const deptId = localStorage.getItem("selected_dept_id");
+        const deptName = localStorage.getItem("selected_dept_name");
+        const deptUrl = localStorage.getItem("selected_dept_url");
+
+        // Safety check: if no department was selected, boot them back to option.html
+        if (!deptId) {
+            window.location.href = 'option.html';
+        } else {
+            document.getElementById("dept-tag").innerText = deptName;
+            document.getElementById("login-title").innerText = "Terminal Login";
+        }
+
+        // Handle Form Submission
+        document.getElementById("loginForm").onsubmit = function(e) {
+            e.preventDefault();
+            
+            // For now, we'll allow any login to pass. 
+            // In the future, you can add "if (pin === '1234')" logic here.
+            
+            window.location.href = deptUrl;
+        };
+    </script>
+</body>
+</html>
