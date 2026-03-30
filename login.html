@@ -3,160 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LRP | Secure Access</title>
-    <link rel="stylesheet" href="style.css">
+    <title>LRP | Secure Terminal Login</title>
     <style>
         body {
+            background-color: #0b0b0b;
+            color: #ffffff;
+            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100vh;
             margin: 0;
-            background: #0b0b0b;
+            overflow: hidden;
         }
 
-        .login-card {
-            background: rgba(25, 25, 25, 0.95);
-            border: 1px solid #333;
-            border-radius: 15px;
+        .login-container {
+            background: #121212;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            width: 380px;
             padding: 40px;
-            width: 360px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
             text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
         }
 
-        .logo-small {
+        .logo {
             width: 80px;
             border-radius: 50%;
             border: 2px solid #3c6e71;
             margin-bottom: 20px;
         }
 
-        .dept-tag {
+        .dept-header {
             color: #3c6e71;
-            font-size: 0.75rem;
-            font-weight: bold;
+            font-size: 0.7rem;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
             display: block;
         }
 
         h2 {
-            font-size: 1.4rem;
-            margin-top: 0;
-            margin-bottom: 30px;
+            font-size: 1.5rem;
+            margin: 0 0 35px 0;
+            font-weight: 400;
             letter-spacing: 1px;
         }
 
         .input-group {
-            margin-bottom: 15px;
             text-align: left;
+            margin-bottom: 20px;
         }
 
-        label {
+        .input-group label {
             display: block;
-            font-size: 0.7rem;
-            color: #666;
-            margin-bottom: 5px;
-            text-transform: uppercase;
+            font-size: 0.65rem;
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: bold;
+            letter-spacing: 1px;
         }
 
         input {
             width: 100%;
-            padding: 12px;
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 5px;
-            color: white;
+            padding: 12px 15px;
+            background: #080808;
+            border: 1px solid #222;
+            border-radius: 4px;
+            color: #fff;
             box-sizing: border-box;
             outline: none;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
         }
 
         input:focus {
             border-color: #3c6e71;
-            background: #151515;
+            background: #0f0f0f;
         }
 
-        .btn-auth {
+        .btn-login {
             width: 100%;
-            padding: 14px;
+            padding: 15px;
             background: #2b3a67;
-            color: white;
+            color: #fff;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             font-weight: bold;
             text-transform: uppercase;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 15px;
+            letter-spacing: 2px;
             transition: 0.3s;
         }
 
-        .btn-auth:hover {
+        .btn-login:hover {
             background: #3c6e71;
+            box-shadow: 0 0 15px rgba(60, 110, 113, 0.3);
         }
 
-        .back-link {
-            display: block;
-            margin-top: 25px;
-            font-size: 0.75rem;
-            color: #555;
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            font-size: 0.7rem;
+            color: #444;
             text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             transition: 0.3s;
         }
 
-        .back-link:hover {
-            color: #888;
+        .back-btn:hover {
+            color: #777;
         }
     </style>
 </head>
 <body>
 
-    <div class="login-card">
-        <img src="LRPC_favicon_test.jpeg" class="logo-small">
+    <div class="login-container">
+        <img src="LRPC_favicon_test.jpeg" class="logo" alt="Logo">
         
-        <span id="dept-tag" class="dept-tag">Loading...</span>
-        <h2 id="login-title">Secure Portal</h2>
+        <span id="dept-name-display" class="dept-header">SECURE ACCESS</span>
+        <h2 id="login-title">Terminal Login</h2>
 
         <form id="loginForm">
             <div class="input-group">
-                <label>Identifier / Callsign</label>
-                <input type="text" placeholder="e.g. 1A-01" required>
+                <label for="username">USER:</label>
+                <input type="text" id="username" placeholder="Firstname Lastname" required>
             </div>
             
             <div class="input-group">
-                <label>Access Pin</label>
-                <input type="password" placeholder="••••" required>
+                <label for="callsign">CALL-SIGN:</label>
+                <input type="text" id="callsign" placeholder="e.g. 1-ALPHA-01" required>
             </div>
 
-            <button type="submit" class="btn-auth">Authorize Session</button>
+            <div class="input-group">
+                <label for="password">PASSWORD:</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-login">Authorize Access</button>
         </form>
 
-        <a href="option.html" class="back-link">Return to Selection</a>
+        <a href="option.html" class="back-btn">Cancel Authorization</a>
     </div>
 
     <script>
-        // Check which department we came from
+        // Retrieve chosen department data
         const deptId = localStorage.getItem("selected_dept_id");
         const deptName = localStorage.getItem("selected_dept_name");
         const deptUrl = localStorage.getItem("selected_dept_url");
 
-        // Safety check: if no department was selected, boot them back to option.html
+        // If no department is selected (direct URL access), go back
         if (!deptId) {
             window.location.href = 'option.html';
         } else {
-            document.getElementById("dept-tag").innerText = deptName;
-            document.getElementById("login-title").innerText = "Terminal Login";
+            document.getElementById("dept-name-display").innerText = deptName;
         }
 
-        // Handle Form Submission
+        // Handle Form
         document.getElementById("loginForm").onsubmit = function(e) {
             e.preventDefault();
             
-            // For now, we'll allow any login to pass. 
-            // In the future, you can add "if (pin === '1234')" logic here.
-            
+            // Store session info (Optional: useful for showing the name inside the MDT)
+            localStorage.setItem("active_user", document.getElementById("username").value);
+            localStorage.setItem("active_callsign", document.getElementById("callsign").value);
+
+            // Redirect to the actual page
             window.location.href = deptUrl;
         };
     </script>
