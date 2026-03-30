@@ -6,6 +6,13 @@
     <title>LRPC STORM CAD | Selection Terminal</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        body {
+            background-color: #0b0b0b;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+        }
+
         .selection-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -63,6 +70,7 @@
         .disabled {
             opacity: 0.5;
             filter: grayscale(1);
+            cursor: not-allowed;
         }
 
         .status-tag {
@@ -80,7 +88,7 @@
             left: 10px;
             width: 12px;
             height: 12px;
-            background: #dc3545; /* Red */
+            background: #dc3545;
             border: none;
             border-radius: 50%;
             cursor: pointer;
@@ -88,9 +96,7 @@
             transition: opacity 0.3s;
         }
 
-        .admin-secret-btn:hover {
-            opacity: 1;
-        }
+        .admin-secret-btn:hover { opacity: 1; }
     </style>
 </head>
 <body>
@@ -135,7 +141,7 @@
         </div>
     </div>
 
-    <button class="admin-secret-btn" title="Admin Access" onclick="window.location.href='backend.html'"></button
+    <button class="admin-secret-btn" title="Admin Access" onclick="window.location.href='backend.html'"></button>
 
     <script>
     function updateHubUI() {
@@ -151,6 +157,7 @@
             const statusDiv = document.getElementById(dept.id + '-status');
             const btn = document.getElementById(dept.id + '-btn');
             
+            // Check if department is locked in backend
             const isLocked = localStorage.getItem(dept.id + "_locked") !== "false";
 
             if (isLocked) {
@@ -175,7 +182,8 @@
         });
     }
 
+    // Run the UI check as soon as the page loads
     window.onload = updateHubUI;
-</script>
+    </script>
 </body>
 </html>
