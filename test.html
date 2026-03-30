@@ -16,18 +16,19 @@
 
         /* Sidebar */
         .sidebar {
-            width: 240px;
+            width: 250px;
             background-color: #1a1a1a;
             border-right: 1px solid #333;
             padding: 20px;
             display: flex;
             flex-direction: column;
+            flex-shrink: 0;
         }
 
         .nav-tabs {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 5px;
             margin-top: 30px;
         }
 
@@ -35,33 +36,37 @@
             background: transparent;
             color: #888;
             border: none;
-            padding: 12px;
+            padding: 12px 15px;
             text-align: left;
             border-radius: 6px;
             cursor: pointer;
-            transition: 0.3s;
-            font-size: 0.9rem;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .tab-btn:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
-        .tab-btn.active { background: #2b3a67; color: #fff; }
+        .tab-btn.active { background: #2b3a67; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
 
         /* Main Content */
-        .main-panel { flex-grow: 1; padding: 40px; }
+        .main-panel { flex-grow: 1; padding: 40px; overflow-y: auto; }
         
-        /* Hide all tabs by default EXCEPT the one we want seen */
         .tab-content { display: none; }
-        .tab-content.active-tab { display: block; }
+        .tab-content.active-tab { display: block; animation: fadeIn 0.3s ease; }
 
-        h1 { color: #ffffff; font-size: 1.6rem; margin-bottom: 25px; }
-        h2 { color: #666; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Toggles */
+        h1 { color: #ffffff; font-size: 1.6rem; margin-bottom: 5px; }
+        h2 { color: #666; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
+
+        /* Grid for Toggles */
         .control-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
-            margin-top: 20px;
         }
 
         .control-card {
@@ -74,23 +79,34 @@
             align-items: center;
         }
 
-        .switch { position: relative; width: 50px; height: 26px; }
+        /* Toggle Switch */
+        .switch { position: relative; width: 46px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
             position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
             background-color: #333; transition: .4s; border-radius: 34px;
         }
         .slider:before {
-            position: absolute; content: ""; height: 18px; width: 18px;
+            position: absolute; content: ""; height: 16px; width: 16px;
             left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%;
         }
         input:checked + .slider { background-color: #2ecc71; }
-        input:checked + .slider:before { transform: translateX(24px); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* Placeholder boxes */
+        .placeholder-box {
+            background: #151515;
+            border: 1px dashed #333;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            color: #555;
+        }
 
         .btn-exit {
             background: #c0392b; color: white; border: none;
             padding: 12px; border-radius: 5px; cursor: pointer;
-            font-weight: bold; margin-top: auto;
+            font-weight: bold; margin-top: auto; text-transform: uppercase; font-size: 0.75rem;
         }
     </style>
 </head>
@@ -99,82 +115,101 @@
     <div class="sidebar">
         <div style="text-align: center;">
             <img src="LRPC_favicon_test.jpeg" alt="Logo" style="width: 65px; border-radius: 50%; border: 2px solid #3c6e71;">
-            <h3 style="font-size: 0.8rem; margin-top: 10px;">SYSTEM ADMIN</h3>
+            <h3 style="font-size: 0.8rem; margin-top: 10px; letter-spacing: 1px;">STORM BACKEND</h3>
         </div>
         
         <nav class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('controls', this)">⚙️ Controls</button>
-            <button class="tab-btn" onclick="switchTab('logs', this)">📜 Logs</button>
+            <button class="tab-btn active" onclick="switchTab('controls', this)">⚙️ System Controls</button>
+            <button class="tab-btn" onclick="switchTab('database', this)">📂 Master Database</button>
+            <button class="tab-btn" onclick="switchTab('map', this)">🗺️ Map Editor</button>
+            <button class="tab-btn" onclick="switchTab('logs', this)">📜 System Logs</button>
             <button class="tab-btn" onclick="switchTab('settings', this)">🛡️ Settings</button>
         </nav>
 
-        <button class="btn-exit" onclick="window.location.href='index.html'">Exit to Hub</button>
+        <button class="btn-exit" onclick="window.location.href='index.html'">Exit Terminal</button>
     </div>
 
     <div class="main-panel">
         
         <div id="controls" class="tab-content active-tab">
-            <h1>Master Access Controls</h1>
-            <h2>Department Status</h2>
+            <h1>System Controls</h1>
+            <h2>Maintenance Mode Management</h2>
             <div class="control-grid">
                 <div class="control-card">
-                    <div><b>Police MDT</b><p style="font-size: 0.8rem; color: #666; margin: 0;">Met Police</p></div>
+                    <div><b>Police MDT</b><p style="font-size: 0.75rem; color: #666; margin: 0;">Metropolitan Police</p></div>
                     <label class="switch"><input type="checkbox" id="police_toggle" onchange="toggle('police')"><span class="slider"></span></label>
                 </div>
                 <div class="control-card">
-                    <div><b>Medical/Fire</b><p style="font-size: 0.8rem; color: #666; margin: 0;">Ambulance/Fire</p></div>
+                    <div><b>Medical/Fire</b><p style="font-size: 0.75rem; color: #666; margin: 0;">L.A.S / L.F.B</p></div>
                     <label class="switch"><input type="checkbox" id="ems_toggle" onchange="toggle('ems')"><span class="slider"></span></label>
                 </div>
                 <div class="control-card">
-                    <div><b>DOT Access</b><p style="font-size: 0.8rem; color: #666; margin: 0;">Highways</p></div>
+                    <div><b>DOT Access</b><p style="font-size: 0.75rem; color: #666; margin: 0;">Highways Agency</p></div>
                     <label class="switch"><input type="checkbox" id="dot_toggle" onchange="toggle('dot')"><span class="slider"></span></label>
                 </div>
                 <div class="control-card">
-                    <div><b>Civilian Portal</b><p style="font-size: 0.8rem; color: #666; margin: 0;">DMV</p></div>
+                    <div><b>Civilian Portal</b><p style="font-size: 0.75rem; color: #666; margin: 0;">Citizen Registry</p></div>
                     <label class="switch"><input type="checkbox" id="civ_toggle" onchange="toggle('civ')"><span class="slider"></span></label>
                 </div>
             </div>
         </div>
 
+        <div id="database" class="tab-content">
+            <h1>Master Database</h1>
+            <h2>Global Citizen & Vehicle Records</h2>
+            <div class="placeholder-box">
+                <p>Database Query Engine Standby...</p>
+                <button style="background:#2b3a67; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer;">Initialize Global Search</button>
+            </div>
+        </div>
+
+        <div id="map" class="tab-content">
+            <h1>Map Editor</h1>
+            <h2>Live Dispatch Coordinate Management</h2>
+            <div class="placeholder-box">
+                <p>Map Render Engine Offline</p>
+                <p style="font-size: 0.8rem;">Drag and drop dispatch markers to update live MDT maps.</p>
+            </div>
+        </div>
+
         <div id="logs" class="tab-content">
             <h1>System Logs</h1>
-            <div style="background: #1a1a1a; padding: 20px; border-radius: 8px; font-family: monospace; color: #888;">
-                [SYSTEM] All services operational...
+            <h2>Recent Administrative Actions</h2>
+            <div style="background: #1a1a1a; padding: 20px; border-radius: 8px; font-family: monospace; color: #4ade80; font-size: 0.85rem; border: 1px solid #333;">
+                [INFO] System initialized successfully.<br>
+                [WARN] Database sync delayed by 12ms...<br>
+                [INFO] Administrative Session Started.
             </div>
         </div>
 
         <div id="settings" class="tab-content">
-            <h1>Server Settings</h1>
-            <p>Database and API configurations are locked.</p>
+            <h1>Settings</h1>
+            <h2>Core Security Configurations</h2>
+            <p style="color:#888;">Global API Keys and Permission Nodes are managed here.</p>
         </div>
 
     </div>
 
     <script>
-        // TAB SWITCHING
         function switchTab(tabId, element) {
-            // Hide all content
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(c => c.classList.remove('active-tab'));
             
-            // Remove active style from buttons
             const buttons = document.querySelectorAll('.tab-btn');
             buttons.forEach(b => b.classList.remove('active'));
 
-            // Show current
             document.getElementById(tabId).classList.add('active-tab');
             element.classList.add('active');
         }
 
-        // LOAD STATES
         window.onload = function() {
             ['police', 'ems', 'dot', 'civ'].forEach(dept => {
                 const isOnline = localStorage.getItem(dept + "_locked") === "false";
-                document.getElementById(dept + '_toggle').checked = isOnline;
+                const toggleBtn = document.getElementById(dept + '_toggle');
+                if(toggleBtn) toggleBtn.checked = isOnline;
             });
         };
 
-        // SAVE STATES
         function toggle(dept) {
             const isChecked = document.getElementById(dept + '_toggle').checked;
             localStorage.setItem(dept + "_locked", isChecked ? "false" : "true");
