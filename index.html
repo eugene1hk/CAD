@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LRPC CAD | Selection Terminal</title>
+    <title>LRP CAD | Selection Terminal</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Specific layout for the selection cards */
         .selection-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -25,14 +24,15 @@
             padding: 40px;
             text-align: center;
             transition: all 0.3s ease;
-            cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            min-height: 350px;
         }
 
-        .login-card:hover:not(.disabled) {
+        /* Only allow hover effects if the card is NOT disabled */
+        .login-card:not(.disabled):hover {
             transform: translateY(-10px);
             background: rgba(255, 255, 255, 0.1);
             border-color: #3c6e71;
@@ -48,28 +48,30 @@
         }
 
         .card-title { font-size: 1.5em; font-weight: bold; margin-bottom: 10px; }
-        .card-desc { font-size: 0.9em; opacity: 0.7; }
+        .card-desc { font-size: 0.9em; opacity: 0.7; margin-bottom: 15px; height: 40px;}
 
         .btn-enter {
-            margin-top: 25px; padding: 10px 30px;
+            margin-top: 15px; padding: 10px 40px;
             border-radius: 30px; border: none;
             background: #2b3a67; color: white;
             font-weight: bold; text-transform: uppercase;
             cursor: pointer;
+            transition: 0.2s;
         }
 
-        /* State Styles */
+        .btn-enter:hover { background: #3c6e71; }
+
         .disabled {
-            opacity: 0.4;
-            cursor: not-allowed !important;
+            opacity: 0.5;
             filter: grayscale(1);
         }
 
-        .status-text {
-            font-size: 0.7em;
-            margin-top: 10px;
+        .status-tag {
+            font-size: 0.75em;
             font-weight: bold;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -82,38 +84,41 @@
     </div>
 
     <div class="selection-container">
-        <div class="login-card" onclick="window.location.href='backend.html'">
+        <div class="login-card">
             <div class="icon-circle">🛡️</div>
             <div class="card-title">ADMINISTRATION</div>
             <div class="card-desc">System Controls & Backend</div>
-            <button class="btn-enter">Enter</button>
+            <div class="status-tag" style="color: #4ade80;">● System Online</div>
+            <button class="btn-enter" onclick="window.location.href='backend.html'">Enter</button>
         </div>
 
         <div id="police-card" class="login-card">
             <div class="icon-circle">🚓</div>
             <div class="card-title">LAW ENFORCEMENT</div>
             <div class="card-desc">MDT Access - MET Police Only</div>
-            <div id="police-status" class="status-text"></div>
+            <div id="police-status" class="status-tag"></div>
+            <button id="police-btn" class="btn-enter" style="display:none;">Enter</button>
         </div>
 
         <div id="ems-card" class="login-card">
             <div class="icon-circle">🚑</div>
             <div class="card-title">MEDICAL SERVICE</div>
             <div class="card-desc">Patient Care & Dispatch Logs</div>
-            <div id="ems-status" class="status-text"></div>
+            <div id="ems-status" class="status-tag"></div>
+            <button id="ems-btn" class="btn-enter" style="display:none;">Enter</button>
         </div>
 
         <div id="civ-card" class="login-card">
             <div class="icon-circle">👤</div>
             <div class="card-title">CIVILIAN PORTAL</div>
             <div class="card-desc">Character & Vehicle Registration</div>
-            <div id="civ-status" class="status-text"></div>
+            <div id="civ-status" class="status-tag"></div>
+            <button id="civ-btn" class="btn-enter" style="display:none;">Enter</button>
         </div>
     </div>
 
     <script>
         function updateHubUI() {
-            // List of departments to check
             const depts = [
                 { id: 'police', url: 'police.html' },
                 { id: 'ems', url: 'fire.html' },
@@ -123,27 +128,26 @@
             depts.forEach(dept => {
                 const card = document.getElementById(dept.id + '-card');
                 const statusDiv = document.getElementById(dept.id + '-status');
+                const btn = document.getElementById(dept.id + '-btn');
                 
-                // Get lock status from localStorage (Set by backend.html)
-                // If it's null (first time), we'll assume it's locked (true)
+                // Get lock status from backend (Default to locked/true)
                 const isLocked = localStorage.getItem(dept.id + "_locked") !== "false";
 
                 if (isLocked) {
                     card.classList.add('disabled');
-                    card.onclick = null;
                     statusDiv.innerText = "● Maintenance In Progress";
                     statusDiv.style.color = "#ffbc00";
-                    // Hide the enter button if it exists or just show status
+                    btn.style.display = "none"; // Hide button
                 } else {
                     card.classList.remove('disabled');
-                    card.onclick = () => window.location.href = dept.url;
                     statusDiv.innerText = "● System Online";
                     statusDiv.style.color = "#4ade80";
+                    btn.style.display = "block"; // Show button
+                    btn.onclick = () => window.location.href = dept.url;
                 }
             });
         }
 
-        // Run this when the page loads
         window.onload = updateHubUI;
     </script>
 </body>
