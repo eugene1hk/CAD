@@ -6,31 +6,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LRPC STORM CAD | Selection Terminal</title>
     <style>
-        body { background-color: #0b0b0b; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow-x: hidden;}
+        /* Lock the page vertically to prevent up/down scrolling */
+        body { 
+            background-color: #0b0b0b; 
+            color: white; 
+            font-family: 'Segoe UI', sans-serif; 
+            margin: 0; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+        }
         
-        .header-section { text-align: center; margin-top: 60px; margin-bottom: 20px; }
+        /* Compressed Header Space */
+        .header-section { 
+            text-align: center; 
+            padding-top: 20px; /* Reduced from 60px */
+            margin-bottom: 10px; /* Reduced from 20px */
+            flex-shrink: 0;
+        }
         
-        /* SCROLL CONTAINER */
+        .header-section h1 { 
+            margin: 5px 0; 
+            font-size: 1.8rem; 
+            letter-spacing: 4px; 
+        }
+        
+        .header-section p { 
+            margin: 0; 
+            font-size: 0.9rem; 
+            opacity: 0.7; 
+        }
+        
+        /* THE SCROLL WRAPPER (Now positioned higher) */
         .selection-wrapper {
             width: 100%;
-            overflow-x: auto; /* The scrollbar trigger */
-            padding-bottom: 30px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 15px; /* Space for the scrollbar */
+            margin-top: 10px;
             display: flex;
-            justify-content: flex-start; /* Aligns cards to left when scrolling starts */
         }
 
-        /* Custom Scrollbar Styling */
-        .selection-wrapper::-webkit-scrollbar { height: 8px; }
-        .selection-wrapper::-webkit-scrollbar-track { background: #000; }
-        .selection-wrapper::-webkit-scrollbar-thumb { background: #2b3a67; border-radius: 10px; }
+        /* Scrollbar Styling - Positioned right under cards */
+        .selection-wrapper::-webkit-scrollbar { height: 10px; }
+        .selection-wrapper::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 10px; }
+        .selection-wrapper::-webkit-scrollbar-thumb { background: #2b3a67; border-radius: 10px; border: 2px solid #0b0b0b; }
         .selection-wrapper::-webkit-scrollbar-thumb:hover { background: #3c6e71; }
 
         .selection-container {
-            display: flex; /* Changed from Grid to Flex for horizontal scroll */
-            gap: 25px;
-            padding: 20px 40px;
-            min-width: min-content; /* Critical for scrolling */
-            margin: 0 auto;
+            display: flex;
+            gap: 20px;
+            padding: 10px 40px; /* Reduced vertical padding */
+            min-width: min-content;
         }
 
         .login-card {
@@ -38,34 +66,39 @@
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            padding: 40px;
+            padding: 25px; /* Compressed from 40px */
             text-align: center;
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 280px; /* Fixed width so they line up */
-            flex-shrink: 0; /* Prevents cards from squishing */
+            width: 260px;
+            flex-shrink: 0;
         }
 
-        .login-card:not(.disabled):hover { transform: translateY(-10px); border-color: #3c6e71; background: rgba(255, 255, 255, 0.1); }
-        .icon-circle { width: 80px; height: 80px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 2.5em; }
-        .card-title { font-size: 1.2em; font-weight: bold; margin-bottom: 10px; text-transform: uppercase;}
-        .card-desc { font-size: 0.85em; opacity: 0.6; margin-bottom: 15px; height: 40px; }
+        .login-card:not(.disabled):hover { transform: translateY(-5px); border-color: #3c6e71; background: rgba(255, 255, 255, 0.1); }
         
-        .btn-enter { padding: 10px 30px; border-radius: 30px; border: none; background: #2b3a67; color: white; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        /* Smaller Icons to save vertical space */
+        .icon-circle { width: 60px; height: 60px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; font-size: 2em; }
+        
+        .card-title { font-size: 1.1em; font-weight: bold; margin-bottom: 5px; text-transform: uppercase;}
+        .card-desc { font-size: 0.8rem; opacity: 0.6; margin-bottom: 10px; height: 35px; overflow: hidden; }
+        
+        .btn-enter { padding: 8px 25px; border-radius: 30px; border: none; background: #2b3a67; color: white; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
+        
         .disabled { opacity: 0.4; filter: grayscale(1); }
-        .status-tag { font-size: 0.7em; font-weight: bold; margin-top: 10px; }
+        .status-tag { font-size: 0.65rem; font-weight: bold; margin-bottom: 10px; }
         
-        .admin-secret-btn { position: fixed; bottom: 10px; left: 10px; width: 12px; height: 12px; background: #dc3545; border: none; border-radius: 50%; cursor: pointer; opacity: 0.2; }
+        /* Secret Admin remains at the very edge */
+        .admin-secret-btn { position: fixed; bottom: 10px; left: 10px; width: 12px; height: 12px; background: #dc3545; border: none; border-radius: 50%; cursor: pointer; opacity: 0.1; }
     </style>
 </head>
 <body>
 
     <div class="header-section">
-        <img src="LRPC_favicon_test.jpeg" alt="Logo" style="width: 100px; border-radius: 50%; border: 3px solid #3c6e71;">
-        <h1 style="letter-spacing: 4px;">TERMINAL ACCESS</h1>
-        <p style="opacity: 0.7;">Dynamic Department Selection</p>
+        <img src="LRPC_favicon_test.jpeg" alt="Logo" style="width: 70px; border-radius: 50%; border: 2px solid #3c6e71;">
+        <h1>TERMINAL ACCESS</h1>
+        <p>Dynamic Department Selection</p>
     </div>
 
     <div class="selection-wrapper">
@@ -76,6 +109,7 @@
     <button class="admin-secret-btn" onclick="window.location.href='backend.html'"></button>
 
     <script>
+        // ... (Script remains exactly the same as your previous version)
         function renderHub() {
             const defaultDepts = [
                 { id: 'police', name: 'Law Enforcement', icon: '🚓', url: 'police.html', desc: 'MDT Access - MET Police Only' },
@@ -88,7 +122,7 @@
             const depts = saved ? JSON.parse(saved) : defaultDepts;
             const container = document.getElementById('main-container');
             
-            container.innerHTML = ""; // Clear existing
+            container.innerHTML = ""; 
 
             depts.forEach(dept => {
                 const isLocked = localStorage.getItem(dept.id + "_locked") === "true";
@@ -100,7 +134,7 @@
                     <div class="card-title">${dept.name}</div>
                     <div class="card-desc">${dept.desc || 'Authorized Personnel Only'}</div>
                     <div class="status-tag" style="color:${isLocked ? '#ffbc00' : '#4ade80'}">
-                        ${isLocked ? '● Maintenance Mode' : '● System Online'}
+                        ${isLocked ? '● Maintenance' : '● System Online'}
                     </div>
                     ${!isLocked ? `<button class="btn-enter" onclick="login('${dept.id}', '${dept.name}', '${dept.url}')">Enter</button>` : ''}
                 `;
