@@ -46,7 +46,7 @@
             min-width: min-content;
         }
 
-        /* 0.8x SCALED BOX */
+        /* 0.8x SCALED CARD */
         .login-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(15px);
@@ -63,6 +63,18 @@
             width: 224px;      
             flex-shrink: 0;
             position: relative;
+            overflow: hidden; /* Clips the grayscale overlay */
+        }
+
+        /* THE MAINTENANCE OVERLAY: This grays out the card WITHOUT touching the text */
+        .login-card.disabled::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: grayscale(1);
+            z-index: 1; /* Sits above background but below text */
+            pointer-events: none;
         }
 
         .login-card:not(.disabled):hover {
@@ -70,6 +82,12 @@
             background: rgba(255, 255, 255, 0.1);
             border-color: #3c6e71;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Ensure all content sits above the grayscale overlay */
+        .login-card > * {
+            position: relative;
+            z-index: 2;
         }
 
         .icon-circle {
@@ -93,27 +111,19 @@
         }
         .btn-enter:hover { background: #3c6e71; }
 
-        /* MAINTENANCE STATE */
-        .disabled {
-            opacity: 0.7;
-            filter: grayscale(1);
-            cursor: not-allowed;
-        }
-
-        /* THE FIX: Forcing yellow to ignore the parent's grayscale filter */
-        .status-tag.maintenance-text {
-            color: #ffbc00 !important;
-            filter: brightness(1.2) drop-shadow(0 0 2px rgba(0,0,0,0.5));
-            display: inline-block;
-            transform: translateZ(1px); /* Forces separate layer to bypass grayscale */
-        }
-
+        /* YELLOW TEXT FIX */
         .status-tag {
             font-size: 0.7em;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-top: 8px;
+            z-index: 10; /* Highest priority */
+        }
+
+        .maintenance-text {
+            color: #ffbc00 !important;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
         }
 
         .admin-secret-btn {
@@ -171,17 +181,13 @@
                 const card = document.createElement('div');
                 card.className = `login-card ${isLocked ? 'disabled' : ''}`;
                 
-                // If locked, we add the "maintenance-text" class to specifically target the color
-                const statusClass = isLocked ? 'status-tag maintenance-text' : 'status-tag';
-                const statusColor = isLocked ? '#ffbc00' : '#4ade80';
-                const statusLabel = isLocked ? '● Maintenance In Progress' : '● System Online';
-
                 card.innerHTML = `
                     <div class="icon-circle">${dept.icon}</div>
                     <div class="card-title">${dept.name}</div>
                     <div class="card-desc">${dept.desc}</div>
-                    <div class="${statusClass}" style="color: ${statusColor}">
-                        ${statusLabel}
+                    <div class="status-tag ${isLocked ? 'maintenance-text' : ''}" 
+                         style="color: ${isLocked ? '#ffbc00' : '#4ade80'}">
+                        ${isLocked ? '● Maintenance In Progress' : '● System Online'}
                     </div>
                     ${!isLocked ? `<button class="btn-enter" onclick="login('${dept.id}', '${dept.name}', '${dept.url}')">Enter</button>` : ''}
                 `;
