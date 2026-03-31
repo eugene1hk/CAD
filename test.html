@@ -17,93 +17,89 @@
             overflow: hidden; 
         }
         
-        .top-spacer { height: 8vh; flex-shrink: 0; }
+        .top-spacer { height: 5vh; flex-shrink: 0; }
 
-        /* Restoring Original Header Spacing */
         .header-section { text-align: center; flex-shrink: 0; z-index: 5; }
-        .header-section img { width: 120px; border-radius: 50%; border: 3px solid #3c6e71; margin-bottom: 20px; }
-        .header-section h1 { margin: 0; font-size: 2.2rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; }
-        .header-section p { margin: 10px 0 0 0; font-size: 1rem; opacity: 0.8; }
+        .header-section img { width: 110px; border-radius: 50%; border: 3px solid #3c6e71; margin-bottom: 15px; }
+        .header-section h1 { margin: 0; font-size: 2rem; letter-spacing: 3px; text-transform: uppercase; }
+        .header-section p { margin: 5px 0 0 0; font-size: 1rem; opacity: 0.7; }
         
-        /* The Scroll Area */
+        /* SCROLL AREA - Adjusted to ensure scrollbar is always visible */
         .selection-wrapper {
-            width: 95%; 
-            margin: 50px auto 0 auto; 
+            width: 90%; 
+            margin: 30px auto 0 auto; 
             overflow-x: auto;
             overflow-y: hidden;
-            padding-bottom: 30px; 
+            padding-bottom: 25px; 
             flex-shrink: 0;
             z-index: 10;
-            scroll-behavior: auto; /* Essential for smooth JS touchpad control */
+            scroll-behavior: auto; 
         }
 
-        /* Pro Scrollbar Styling */
-        .selection-wrapper::-webkit-scrollbar { height: 6px; }
+        /* Scrollbar Visuals */
+        .selection-wrapper::-webkit-scrollbar { height: 6px; transition: height 0.2s; }
         .selection-wrapper::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); border-radius: 10px; }
         .selection-wrapper::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 10px; }
-        .selection-wrapper::-webkit-scrollbar:hover { height: 16px; }
+        .selection-wrapper::-webkit-scrollbar:hover { height: 14px; }
         .selection-wrapper::-webkit-scrollbar-thumb:hover { background: #718096; }
 
         .selection-container {
             display: flex;
             gap: 30px; 
-            padding: 20px 40px;
+            padding: 10px 20px;
             min-width: min-content;
         }
 
-        /* RESTORED ORIGINAL CARD SIZING */
+        /* TUNED BOX SIZE: Slightly larger than original, but fits the screen */
         .login-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            padding: 40px;
+            padding: 40px 30px;
             text-align: center;
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            width: 280px;      /* Matches original grid min-width */
-            min-height: 380px; /* Matches original look */
-            flex-shrink: 0;    /* Prevents shrinking */
+            width: 290px;      /* Balanced width */
+            height: 410px;     /* Balanced height */
+            flex-shrink: 0;
         }
 
         .login-card:not(.disabled):hover { 
-            transform: translateY(-10px); 
-            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-8px); 
+            background: rgba(255, 255, 255, 0.08);
             border-color: #3c6e71;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
         }
 
         .icon-circle { 
-            width: 80px; height: 80px; 
-            background: rgba(255, 255, 255, 0.1); 
+            width: 85px; height: 85px; 
+            background: rgba(255, 255, 255, 0.08); 
             border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; 
-            margin-bottom: 20px; font-size: 2.5em; 
+            margin-bottom: 20px; font-size: 2.8em; 
         }
         
-        .card-title { font-size: 1.5em; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
-        .card-desc { font-size: 0.9em; opacity: 0.7; margin-bottom: 20px; height: 40px; line-height: 1.4; }
+        .card-title { font-size: 1.4em; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .card-desc { font-size: 0.95em; opacity: 0.6; margin-bottom: 20px; height: 45px; line-height: 1.4; }
         
         .status-tag { 
-            font-size: 0.75em; font-weight: bold; text-transform: uppercase; 
-            letter-spacing: 1px; margin-top: 10px; margin-bottom: 15px;
+            font-size: 0.8em; font-weight: bold; text-transform: uppercase; 
+            letter-spacing: 1px; margin-top: auto; margin-bottom: 15px;
         }
 
         .btn-enter { 
-            padding: 12px 45px; border-radius: 30px; border: none; 
+            padding: 12px 0; width: 80%; border-radius: 30px; border: none; 
             background: #2b3a67; color: white; font-weight: bold; 
             text-transform: uppercase; cursor: pointer; transition: 0.2s;
-            margin-top: 10px;
         }
         .btn-enter:hover { background: #3c6e71; }
 
         .bottom-spacer { flex-grow: 1; pointer-events: none; }
-        .disabled { opacity: 0.5; filter: grayscale(1); cursor: not-allowed; }
+        .disabled { opacity: 0.4; filter: grayscale(1); cursor: not-allowed; }
         
-        /* Fixed Secret Button Access */
         .admin-secret-btn { 
             position: fixed; bottom: 15px; left: 15px; width: 14px; height: 14px; 
             background: #dc3545; border: none; border-radius: 50%; cursor: pointer; 
@@ -128,30 +124,28 @@
 
     <div class="bottom-spacer"></div>
 
-    <button class="admin-secret-btn" title="Admin Access" onclick="window.location.href='backend.html'"></button>
+    <button class="admin-secret-btn" onclick="window.location.href='backend.html'"></button>
 
     <script>
         const scrollContainer = document.getElementById('scroll-container');
 
-        // REFINED SYNCED SCROLLING
+        // REVERTED TO STABLE SYNCED SCROLL
         scrollContainer.addEventListener('wheel', (e) => {
             if (Math.abs(e.deltaY) > 0) {
                 const isMouse = Math.abs(e.deltaY) >= 100;
                 
-                // Mouse: Solid chunk for responsiveness
-                // Touchpad: Linear movement to eliminate "jitter/jumping"
-                const moveAmount = isMouse ? 220 : Math.abs(e.deltaY) * 2.5; 
+                // Mouse: Large clean jumps
+                // Touchpad: Scaled for sensitivity (1.4x boost)
+                const scrollSpeed = isMouse ? 210 : Math.abs(e.deltaY) * 11;
                 const direction = e.deltaY > 0 ? 1 : -1;
 
-                // Manual Scroll calculation
-                scrollContainer.scrollLeft -= (direction * moveAmount);
-                
+                scrollContainer.scrollLeft -= (direction * scrollSpeed);
                 e.preventDefault(); 
             }
         }, { passive: false });
 
         function renderHub() {
-            const defaultDepts = [
+            const depts = [
                 { id: 'police', name: 'Law Enforcement', icon: '🚓', url: 'police.html', desc: 'MDT Access - MET Police Only' },
                 { id: 'ems', name: 'Medical Service', icon: '🚑', url: 'fire.html', desc: 'Patient Care & Dispatch Logs' },
                 { id: 'dot', name: 'DOT', icon: '🚧', url: 'dot.html', desc: 'Highways Agency & Transport MDT' },
@@ -161,7 +155,7 @@
             const mainDiv = document.getElementById('main-container');
             mainDiv.innerHTML = ""; 
 
-            defaultDepts.forEach(dept => {
+            depts.forEach(dept => {
                 const isLocked = localStorage.getItem(dept.id + "_locked") === "true";
                 const card = document.createElement('div');
                 card.className = `login-card ${isLocked ? 'disabled' : ''}`;
