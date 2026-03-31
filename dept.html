@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LRP | Department Management Portal</title>
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 250px;
+            background-color: #1a1a1a;
+            border-right: 1px solid #333;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar h3 {
+            font-size: 0.8rem;
+            margin-top: 10px;
+            letter-spacing: 1px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .nav-tabs {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 30px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: #888;
+            border: none;
+            padding: 12px 15px;
+            text-align: left;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+        .tab-btn.active { background: #2b3a67; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+
+        /* Main Content */
+        .main-panel { 
+            flex-grow: 1; 
+            padding: 40px; 
+            overflow-y: auto; 
+            background-color: #0f0f0f;
+        }
+        
+        .tab-content { display: none; }
+        .tab-content.active-tab { display: block; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { color: #ffffff; font-size: 1.6rem; margin: 0 0 5px 0; }
+        h2 { color: #666; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
+
+        /* MANAGEMENT STYLES */
+        .add-form {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            align-items: end;
+            border: 1px solid #333;
+        }
+
+        .input-group { display: flex; flex-direction: column; gap: 5px; }
+        .input-group label { font-size: 0.7rem; color: #3c6e71; font-weight: bold; text-transform: uppercase; }
+        
+        input {
+            background: #0f0f0f;
+            border: 1px solid #333;
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+        }
+
+        table { width: 100%; border-collapse: collapse; background: #1a1a1a; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+        th { background: rgba(255,255,255,0.05); text-align: left; padding: 15px; font-size: 0.75rem; color: #888; text-transform: uppercase; }
+        td { padding: 12px 15px; border-bottom: 1px solid #333; }
+
+        .status-btn { 
+            padding: 6px 12px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; font-size: 0.75rem; width: 110px;
+        }
+        .online { background: #2ecc71; color: #000; }
+        .maint { background: #f1c40f; color: #000; }
+
+        .btn-delete { background: #c0392b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
+        .btn-primary { background: #2b3a67; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.75rem; }
+
+        .placeholder-box { background: #151515; border: 1px dashed #333; padding: 50px; border-radius: 10px; text-align: center; color: #555; margin-top: 20px; }
+        .btn-exit { background: #c0392b; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: auto; text-transform: uppercase; font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div style="text-align: center;">
+            <img src="LRPC_favicon_test.jpeg" alt="Logo" style="width: 65px; border-radius: 50%; border: 2px solid #3c6e71;">
+            <h3>DEPT MANAGER</h3>
+        </div>
+        
+        <nav class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('controls', this)">⚙️ Dept Controls</button>
+            <button class="tab-btn" onclick="switchTab('roster', this)">👥 Unit Roster</button>
+            <button class="tab-btn" onclick="switchTab('announcements', this)">📢 Notices</button>
+            <button class="tab-btn" onclick="switchTab('logs', this)">📜 Dept Logs</button>
+        </nav>
+
+        <button class="btn-exit" onclick="window.location.href='option.html'">Return to Selection</button>
+    </div>
+
+    <div class="main-panel">
+        
+        <div id="controls" class="tab-content active-tab">
+            <h1>Department Controls</h1>
+            <h2>Active Terminal Management</h2>
+
+            <div class="add-form">
+                <div class="input-group">
+                    <label>ID (Key)</label>
+                    <input type="text" id="new-id" placeholder="e.g. police">
+                </div>
+                <div class="input-group">
+                    <label>Title</label>
+                    <input type="text" id="new-name" placeholder="Law Enforcement">
+                </div>
+                <div class="input-group">
+                    <label>Icon</label>
+                    <input type="text" id="new-icon" placeholder="🚓">
+                </div>
+                <div class="input-group">
+                    <label>URL</label>
+                    <input type="text" id="new-url" placeholder="police.html">
+                </div>
+                <div class="input-group">
+                    <label>Brief Desc</label>
+                    <input type="text" id="new-desc" placeholder="MDT Access...">
+                </div>
+                <button class="btn-primary" onclick="addDept()">+ ADD DEPT</button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Icon</th>
+                        <th>Department Name</th>
+                        <th>Terminal Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="dept-list">
+                    </tbody>
+            </table>
+        </div>
+
+        <div id="roster" class="tab-content">
+            <h1>Unit Roster</h1>
+            <h2>Personnel Directory</h2>
+            <div class="placeholder-box">
+                <p>Loading Active Personnel...</p>
+            </div>
+        </div>
+
+        <div id="announcements" class="tab-content">
+            <h1>Announcements</h1>
+            <h2>Department-Wide Notices</h2>
+            <div class="placeholder-box">
+                <p>No active announcements.</p>
+            </div>
+        </div>
+
+        <div id="logs" class="tab-content">
+            <h1>Department Logs</h1>
+            <h2>Terminal Activity History</h2>
+            <div id="log-output" style="background: #111; padding: 20px; border-radius: 8px; font-family: monospace; color: #4ade80; font-size: 0.85rem; border: 1px solid #222; line-height: 1.6;">
+                > [INFO] Dept Portal initialized.<br>
+                > [AUTH] Admin session established.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // MASTER DEPT LIST LOGIC (Synced with option.html)
+        const defaultDepts = [
+            { id: 'police', name: 'Law Enforcement', icon: '🚓', url: 'police.html', desc: 'MDT Access - MET Police Only' },
+            { id: 'ems', name: 'Medical Service', icon: '🚑', url: 'fire.html', desc: 'Patient Care & Dispatch Logs' },
+            { id: 'dot', name: 'DOT', icon: '🚧', url: 'dot.html', desc: 'Highways Agency & Transport MDT' },
+            { id: 'civ', name: 'Civilian Portal', icon: '👤', url: 'civ.html', desc: 'Character & Vehicle Registration' }
+        ];
+
+        function getDepts() {
+            const saved = localStorage.getItem('master_dept_list');
+            return saved ? JSON.parse(saved) : defaultDepts;
+        }
+
+        function saveDepts(list) {
+            localStorage.setItem('master_dept_list', JSON.stringify(list));
+            renderAdmin();
+        }
+
+        function renderAdmin() {
+            const list = getDepts();
+            const tbody = document.getElementById('dept-list');
+            tbody.innerHTML = '';
+
+            list.forEach((dept, index) => {
+                const isLocked = localStorage.getItem(dept.id + "_locked") === "true";
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-size: 1.5rem;">${dept.icon}</td>
+                    <td><b>${dept.name}</b><br><small style="color:#666">${dept.url}</small></td>
+                    <td>
+                        <button class="status-btn ${isLocked ? 'maint' : 'online'}" onclick="toggleMaint('${dept.id}')">
+                            ${isLocked ? 'MAINTENANCE' : 'ONLINE'}
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn-delete" onclick="deleteDept(${index})">Remove</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function addDept() {
+            const id = document.getElementById('new-id').value.trim();
+            const name = document.getElementById('new-name').value.trim();
+            const icon = document.getElementById('new-icon').value.trim();
+            const url = document.getElementById('new-url').value.trim();
+            const desc = document.getElementById('new-desc').value.trim();
+
+            if(!id || !name) return alert("Must provide ID and Title");
+
+            const list = getDepts();
+            list.push({id, name, icon, url, desc});
+            saveDepts(list);
+
+            document.querySelectorAll('.add-form input').forEach(i => i.value = '');
+        }
+
+        function deleteDept(index) {
+            if(!confirm("Remove this department from the system?")) return;
+            const list = getDepts();
+            list.splice(index, 1);
+            saveDepts(list);
+        }
+
+        function toggleMaint(id) {
+            const current = localStorage.getItem(id + "_locked") === "true";
+            localStorage.setItem(id + "_locked", !current);
+            renderAdmin();
+        }
+
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-tab'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active-tab');
+            element.classList.add('active');
+        }
+
+        window.onload = renderAdmin;
+    </script>
+</body>
+</html>
