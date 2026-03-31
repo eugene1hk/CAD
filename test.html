@@ -3,263 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LRPC | Terminal Management</title>
+    <title>LRP | Master Backend Control</title>
     <style>
-        :root {
-            --primary: #3c6e71;
-            --bg: #0b0b0b;
-            --card: rgba(255, 255, 255, 0.05);
-            --accent: #2b3a67;
-        }
-
         body {
-            background-color: var(--bg);
-            color: white;
-            font-family: 'Segoe UI', sans-serif;
+            background-color: #0f0f0f;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
             margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 250px;
+            background-color: #1a1a1a;
+            border-right: 1px solid #333;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
         }
 
-        .container { max-width: 1000px; margin: auto; }
-        
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+        .sidebar h3 {
+            font-size: 0.8rem;
+            margin-top: 10px;
+            letter-spacing: 1px;
+            text-align: center;
+            color: #fff;
         }
 
-        /* TAB SYSTEM */
-        .tab-container {
+        .nav-tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 30px;
         }
 
         .tab-btn {
-            background: var(--card);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-            padding: 10px 20px;
+            background: transparent;
+            color: #888;
+            border: none;
+            padding: 12px 15px;
+            text-align: left;
+            border-radius: 6px;
             cursor: pointer;
-            border-radius: 5px;
-            transition: 0.3s;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .tab-btn.active {
-            background: var(--primary);
-            border-color: var(--primary);
+        .tab-btn:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+        .tab-btn.active { background: #2b3a67; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+
+        /* Main Content */
+        .main-panel { 
+            flex-grow: 1; 
+            padding: 40px; 
+            overflow-y: auto; 
+            background-color: #0f0f0f;
         }
+        
+        .tab-content { display: none; }
+        .tab-content.active-tab { display: block; animation: fadeIn 0.3s ease; }
 
-        .tab-content { display: none; animation: fadeIn 0.3s ease; }
-        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        h1 { color: #ffffff; font-size: 1.6rem; margin: 0 0 5px 0; }
+        h2 { color: #666; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
 
-        /* ADD SECTION */
+        /* DYNAMIC MANAGEMENT STYLES */
         .add-form {
-            background: var(--card);
+            background: #1a1a1a;
             padding: 20px;
-            border-radius: 15px;
+            border-radius: 10px;
             margin-bottom: 30px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 15px;
             align-items: end;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid #333;
         }
 
         .input-group { display: flex; flex-direction: column; gap: 5px; }
-        .input-group label { font-size: 0.75em; color: var(--primary); font-weight: bold; text-transform: uppercase; }
+        .input-group label { font-size: 0.7rem; color: #3c6e71; font-weight: bold; text-transform: uppercase; }
         
         input {
-            background: #1a1a1a;
+            background: #0f0f0f;
             border: 1px solid #333;
             color: white;
-            padding: 10px;
+            padding: 8px;
             border-radius: 5px;
+            font-size: 0.85rem;
         }
 
-        /* BUTTONS */
-        .btn {
-            padding: 10px 20px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
+        table { width: 100%; border-collapse: collapse; background: #1a1a1a; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+        th { background: rgba(255,255,255,0.05); text-align: left; padding: 15px; font-size: 0.75rem; color: #888; text-transform: uppercase; }
+        td { padding: 12px 15px; border-bottom: 1px solid #333; }
+
+        .status-btn { 
+            padding: 6px 12px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; font-size: 0.75rem; width: 110px;
         }
+        .online { background: #2ecc71; color: #000; }
+        .maint { background: #f1c40f; color: #000; }
 
-        .btn-add { background: var(--primary); color: white; }
-        .btn-delete { background: #dc3545; color: white; padding: 5px 12px; }
-        .toggle-btn { width: 140px; }
-        .status-online { background: #4ade80; color: #000; }
-        .status-maint { background: #ffbc00; color: #000; }
+        .btn-delete { background: #c0392b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
+        .btn-primary { background: #2b3a67; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.75rem; }
 
-        /* TABLE */
-        table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 10px; overflow: hidden; }
-        th { background: rgba(255,255,255,0.1); text-align: left; padding: 15px; font-size: 0.8em; text-transform: uppercase; }
-        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
-        .nav-link { color: var(--primary); text-decoration: none; font-weight: bold; font-size: 0.9em; }
+        /* General Utilities */
+        .placeholder-box { background: #151515; border: 1px dashed #333; padding: 50px; border-radius: 10px; text-align: center; color: #555; margin-top: 20px; }
+        .btn-exit { background: #c0392b; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: auto; text-transform: uppercase; font-size: 0.75rem; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>STORM CAD | Backend</h1>
-        <a href="option.html" class="nav-link">← TERMINAL EXIT</a>
-    </div>
-
-    <div class="tab-container">
-        <button class="tab-btn" onclick="openTab('status-tab')">Live Status</button>
-        <button class="tab-btn active" onclick="openTab('system-controls')">System Controls</button>
-    </div>
-
-    <div id="status-tab" class="tab-content">
-        <h3>Overview</h3>
-        <p>Manage which departments are currently visible and active on the main terminal.</p>
-        <div id="status-overview"></div>
-    </div>
-
-    <div id="system-controls" class="tab-content active">
-        <h3>Department Management</h3>
+    <div class="sidebar">
+        <div style="text-align: center;">
+            <img src="LRPC_favicon_test.jpeg" alt="Logo" style="width: 65px; border-radius: 50%; border: 2px solid #3c6e71;">
+            <h3>STORM BACKEND</h3>
+        </div>
         
-        <div class="add-form">
-            <div class="input-group">
-                <label>ID (Shortname)</label>
-                <input type="text" id="new-id" placeholder="e.g. fire">
+        <nav class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('controls', this)">⚙️ System Controls</button>
+            <button class="tab-btn" onclick="switchTab('database', this)">📂 Master Database</button>
+            <button class="tab-btn" onclick="switchTab('map', this)">🗺️ Map Editor</button>
+            <button class="tab-btn" onclick="switchTab('logs', this)">📜 System Logs</button>
+            <button class="tab-btn" onclick="switchTab('settings', this)">🛡️ Settings</button>
+        </nav>
+
+        <button class="btn-exit" onclick="window.location.href='option.html'">Exit Terminal</button>
+    </div>
+
+    <div class="main-panel">
+        
+        <div id="controls" class="tab-content active-tab">
+            <h1>System Controls</h1>
+            <h2>Department Management</h2>
+
+            <div class="add-form">
+                <div class="input-group">
+                    <label>ID (Key)</label>
+                    <input type="text" id="new-id" placeholder="police">
+                </div>
+                <div class="input-group">
+                    <label>Title</label>
+                    <input type="text" id="new-name" placeholder="Law Enforcement">
+                </div>
+                <div class="input-group">
+                    <label>Icon</label>
+                    <input type="text" id="new-icon" placeholder="🚓">
+                </div>
+                <div class="input-group">
+                    <label>Page URL</label>
+                    <input type="text" id="new-url" placeholder="police.html">
+                </div>
+                <div class="input-group">
+                    <label>Description</label>
+                    <input type="text" id="new-desc" placeholder="MDT Access...">
+                </div>
+                <button class="btn-primary" onclick="addDept()">+ ADD</button>
             </div>
-            <div class="input-group">
-                <label>Name</label>
-                <input type="text" id="new-name" placeholder="e.g. Fire Dept">
-            </div>
-            <div class="input-group">
-                <label>Icon</label>
-                <input type="text" id="new-icon" placeholder="🚒">
-            </div>
-            <div class="input-group">
-                <label>URL</label>
-                <input type="text" id="new-url" placeholder="fire.html">
-            </div>
-            <div class="input-group">
-                <label>Description</label>
-                <input type="text" id="new-desc" placeholder="Dispatch Logs...">
-            </div>
-            <button class="btn btn-add" onclick="addDepartment()">+ ADD NEW</button>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Icon</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="dept-list">
+                    </tbody>
+            </table>
         </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Icon</th>
-                    <th>Department</th>
-                    <th>System State</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="dept-list"></tbody>
-        </table>
+        <div id="database" class="tab-content">
+            <h1>Master Database</h1>
+            <h2>Global Citizen & User Management</h2>
+            <div class="placeholder-box">
+                <p>User Directory & Credential Manager</p>
+                <button onclick="window.location.href='database.html'" class="btn-primary" style="margin-top:15px">Initialize Master Registry</button>
+            </div>
+        </div>
+
+        <div id="map" class="tab-content">
+            <h1>Map Editor</h1>
+            <h2>Live Dispatch Coordinate Management</h2>
+            <div class="placeholder-box">
+                <p>Map Render Engine Standby</p>
+            </div>
+        </div>
+
+        <div id="logs" class="tab-content">
+            <h1>System Logs</h1>
+            <h2>Recent Administrative Actions</h2>
+            <div id="log-output" style="background: #111; padding: 20px; border-radius: 8px; font-family: monospace; color: #4ade80; font-size: 0.85rem; border: 1px solid #222; line-height: 1.6;">
+                > [INFO] System initialized successfully.<br>
+                > [AUTH] Administrative Session Started.
+            </div>
+        </div>
+
+        <div id="settings" class="tab-content">
+            <h1>Settings</h1>
+            <h2>Core Security Configurations</h2>
+            <div class="placeholder-box"><p>Security modules loading...</p></div>
+        </div>
+
     </div>
-</div>
 
-<script>
-    // Initial data if nothing exists in storage
-    const defaultDepts = [
-        { id: 'police', name: 'Law Enforcement', icon: '🚓', url: 'police.html', desc: 'MDT Access - MET Police Only' },
-        { id: 'ems', name: 'Medical Service', icon: '🚑', url: 'fire.html', desc: 'Patient Care & Dispatch Logs' },
-        { id: 'dot', name: 'DOT', icon: '🚧', url: 'dot.html', desc: 'Highways Agency & Transport MDT' },
-        { id: 'civ', name: 'Civilian Portal', icon: '👤', url: 'civ.html', desc: 'Character & Vehicle Registration' }
-    ];
+    <script>
+        // MASTER DEPT LIST LOGIC
+        const defaultDepts = [
+            { id: 'police', name: 'Law Enforcement', icon: '🚓', url: 'police.html', desc: 'MDT Access - MET Police Only' },
+            { id: 'ems', name: 'Medical Service', icon: '🚑', url: 'fire.html', desc: 'Patient Care & Dispatch Logs' },
+            { id: 'dot', name: 'DOT', icon: '🚧', url: 'dot.html', desc: 'Highways Agency & Transport MDT' },
+            { id: 'civ', name: 'Civilian Portal', icon: '👤', url: 'civ.html', desc: 'Character & Vehicle Registration' }
+        ];
 
-    // TAB LOGIC
-    function openTab(tabId) {
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        
-        document.getElementById(tabId).classList.add('active');
-        event.currentTarget.classList.add('active');
-    }
+        function getDepts() {
+            const saved = localStorage.getItem('master_dept_list');
+            return saved ? JSON.parse(saved) : defaultDepts;
+        }
 
-    // CORE DATA FUNCTIONS
-    function getDepts() {
-        const saved = localStorage.getItem('master_dept_list');
-        return saved ? JSON.parse(saved) : defaultDepts;
-    }
+        function saveDepts(list) {
+            localStorage.setItem('master_dept_list', JSON.stringify(list));
+            renderAdmin();
+        }
 
-    function saveDepts(list) {
-        localStorage.setItem('master_dept_list', JSON.stringify(list));
-        renderAdmin();
-    }
+        function renderAdmin() {
+            const list = getDepts();
+            const tbody = document.getElementById('dept-list');
+            tbody.innerHTML = '';
 
-    // ADD FUNCTION
-    function addDepartment() {
-        const id = document.getElementById('new-id').value.trim();
-        const name = document.getElementById('new-name').value.trim();
-        const icon = document.getElementById('new-icon').value.trim();
-        const url = document.getElementById('new-url').value.trim();
-        const desc = document.getElementById('new-desc').value.trim();
+            list.forEach((dept, index) => {
+                const isLocked = localStorage.getItem(dept.id + "_locked") === "true";
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-size: 1.5rem;">${dept.icon}</td>
+                    <td><b>${dept.name}</b><br><small style="color:#666">${dept.url}</small></td>
+                    <td>
+                        <button class="status-btn ${isLocked ? 'maint' : 'online'}" onclick="toggleMaint('${dept.id}')">
+                            ${isLocked ? 'MAINTENANCE' : 'ONLINE'}
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn-delete" onclick="deleteDept(${index})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
 
-        if(!id || !name) return alert("Error: ID and Name are required!");
+        function addDept() {
+            const id = document.getElementById('new-id').value.trim();
+            const name = document.getElementById('new-name').value.trim();
+            const icon = document.getElementById('new-icon').value.trim();
+            const url = document.getElementById('new-url').value.trim();
+            const desc = document.getElementById('new-desc').value.trim();
 
-        const list = getDepts();
-        list.push({ id, name, icon, url, desc });
-        saveDepts(list);
+            if(!id || !name) return alert("Must provide ID and Title");
 
-        // Clear Form
-        document.querySelectorAll('.add-form input').forEach(input => input.value = '');
-    }
+            const list = getDepts();
+            list.push({id, name, icon, url, desc});
+            saveDepts(list);
 
-    // DELETE FUNCTION
-    function deleteDept(index) {
-        if(!confirm("WARNING: This will permanently remove this department from the terminal. Continue?")) return;
-        const list = getDepts();
-        list.splice(index, 1);
-        saveDepts(list);
-    }
+            // Clear inputs
+            document.querySelectorAll('.add-form input').forEach(i => i.value = '');
+        }
 
-    // TOGGLE MAINTENANCE
-    function toggleStatus(id) {
-        const current = localStorage.getItem(id + "_locked") === "true";
-        localStorage.setItem(id + "_locked", !current);
-        renderAdmin();
-    }
+        function deleteDept(index) {
+            if(!confirm("Remove this department?")) return;
+            const list = getDepts();
+            list.splice(index, 1);
+            saveDepts(list);
+        }
 
-    // RENDER THE INTERFACE
-    function renderAdmin() {
-        const list = getDepts();
-        const tbody = document.getElementById('dept-list');
-        tbody.innerHTML = '';
+        function toggleMaint(id) {
+            const current = localStorage.getItem(id + "_locked") === "true";
+            localStorage.setItem(id + "_locked", !current);
+            renderAdmin();
+        }
 
-        list.forEach((dept, index) => {
-            const isLocked = localStorage.getItem(dept.id + "_locked") === "true";
-            
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td style="font-size: 1.5em;">${dept.icon}</td>
-                <td>
-                    <strong>${dept.name}</strong><br>
-                    <small style="opacity:0.5">${dept.url}</small>
-                </td>
-                <td>
-                    <button class="btn toggle-btn ${isLocked ? 'status-maint' : 'status-online'}" 
-                            onclick="toggleStatus('${dept.id}')">
-                        ${isLocked ? 'MAINTENANCE' : 'ONLINE'}
-                    </button>
-                </td>
-                <td>
-                    <button class="btn btn-delete" onclick="deleteDept(${index})">DELETE</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
+        // TAB NAVIGATION
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-tab'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active-tab');
+            element.classList.add('active');
+        }
 
-    window.onload = renderAdmin;
-</script>
-
+        window.onload = renderAdmin;
+    </script>
 </body>
 </html>
