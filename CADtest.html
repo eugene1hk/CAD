@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LRPC STORM CAD - MDT</title>
+    <title>LRPC STORM CAD</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         :root {
@@ -12,69 +12,112 @@
             --accent-green: #48bb78;
             --accent-red: #f56565;
             --accent-orange: #ed8936;
+            --border-color: #232323;
             --text-main: #cbd5e0;
             --text-dim: #718096;
             --sidebar-width: 75px;
-            --header-height: 70px;
+            --header-height: 75px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         body { background-color: var(--bg-dark); color: var(--text-main); height: 100vh; overflow: hidden; display: grid; grid-template-areas: "header header" "sidebar main"; grid-template-columns: var(--sidebar-width) 1fr; grid-template-rows: var(--header-height) 1fr; }
 
-        /* --- HEADER & SIDEBAR --- */
-        header { grid-area: header; background-color: #111; display: flex; align-items: center; padding: 0 15px; border-bottom: 1px solid #232323; justify-content: space-between; }
+        /* --- HEADER (Replicated from Image) --- */
+        header { 
+            grid-area: header; 
+            background-color: #111; 
+            display: flex; 
+            align-items: center; 
+            padding: 0 15px; 
+            border-bottom: 1px solid var(--border-color); 
+            justify-content: space-between; 
+        }
         .header-left { display: flex; align-items: center; gap: 12px; }
-        .logo-box { width: 42px; height: 42px; background: #2d3748; border-radius: 4px; overflow: hidden; }
-        .mdt-info { font-size: 0.75rem; color: var(--text-dim); }
-        .header-nav { display: flex; gap: 5px; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; width: 60px; font-size: 0.65rem; color: var(--text-dim); cursor: pointer; transition: 0.2s; }
-        .nav-item:hover, .nav-item.active { color: #fff; }
-        .timestamp { font-family: monospace; color: #a0aec0; font-size: 0.85rem; }
+        .logo-box { width: 45px; height: 45px; background: #2d3748; border-radius: 4px; overflow: hidden; }
+        .mdt-info { font-size: 0.7rem; color: var(--text-dim); line-height: 1.3; }
+        .mdt-id { color: #4a5568; font-family: monospace; font-weight: bold; }
 
-        nav.sidebar { grid-area: sidebar; background-color: #121212; display: flex; flex-direction: column; border-right: 1px solid #232323; }
-        .side-btn { height: 75px; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-dim); text-decoration: none; font-size: 0.7rem; cursor: pointer; border-bottom: 1px solid #1a1a1a; transition: 0.2s; position: relative; }
+        .header-nav { display: flex; gap: 2px; }
+        .nav-item { 
+            display: flex; flex-direction: column; align-items: center; 
+            width: 62px; font-size: 0.6rem; color: var(--text-dim); 
+            cursor: pointer; transition: 0.2s; text-transform: uppercase;
+        }
+        .nav-item i { font-size: 1.2rem; margin-bottom: 3px; }
+        .nav-item:hover, .nav-item.active { color: #fff; }
+        .status-dispatch { color: var(--accent-green) !important; }
+
+        .timestamp { font-family: monospace; color: #a0aec0; font-size: 0.85rem; letter-spacing: 0.5px; }
+
+        /* --- SIDEBAR (Equalized) --- */
+        nav.sidebar { 
+            grid-area: sidebar; 
+            background-color: #121212; 
+            display: flex; 
+            flex-direction: column; 
+            border-right: 1px solid var(--border-color); 
+        }
+        .side-btn { 
+            height: 75px; width: 100%; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            color: var(--text-dim); text-decoration: none; font-size: 0.7rem; 
+            cursor: pointer; border-bottom: 1px solid #1a1a1a; transition: 0.2s; position: relative; 
+        }
         .side-btn.active { color: var(--accent-orange); background: rgba(237, 137, 54, 0.05); }
         .side-btn.active::before { content: ""; position: absolute; left: 0; width: 3px; height: 100%; background: var(--accent-orange); }
 
-        /* --- CONTENT SWITCHING LOGIC --- */
+        /* --- MAIN VIEW LOGIC --- */
         main { grid-area: main; position: relative; background: var(--bg-dark); }
-        .view { display: none; height: 100%; width: 100%; padding: 20px; animation: fadeIn 0.3s ease; }
+        .view { display: none; height: 100%; width: 100%; animation: fadeIn 0.3s ease; }
         .view.active-view { display: grid; }
-
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- DASHBOARD VIEW (Original) --- */
-        #view-shift { grid-template-columns: 1fr 1.3fr; gap: 1px; background: #232323; padding: 0; }
+        /* --- SHIFT VIEW (Split Layout) --- */
+        #view-shift { grid-template-columns: 1fr 1.3fr; gap: 1px; background: var(--border-color); }
         .panel { background: var(--bg-dark); padding: 25px; }
         .map-container { background: #0e0e0e; display: flex; flex-direction: column; }
+
+        /* --- UTILITY CLASSES --- */
+        .content-card { background: #161616; margin: 20px; border-radius: 6px; padding: 20px; border: 1px solid #2d3748; }
+        .section-title { font-size: 1.1rem; font-weight: 500; margin-bottom: 20px; color: #fff; }
         
-        /* --- SEARCH/LAWS TABLE STYLES --- */
-        .content-card { background: #161616; border-radius: 8px; padding: 20px; border: 1px solid #2d3748; }
-        input { background: #0b0b0b; border: 1px solid #2d3748; color: white; padding: 10px; border-radius: 4px; width: 100%; margin-bottom: 15px; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        #startShiftBtn { 
+            background: var(--accent-green); color: white; border: none; 
+            padding: 10px 20px; border-radius: 4px; font-weight: 600; cursor: pointer; 
+        }
+        #startShiftBtn.on-duty { background: var(--accent-red); }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 10px; }
         th { text-align: left; color: var(--text-dim); padding: 10px; border-bottom: 1px solid #2d3748; }
         td { padding: 10px; border-bottom: 1px solid #1a1a1a; }
-
-        .btn-action { background: var(--accent-green); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
-        .btn-red { background: var(--accent-red); }
-
+        input { background: #0b0b0b; border: 1px solid #2d3748; color: white; padding: 8px; width: 100%; border-radius: 4px; outline: none; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="header-left">
-            <div class="logo-box"><img src="https://via.placeholder.com/42" alt="Logo"></div>
-            <div class="mdt-info">MDT: <span style="font-family: monospace;">STORM-V3</span><br>London Roleplay Community</div>
+            <div class="logo-box">
+                <img src="https://via.placeholder.com/45" alt="Logo">
+            </div>
+            <div class="mdt-info">
+                MDT: <span class="mdt-id">b4170f9a-ef31-4a00-99b8-b2690cd5f864</span><br>
+                (London Roleplay Community Database) [Advanced]
+            </div>
         </div>
 
         <div class="header-nav">
+            <div class="nav-item" onclick="showView('calls')"><i class='bx bx-radio-circle-marked'></i>Calls</div>
             <div class="nav-item" onclick="showView('reports')"><i class='bx bx-file'></i>Reports</div>
-            <div class="nav-item" onclick="showView('search')"><i class='bx bxs-user-detail'></i>Search</div>
-            <div class="nav-item status-indicator"><i class='bx bx-broadcast'></i>Dispatch</div>
+            <div class="nav-item" onclick="showView('tickets')"><i class='bx bx-receipt'></i>Tickets</div>
+            <div class="nav-item" onclick="showView('search')"><i class='bx bxs-car'></i>Vehicles</div>
+            <div class="nav-item" onclick="showView('search')"><i class='bx bxs-user-detail'></i>Person</div>
+            <div class="nav-item" onclick="showView('info')"><i class='bx bx-info-circle'></i>MDT Info</div>
+            <div class="nav-item"><i class='bx bxs-shield-alt-2' style="color: #ecc94b;"></i>Supervisor</div>
+            <div class="nav-item status-dispatch"><i class='bx bx-broadcast'></i>Dispatch</div>
         </div>
 
-        <div class="timestamp" id="clock">00-00-0000 00:00:00</div>
+        <div class="timestamp" id="clock">03-31-2026 13:17:02</div>
     </header>
 
     <nav class="sidebar">
@@ -84,8 +127,9 @@
         <div class="side-btn" id="tab-laws" onclick="showView('laws')">
             <i class='bx bx-balance'></i>Laws
         </div>
+        
         <div style="margin-top: auto;">
-            <a href="https://discord.gg/yourlink" target="_blank" class="side-btn" style="border: none;">
+            <a href="#" class="side-btn" style="border: none;">
                 <i class='bx bxl-discord-alt'></i>Server
             </a>
         </div>
@@ -94,33 +138,29 @@
     <main>
         <section id="view-shift" class="view active-view">
             <div class="panel">
-                <h2 style="margin-bottom:15px; font-weight: 500;">Shift Management</h2>
-                <button id="startShiftBtn" class="btn-action">Start Shift</button>
-                <div id="status-text" style="margin-top: 15px; color: var(--text-dim); font-size: 0.8rem;">Status: Off-Duty</div>
+                <h2 class="section-title">Shift Management</h2>
+                <button id="startShiftBtn">Start Shift</button>
+                <p id="status-display" style="margin-top: 15px; font-size: 0.8rem; color: var(--text-dim);">Current Status: 10-42 (Off Duty)</p>
             </div>
             <div class="map-container">
-                <div style="padding: 10px; font-size: 0.7rem; background: #161616;">ERLC LIVE MAP</div>
-                <div style="flex:1; display:flex; align-items:center; justify-content:center;">
-                    <img src="https://i.imgur.com/K1n8zI8.png" style="max-width: 90%; opacity: 0.7;">
+                <div style="padding: 8px 12px; background: #161616; font-size: 0.7rem; color: var(--text-dim); border-bottom: 1px solid var(--border-color);">ERLC MAP VIEW</div>
+                <div style="flex:1; display:flex; align-items:center; justify-content:center; padding: 20px;">
+                    <img src="https://i.imgur.com/K1n8zI8.png" style="max-width: 95%; opacity: 0.8; filter: drop-shadow(0 0 10px #000);">
                 </div>
             </div>
         </section>
 
         <section id="view-laws" class="view">
             <div class="content-card">
-                <h2 style="margin-bottom:15px;">Penal Code</h2>
+                <h2 class="section-title">Legal Penal Code</h2>
                 <table>
                     <thead>
-                        <tr>
-                            <th>Charge</th>
-                            <th>Time (Sec)</th>
-                            <th>Fine ($)</th>
-                        </tr>
+                        <tr><th>Infraction</th><th>Fine</th><th>Sentence</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td>Reckless Driving</td><td>120</td><td>500</td></tr>
-                        <tr><td>Felony Evading</td><td>300</td><td>1500</td></tr>
-                        <tr><td>Armed Robbery</td><td>600</td><td>5000</td></tr>
+                        <tr><td>Speeding (15+)</td><td>$250</td><td>Citation</td></tr>
+                        <tr><td>Driving Under Influence</td><td>$1,500</td><td>300s</td></tr>
+                        <tr><td>Evading Arrest</td><td>$2,500</td><td>450s</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -128,59 +168,86 @@
 
         <section id="view-search" class="view">
             <div class="content-card">
-                <h2>Database Search</h2>
-                <input type="text" placeholder="Enter Name or Plate...">
-                <div style="text-align: center; color: var(--text-dim); padding: 40px;">
-                    <i class='bx bx-search' style="font-size: 3rem; opacity: 0.2;"></i>
-                    <p>Enter criteria to begin search</p>
+                <h2 class="section-title">Database Search</h2>
+                <input type="text" placeholder="Enter Name, Plate, or ID...">
+                <div style="margin-top: 50px; text-align: center; opacity: 0.3;">
+                    <i class='bx bx-search-alt' style="font-size: 4rem;"></i>
+                    <p>Awaiting Input...</p>
                 </div>
             </div>
         </section>
 
         <section id="view-reports" class="view">
             <div class="content-card">
-                <h2>Recent Incident Reports</h2>
-                <p style="color: var(--text-dim); font-size: 0.8rem;">No recent reports filed.</p>
+                <h2 class="section-title">Incident Reports</h2>
+                <p style="color: var(--text-dim); font-size: 0.8rem;">No active reports found in the database.</p>
+            </div>
+        </section>
+
+        <section id="view-calls" class="view">
+            <div class="content-card">
+                <h2 class="section-title">Active 911 Calls</h2>
+                <div style="padding: 15px; border-left: 4px solid var(--accent-orange); background: #222; margin-bottom: 10px;">
+                    <div style="font-size: 0.8rem; font-weight: bold;">[#9921] 10-31 In Progress</div>
+                    <div style="font-size: 0.7rem; color: #aaa;">Location: Postal 3012 - Gas Station</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-tickets" class="view">
+            <div class="content-card">
+                <h2 class="section-title">Traffic Citations</h2>
+                <p style="color: var(--text-dim); font-size: 0.8rem;">Search a person to issue a new ticket.</p>
+            </div>
+        </section>
+
+        <section id="view-info" class="view">
+            <div class="content-card">
+                <h2 class="section-title">System Information</h2>
+                <p style="font-size: 0.8rem;">STORM CAD Version: 3.0.1 (Stable)</p>
+                <p style="font-size: 0.8rem; color: var(--accent-orange);">Terminal Connected: Secure</p>
             </div>
         </section>
     </main>
 
     <script>
-        // 1. VIEW SWITCHING LOGIC
-        function showView(viewName) {
-            // Hide all views
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view'));
-            // Remove active class from all tabs
-            document.querySelectorAll('.side-btn, .nav-item').forEach(t => t.classList.remove('active'));
+        // 1. CLOCK (Matches 2026 Project Time)
+        function updateClock() {
+            const now = new Date();
+            const date = now.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+            const time = now.toLocaleTimeString('en-GB', { hour12: false });
+            document.getElementById('clock').innerText = `${date} ${time}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
 
-            // Show selected view
-            document.getElementById('view-' + viewName).classList.add('active-view');
-            
-            // Set active tab styling
-            const activeTab = document.getElementById('tab-' + viewName);
-            if(activeTab) activeTab.classList.add('active');
+        // 2. VIEW SWITCHER
+        function showView(viewId) {
+            // Hide all
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view'));
+            document.querySelectorAll('.nav-item, .side-btn').forEach(b => b.classList.remove('active'));
+
+            // Show selected
+            const targetView = document.getElementById('view-' + viewId);
+            if(targetView) targetView.classList.add('active-view');
+
+            // Highlight Sidebar Tab if applicable
+            const targetTab = document.getElementById('tab-' + viewId);
+            if(targetTab) targetTab.classList.add('active');
         }
 
-        // 2. SHIFT TOGGLE
+        // 3. SHIFT BUTTON LOGIC
         const shiftBtn = document.getElementById('startShiftBtn');
-        const statusText = document.getElementById('status-text');
+        const statusDisp = document.getElementById('status-display');
         let onDuty = false;
 
         shiftBtn.addEventListener('click', () => {
             onDuty = !onDuty;
             shiftBtn.innerText = onDuty ? "End Shift" : "Start Shift";
-            shiftBtn.classList.toggle('btn-red');
-            statusText.innerText = onDuty ? "Status: ON-DUTY" : "Status: Off-Duty";
-            statusText.style.color = onDuty ? "#48bb78" : "#718096";
+            shiftBtn.classList.toggle('on-duty');
+            statusDisp.innerText = onDuty ? "Current Status: 10-41 (On Duty)" : "Current Status: 10-42 (Off Duty)";
+            statusDisp.style.color = onDuty ? "var(--accent-green)" : "var(--text-dim)";
         });
-
-        // 3. CLOCK
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleString('en-GB');
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
     </script>
 </body>
 </html>
