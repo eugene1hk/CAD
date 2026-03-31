@@ -6,7 +6,6 @@
     <title>LRP | Master Backend Control</title>
     <style>
         body { background-color: #0f0f0f; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
-        
         .sidebar { width: 250px; background-color: #1a1a1a; border-right: 1px solid #333; padding: 20px; display: flex; flex-direction: column; flex-shrink: 0; box-sizing: border-box; }
         .nav-tabs { display: flex; flex-direction: column; gap: 5px; margin-top: 30px; }
         .tab-btn { background: transparent; color: #888; border: none; padding: 12px 15px; text-align: left; border-radius: 6px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
@@ -26,18 +25,9 @@
         .setting-row { background: #1a1a1a; border: 1px solid #333; padding: 15px 20px; border-radius: 10px; margin-bottom: 10px; display: flex; align-items: center; gap: 20px; }
         
         .btn-action { background: #3c6e71; color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; width: 100%; }
-        .btn-action:hover { background: #2b3a67; transform: translateY(-2px); }
-        .btn-reset { background: transparent; border: 1px solid #c0392b; color: #c0392b; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-top: 40px; transition: 0.2s; }
-        .btn-reset:hover { background: #c0392b; color: white; }
-        .btn-exit { background: #c0392b; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; margin-top: auto; font-weight: bold; font-size: 0.75rem; text-transform: uppercase; }
-
+        .num-input { width: 70px; background: #000; border: 1px solid #444; color: #4ade80; padding: 5px; border-radius: 4px; text-align: center; font-family: monospace; }
         .slider-ctrl { flex: 2; -webkit-appearance: none; height: 4px; background: #333; border-radius: 5px; outline: none; }
         .slider-ctrl::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: #3c6e71; border-radius: 50%; cursor: pointer; border: 2px solid #fff; }
-        .num-input { width: 70px; background: #000; border: 1px solid #444; color: #4ade80; padding: 5px; border-radius: 4px; text-align: center; font-family: monospace; }
-        
-        .dir-container { display: flex; gap: 5px; background: #000; padding: 4px; border-radius: 10px; }
-        .dir-btn { border: none; background: transparent; color: #555; padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
-        .dir-btn.active { background: #3c6e71; color: white; }
 
         .switch { position: relative; width: 40px; height: 20px; flex-shrink: 0; }
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -45,10 +35,14 @@
         .toggle-slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .toggle-slider { background-color: #2ecc71; }
         input:checked + .toggle-slider:before { transform: translateX(20px); }
+        .btn-exit { background: #c0392b; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; margin-top: auto; font-weight: bold; font-size: 0.75rem; text-transform: uppercase; }
+        
+        .dir-container { display: flex; gap: 5px; background: #000; padding: 4px; border-radius: 10px; }
+        .dir-btn { border: none; background: transparent; color: #555; padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
+        .dir-btn.active { background: #3c6e71; color: white; }
     </style>
 </head>
 <body>
-
     <div class="sidebar">
         <div style="text-align: center;">
             <img src="LRPC_favicon_test.jpeg" alt="Logo" style="width: 60px; border-radius: 50%; border: 2px solid #3c6e71;">
@@ -56,92 +50,80 @@
         </div>
         <nav class="nav-tabs">
             <button class="tab-btn active" onclick="switchTab('controls', this)">⚙️ System Controls</button>
+            <button class="tab-btn" onclick="switchTab('admin', this)">🛡️ Admin</button>
             <button class="tab-btn" onclick="switchTab('database', this)">📂 Master Database</button>
+            <button class="tab-btn" onclick="switchTab('version', this)">🏷️ Version</button>
             <button class="tab-btn" onclick="switchTab('map', this)">🗺️ Map Editor</button>
-            <button class="tab-btn" onclick="switchTab('logs', this)">📜 System Logs</button>
         </nav>
         <button class="btn-exit" onclick="window.location.href='option.html'">Exit Terminal</button>
     </div>
 
     <div class="main-panel">
-        
         <div id="controls" class="tab-content active-tab">
             <h1>System Controls</h1>
-            
             <h2>1. Department Access & Management</h2>
             <div class="control-grid" id="dynamic-toggle-container"></div>
-            <div class="setting-row">
-                <div style="flex:1;">
-                    <b>Department Manager</b>
-                    <p style="font-size:0.7rem; color:#666; margin:2px 0;">Add, remove, or edit department metadata and icons.</p>
-                </div>
-                <button class="btn-action" style="width:200px;" onclick="window.location.href='dept.html'">Launch Manager</button>
-            </div>
+            <button class="btn-action" style="margin-bottom:30px;" onclick="window.location.href='dept.html'">Launch Dept Manager</button>
 
-            <h2 style="margin-top:50px;">2. Mechanical Input Customization</h2>
-            
+            <h2>2. Mechanical Input Customization</h2>
             <div class="setting-row">
-                <div style="flex:1;"><b>Touchpad Sensitivity</b><span> (0.01x - 100.00x)</span></div>
-                <input type="range" id="touch_slide" class="slider-ctrl" min="0.01" max="100" step="0.01" oninput="updateSpeed('touch', this.value)">
-                <input type="number" id="touch_num" class="num-input" min="0.01" max="100" onchange="updateSpeed('touch', this.value)">
+                <div style="flex:1;"><b>Touchpad Speed</b></div>
+                <input type="range" id="touch_slide" class="slider-ctrl" min="0.01" max="10" step="0.01" oninput="updateSpeed('touch', this.value)">
+                <input type="number" id="touch_num" class="num-input" min="0.01" max="10" onchange="updateSpeed('touch', this.value)">
             </div>
-
             <div class="setting-row">
-                <div style="flex:1;"><b>Mouse Wheel Sensitivity</b><span> (0.01x - 100.00x)</span></div>
-                <input type="range" id="mouse_slide" class="slider-ctrl" min="0.01" max="100" step="0.01" oninput="updateSpeed('mouse', this.value)">
-                <input type="number" id="mouse_num" class="num-input" min="0.01" max="100" onchange="updateSpeed('mouse', this.value)">
+                <div style="flex:1;"><b>Mouse Speed</b></div>
+                <input type="range" id="mouse_slide" class="slider-ctrl" min="0.01" max="10" step="0.01" oninput="updateSpeed('mouse', this.value)">
+                <input type="number" id="mouse_num" class="num-input" min="0.01" max="10" onchange="updateSpeed('mouse', this.value)">
             </div>
 
             <div class="control-grid">
                 <div class="control-card">
-                    <div><b>Scroll UP Action</b></div>
+                    <div><b>Scroll UP</b></div>
                     <div class="dir-container">
                         <button id="up-left" class="dir-btn" onclick="setLinkage('up', 'left')">LEFT</button>
                         <button id="up-right" class="dir-btn" onclick="setLinkage('up', 'right')">RIGHT</button>
                     </div>
                 </div>
                 <div class="control-card">
-                    <div><b>Scroll DOWN Action</b></div>
+                    <div><b>Scroll DOWN</b></div>
                     <div class="dir-container">
                         <button id="down-left" class="dir-btn" onclick="setLinkage('down', 'left')">LEFT</button>
                         <button id="down-right" class="dir-btn" onclick="setLinkage('down', 'right')">RIGHT</button>
                     </div>
                 </div>
             </div>
+        </div>
 
+        <div id="admin" class="tab-content">
+            <h1>Admin Panel</h1>
             <div class="control-card">
-                <div><b>Kinetic Smooth Rolling</b><p style="font-size:0.7rem; color:#666;">Maintains fluid motion regardless of speed multiplier.</p></div>
-                <label class="switch">
-                    <input type="checkbox" id="scroll_smooth" onchange="localStorage.setItem('hub_smooth', this.checked)">
-                    <span class="toggle-slider"></span>
-                </label>
+                <div><b>Maintenance Mode</b><p>Lock all systems globally.</p></div>
+                <label class="switch"><input type="checkbox" onchange="localStorage.setItem('global_lock', this.checked)"><span class="toggle-slider"></span></label>
             </div>
-
-            <button class="btn-reset" onclick="resetSystem()">⚠️ Reset All Input Settings</button>
         </div>
 
         <div id="database" class="tab-content">
             <h1>Master Database</h1>
-            <div class="control-grid">
-                <div class="control-card">
-                    <div><b>Live Sync</b></div>
-                    <label class="switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            <div class="control-card">
+                <div><b>Live Sync</b></div>
+                <label class="switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <button class="btn-action" style="margin-top:20px;" onclick="window.location.href='database.html'">Open Database Interface</button>
+        </div>
+
+        <div id="version" class="tab-content">
+            <h1>System Version</h1>
+            <div class="control-card">
+                <div>
+                    <b id="version-tag">Version: Loading...</b>
+                    <p id="commit-count">Commits: --</p>
                 </div>
             </div>
-            <button class="btn-action" onclick="window.location.href='database.html'">Open Database Interface</button>
+            <p style="font-size:0.8rem; color:#666;">Fetched live from GitHub main branch.</p>
         </div>
 
-        <div id="map" class="tab-content">
-            <h1>Map Editor</h1>
-            <button class="btn-action">Open Map Canvas</button>
-        </div>
-
-        <div id="logs" class="tab-content">
-            <h1>System Logs</h1>
-            <div style="background:#000; padding:20px; color:#4ade80; border:1px solid #333; height:300px; overflow-y:auto;">
-                > System Online.<br>> Inputs Ready.
-            </div>
-        </div>
+        <div id="map" class="tab-content"><h1>Map Editor</h1><button class="btn-action">Open Editor</button></div>
     </div>
 
     <script>
@@ -175,22 +157,24 @@
             btn.classList.add('active');
         }
 
-        function resetSystem() {
-            if(confirm("Reset settings?")) {
-                localStorage.setItem('hub_touch_speed', 1.0);
-                localStorage.setItem('hub_mouse_speed', 1.0);
-                localStorage.setItem('hub_dir_up', 'right');
-                localStorage.setItem('hub_dir_down', 'left');
-                localStorage.setItem('hub_smooth', 'true');
-                location.reload();
+        async function fetchVersion() {
+            try {
+                // Replace 'user/repo' with your actual github details
+                const response = await fetch('https://api.github.com/repos/YOUR_USER/YOUR_REPO/commits');
+                const data = await response.json();
+                const count = data.length;
+                document.getElementById('version-tag').innerText = `Version: 1.0.${count}`;
+                document.getElementById('commit-count').innerText = `Total Commits: ${count}`;
+            } catch {
+                document.getElementById('version-tag').innerText = "Version: 1.0.Local";
             }
         }
 
         window.onload = () => {
             updateSpeed('touch', localStorage.getItem('hub_touch_speed') || 1);
             updateSpeed('mouse', localStorage.getItem('hub_mouse_speed') || 1);
-            document.getElementById('scroll_smooth').checked = localStorage.getItem('hub_smooth') !== 'false';
             refreshUI();
+            fetchVersion();
             
             const depts = JSON.parse(localStorage.getItem('master_dept_list')) || [
                 { id: 'police', name: 'Law Enforcement', icon: '🚓' },
