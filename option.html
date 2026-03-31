@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LRPC STORM CAD | Selection Terminal</title>
     <style>
-        /* BASE STYLES */
         body {
             background-color: #0b0b0b;
             color: white;
@@ -19,7 +18,6 @@
             overflow: hidden; 
         }
 
-        /* COMPACT HEADER */
         .header-section {
             text-align: center;
             margin-top: 30px;
@@ -29,7 +27,6 @@
         .header-section h1 { margin-top: 10px; letter-spacing: 3px; font-size: 1.6em; }
         .header-section p { opacity: 0.6; font-size: 0.85em; }
 
-        /* SCROLL WRAPPER */
         .selection-wrapper {
             width: 95%;
             margin: 20px auto 0 auto;
@@ -40,7 +37,6 @@
             z-index: 10;
         }
 
-        /* Custom Scrollbar */
         .selection-wrapper::-webkit-scrollbar { height: 6px; }
         .selection-wrapper::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); }
         .selection-wrapper::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 10px; }
@@ -53,7 +49,6 @@
             min-width: min-content;
         }
 
-        /* 0.8x SCALED BOXES */
         .login-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(15px);
@@ -78,9 +73,7 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
         }
 
-        /* --- SUBTLE MAINTENANCE STATE --- */
         .login-card.disabled {
-            /* Changed from 0.7 opacity black to 0.2 opacity black (Much lighter) */
             background: rgba(0, 0, 0, 0.2); 
             border-color: rgba(255, 255, 255, 0.05);
             cursor: not-allowed;
@@ -92,18 +85,12 @@
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             margin-bottom: 15px; font-size: 2em;
-            transition: opacity 0.3s;
         }
-        /* Icon is now 50% visible instead of 20% (Less intense fade) */
         .disabled .icon-circle { opacity: 0.5; }
-
         .card-title { font-size: 1.2em; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
-        /* Title is now 70% visible instead of 40% */
         .disabled .card-title { opacity: 0.7; }
-
         .card-desc { font-size: 0.8em; opacity: 0.5; margin-bottom: 12px; height: 35px; line-height: 1.3;}
 
-        /* YELLOW TAG */
         .status-tag {
             font-size: 0.7em;
             font-weight: bold;
@@ -162,7 +149,8 @@
         }, { passive: false });
 
         function renderHub() {
-            const depts = [
+            const savedDepts = localStorage.getItem('master_dept_list');
+            const depts = savedDepts ? JSON.parse(savedDepts) : [
                 { id: 'police', name: 'Law Enforcement', icon: '🚓', url: 'police.html', desc: 'MDT Access - MET Police Only' },
                 { id: 'ems', name: 'Medical Service', icon: '🚑', url: 'fire.html', desc: 'Patient Care & Dispatch Logs' },
                 { id: 'dot', name: 'DOT', icon: '🚧', url: 'dot.html', desc: 'Highways Agency & Transport MDT' },
@@ -180,7 +168,7 @@
                 card.innerHTML = `
                     <div class="icon-circle">${dept.icon}</div>
                     <div class="card-title">${dept.name}</div>
-                    <div class="card-desc">${dept.desc}</div>
+                    <div class="card-desc">${dept.desc || 'System Terminal'}</div>
                     <div class="status-tag" style="color:${isLocked ? '#ffbc00' : '#4ade80'}">
                         ● ${isLocked ? 'Maintenance In Progress' : 'System Online'}
                     </div>
