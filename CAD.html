@@ -17,7 +17,7 @@
             --text-dim: #718096;
             --sidebar-width: 75px;
             --header-height: 70px;
-            --overlay-panel-width: 450px; /* How much the side panels expand */
+            --overlay-panel-width: 480px; 
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
@@ -28,9 +28,11 @@
         .header-left { display: flex; align-items: center; gap: 12px; }
         .logo-box { width: 40px; height: 40px; background: #2d3748; border-radius: 4px; overflow: hidden; }
         .mdt-info { font-size: 0.7rem; color: var(--text-dim); }
-        .header-nav { display: flex; gap: 5px; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; width: 60px; font-size: 0.6rem; color: var(--text-dim); cursor: pointer; transition: 0.2s; }
-        .nav-item:hover { color: #fff; }
+        .header-nav { display: flex; gap: 2px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; width: 62px; font-size: 0.6rem; color: var(--text-dim); cursor: pointer; transition: 0.2s; text-transform: uppercase; }
+        .nav-item i { font-size: 1.2rem; margin-bottom: 3px; }
+        .nav-item:hover, .nav-item.active { color: #fff; }
+        .status-dispatch { color: var(--accent-green) !important; }
         .timestamp { font-family: monospace; color: #a0aec0; font-size: 0.85rem; }
 
         /* --- SIDEBAR --- */
@@ -39,65 +41,36 @@
         .side-btn.active { color: var(--accent-orange); background: rgba(237, 137, 54, 0.05); }
         .side-btn.active::before { content: ""; position: absolute; left: 0; width: 3px; height: 100%; background: var(--accent-orange); }
 
-        /* --- MAIN DYNAMIC WORKSPACE --- */
-        main { 
-            grid-area: main; 
-            display: flex; /* Flexible row layout */
-            background: #000;
-            overflow: hidden;
-            position: relative;
-        }
+        /* --- MAIN WORKSPACE --- */
+        main { grid-area: main; display: flex; background: #000; overflow: hidden; position: relative; }
 
-        /* The Sliding Content Panel */
         .overlay-content {
-            width: 0; /* Starts hidden */
+            width: 0; 
             height: 100%;
             background: var(--bg-dark);
             border-right: 0 solid var(--border-color);
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), border 0.1s;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             overflow-y: auto;
-            position: relative;
             z-index: 10;
         }
 
-        .overlay-content.open {
-            width: var(--overlay-panel-width);
-            border-right: 1px solid var(--border-color);
-        }
+        .overlay-content.open { width: var(--overlay-panel-width); border-right: 1px solid var(--border-color); }
 
-        /* The Map (Always Visible, Shinks) */
-        .map-view {
-            flex-grow: 1; /* Takes remaining space */
-            height: 100%;
-            background: radial-gradient(circle, #1a1a1a 0%, #050505 100%);
-            display: flex;
-            flex-direction: column;
-            transition: all 0.4s ease;
-        }
+        .map-view { flex-grow: 1; height: 100%; display: flex; flex-direction: column; transition: all 0.4s ease; background: radial-gradient(circle, #1a1a1a 0%, #050505 100%); }
+        .map-img { max-width: 90%; max-height: 85%; margin: auto; opacity: 0.7; transition: transform 0.4s ease; filter: drop-shadow(0 0 20px #000); }
 
-        .map-img {
-            max-width: 90%;
-            max-height: 85%;
-            margin: auto;
-            opacity: 0.8;
-            transition: transform 0.4s ease;
-            filter: drop-shadow(0 0 20px #000);
-        }
-
-        /* --- VIEW STYLES --- */
-        .view-inner { padding: 30px; min-width: var(--overlay-panel-width); opacity: 0; transition: opacity 0.3s; }
-        .overlay-content.open .view-inner { opacity: 1; }
+        /* --- INTERNAL VIEW STYLES --- */
+        .view-inner { padding: 25px; min-width: var(--overlay-panel-width); display: none; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        .section-title { font-size: 1.2rem; margin-bottom: 20px; color: #fff; display: flex; align-items: center; gap: 10px; }
+        .section-title { font-size: 1.1rem; margin-bottom: 20px; color: #fff; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #222; padding-bottom: 10px; }
         .card { background: #161616; padding: 15px; border-radius: 6px; border: 1px solid #232323; margin-bottom: 15px; }
+        
+        input, select { background: #0b0b0b; border: 1px solid #333; color: #fff; padding: 10px; width: 100%; border-radius: 4px; margin-bottom: 10px; outline: none; font-size: 0.85rem; }
+        .btn-primary { background: var(--accent-green); color: #000; border: none; padding: 10px; border-radius: 4px; font-weight: 700; cursor: pointer; width: 100%; }
+        .btn-danger { background: var(--accent-red); color: #fff; }
 
-        #startShiftBtn { background: var(--accent-green); color: #000; border: none; padding: 10px 20px; border-radius: 4px; font-weight: 700; cursor: pointer; width: 100%; }
-        #startShiftBtn.on-duty { background: var(--accent-red); color: #fff; }
-
-        /* Personnel Table */
-        .personnel-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; font-size: 0.8rem; }
-        .badge { padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; background: #2d3748; }
-
+        .list-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #222; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -105,73 +78,93 @@
     <header>
         <div class="header-left">
             <div class="logo-box"><img src="https://via.placeholder.com/40" alt="Logo"></div>
-            <div class="mdt-info">MDT: <span style="font-family: monospace; color:#4a5568">STORM-V3</span><br>London Roleplay Community</div>
+            <div class="mdt-info">MDT: <span style="font-family: monospace; color:#4a5568">b4170f9a-ef31-4a00-99b8-b2690cd5f864</span><br>London Roleplay Community</div>
         </div>
 
         <div class="header-nav">
-            <div class="nav-item"><i class='bx bx-radio-circle-marked'></i>Calls</div>
-            <div class="nav-item"><i class='bx bx-file'></i>Reports</div>
-            <div class="nav-item"><i class='bx bxs-user-detail'></i>Personnel</div> <div class="nav-item status-dispatch"><i class='bx bx-broadcast'></i>Dispatch</div>
+            <div class="nav-item" id="nav-calls" onclick="toggleOverlay('calls')"><i class='bx bx-radio-circle-marked'></i>Calls</div>
+            <div class="nav-item" id="nav-reports" onclick="toggleOverlay('reports')"><i class='bx bx-file'></i>Reports</div>
+            <div class="nav-item" id="nav-tickets" onclick="toggleOverlay('tickets')"><i class='bx bx-receipt'></i>Tickets</div>
+            <div class="nav-item" id="nav-vehicles" onclick="toggleOverlay('vehicles')"><i class='bx bxs-car'></i>Vehicles</div>
+            <div class="nav-item" id="nav-person" onclick="toggleOverlay('person')"><i class='bx bxs-user-detail'></i>Person</div>
+            <div class="nav-item" id="nav-info" onclick="toggleOverlay('info')"><i class='bx bx-info-circle'></i>MDT Info</div>
+            <div class="nav-item"><i class='bx bxs-shield-alt-2' style="color: #ecc94b;"></i>Admin</div>
+            <div class="nav-item status-dispatch"><i class='bx bx-broadcast'></i>Dispatch</div>
         </div>
 
         <div class="timestamp" id="clock">03-31-2026 13:17:02</div>
     </header>
 
     <nav class="sidebar">
-        <div class="side-btn" id="btn-shift" onclick="toggleOverlay('shift')">
-            <i class='bx bx-time-five'></i>Shift
-        </div>
-        <div class="side-btn" id="btn-laws" onclick="toggleOverlay('laws')">
-            <i class='bx bx-balance'></i>Laws
-        </div>
-        <div class="side-btn" id="btn-personnel" onclick="toggleOverlay('personnel')">
-            <i class='bx bxs-group'></i>Staff
-        </div>
-        
-        <div style="margin-top: auto;">
-            <a href="#" class="side-btn" style="border: none;"><i class='bx bxl-discord-alt'></i>Server</a>
-        </div>
+        <div class="side-btn" id="btn-shift" onclick="toggleOverlay('shift')"><i class='bx bx-time-five'></i>Shift</div>
+        <div class="side-btn" id="btn-laws" onclick="toggleOverlay('laws')"><i class='bx bx-balance'></i>Laws</div>
+        <div class="side-btn" id="btn-staff" onclick="toggleOverlay('staff')"><i class='bx bxs-group'></i>Staff</div>
+        <div style="margin-top: auto;"><a href="#" class="side-btn" style="border: none;"><i class='bx bxl-discord-alt'></i>Server</a></div>
     </nav>
 
     <main>
         <div id="side-overlay" class="overlay-content">
             
-            <div id="content-shift" class="view-inner" style="display:none;">
+            <div id="view-calls" class="view-inner">
+                <h2 class="section-title"><i class='bx bx-radio-circle-marked'></i> Active 911 Calls</h2>
+                <div class="card" style="border-left: 4px solid var(--accent-orange);">
+                    <p style="font-weight:bold; font-size:0.9rem;">#1029 - 10-31 In Progress</p>
+                    <p style="font-size:0.75rem; color:var(--text-dim);">Postal: 3012 | Gas Station</p>
+                    <button class="btn-primary" style="margin-top:10px; font-size:0.7rem; padding:5px;">ATTACH TO CALL</button>
+                </div>
+            </div>
+
+            <div id="view-reports" class="view-inner">
+                <h2 class="section-title"><i class='bx bx-file'></i> Incident Reports</h2>
+                <div class="card">
+                    <input type="text" placeholder="Involved Person...">
+                    <textarea placeholder="Narrative..." style="width:100%; background:#0b0b0b; border:1px solid #333; color:#fff; padding:10px; height:100px; border-radius:4px; margin-bottom:10px;"></textarea>
+                    <button class="btn-primary">SUBMIT REPORT</button>
+                </div>
+            </div>
+
+            <div id="view-tickets" class="view-inner">
+                <h2 class="section-title"><i class='bx bx-receipt'></i> Issue Citation</h2>
+                <div class="card">
+                    <input type="text" placeholder="Violator Name...">
+                    <input type="number" placeholder="Fine Amount ($)...">
+                    <button class="btn-primary">ISSUE TICKET</button>
+                </div>
+            </div>
+
+            <div id="view-vehicles" class="view-inner">
+                <h2 class="section-title"><i class='bx bxs-car'></i> Vehicle Database</h2>
+                <input type="text" placeholder="Enter Plate Number...">
+                <div style="text-align:center; padding:40px; opacity:0.2;"><i class='bx bx-search-alt' style="font-size:3rem;"></i></div>
+            </div>
+
+            <div id="view-person" class="view-inner">
+                <h2 class="section-title"><i class='bx bxs-user-detail'></i> Person Search</h2>
+                <input type="text" placeholder="Firstname Lastname...">
+                <button class="btn-primary">QUERY DATABASE</button>
+            </div>
+
+            <div id="view-shift" class="view-inner">
                 <h2 class="section-title"><i class='bx bx-time-five'></i> Shift Management</h2>
                 <div class="card">
-                    <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 15px;">Duty Status: <span id="duty-label" style="color:var(--accent-red)">OFF-DUTY</span></p>
-                    <button id="startShiftBtn">START SHIFT</button>
-                </div>
-                <div class="card">
-                    <h4 style="font-size: 0.7rem; color: var(--text-dim); margin-bottom: 10px;">SESSION STATS</h4>
-                    <div class="personnel-row"><span>Time On Duty</span><span>00:00:00</span></div>
-                    <div class="personnel-row"><span>Arrests Made</span><span>0</span></div>
+                    <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 15px;">Status: <span id="duty-label" style="color:var(--accent-red)">10-42</span></p>
+                    <button id="startShiftBtn" class="btn-primary">START SHIFT</button>
                 </div>
             </div>
 
-            <div id="content-laws" class="view-inner" style="display:none;">
+            <div id="view-laws" class="view-inner">
                 <h2 class="section-title"><i class='bx bx-balance'></i> Penal Code</h2>
-                <div class="card">
-                    <input type="text" placeholder="Search Laws..." style="background:#000; border:1px solid #333; color:#fff; padding:8px; width:100%; border-radius:4px; margin-bottom:10px;">
-                    <div class="personnel-row"><strong>Infraction</strong><strong>Fine</strong></div>
-                    <div class="personnel-row"><span>Speeding (City)</span><span>$250</span></div>
-                    <div class="personnel-row"><span>Failure to Yield</span><span>$400</span></div>
-                    <div class="personnel-row"><span>Murder (1st Deg)</span><span>$15,000</span></div>
-                </div>
+                <div class="card"><div class="list-item"><span>Grand Theft Auto</span><span>$5,000</span></div><div class="list-item"><span>Assault</span><span>$2,500</span></div></div>
             </div>
 
-            <div id="content-personnel" class="view-inner" style="display:none;">
+            <div id="view-staff" class="view-inner">
                 <h2 class="section-title"><i class='bx bxs-group'></i> Active Personnel</h2>
-                <div class="card">
-                    <div class="personnel-row">
-                        <span>[Chief] John Doe</span>
-                        <span class="badge" style="background:var(--accent-green); color:#000;">Active</span>
-                    </div>
-                    <div class="personnel-row">
-                        <span>[Sgt] Jane Smith</span>
-                        <span class="badge">Stationary</span>
-                    </div>
-                </div>
+                <div class="card"><div class="list-item"><span>[Officer] John Doe</span><span style="color:var(--accent-green)">Active</span></div></div>
+            </div>
+
+            <div id="view-info" class="view-inner">
+                <h2 class="section-title"><i class='bx bx-info-circle'></i> MDT Information</h2>
+                <div class="card"><p style="font-size:0.8rem;">STORM-V3 Core</p><p style="font-size:0.7rem; color:var(--text-dim);">Build 03.31.2026</p></div>
             </div>
 
         </div>
@@ -188,32 +181,47 @@
         function toggleOverlay(type) {
             const overlay = document.getElementById('side-overlay');
             const map = document.getElementById('main-map');
-            const allContent = ['shift', 'laws', 'personnel'];
+            const allItems = ['calls', 'reports', 'tickets', 'vehicles', 'person', 'info', 'shift', 'laws', 'staff'];
 
-            // If clicking the same button, close it
+            // Close if clicking the same button
             if (currentOpen === type) {
                 overlay.classList.remove('open');
-                document.getElementById('btn-' + type).classList.remove('active');
+                resetHighlight();
                 map.style.transform = "scale(1)";
                 currentOpen = null;
                 return;
             }
 
-            // Reset all buttons and hide all content
-            allContent.forEach(item => {
-                document.getElementById('content-' + item).style.display = 'none';
-                document.getElementById('btn-' + item).classList.remove('active');
+            // Hide all views and remove all highlights
+            allItems.forEach(item => {
+                const v = document.getElementById('view-' + item);
+                if(v) v.style.display = 'none';
+                
+                const n = document.getElementById('nav-' + item);
+                if(n) n.classList.remove('active');
+                
+                const s = document.getElementById('btn-' + item);
+                if(s) s.classList.remove('active');
             });
 
-            // Show new content and open overlay
-            document.getElementById('content-' + type).style.display = 'block';
-            document.getElementById('btn-' + type).classList.add('active');
+            // Show selected view
+            const targetView = document.getElementById('view-' + type);
+            if(targetView) targetView.style.display = 'block';
+
+            // Highlight correct button (Nav or Side)
+            const targetNav = document.getElementById('nav-' + type);
+            if(targetNav) targetNav.classList.add('active');
+            
+            const targetBtn = document.getElementById('btn-' + type);
+            if(targetBtn) targetBtn.classList.add('active');
+
             overlay.classList.add('open');
-            
-            // Shrink/Shift the map slightly
-            map.style.transform = "scale(0.85) translateX(20px)";
-            
+            map.style.transform = "scale(0.85) translateX(30px)";
             currentOpen = type;
+        }
+
+        function resetHighlight() {
+            document.querySelectorAll('.nav-item, .side-btn').forEach(i => i.classList.remove('active'));
         }
 
         // Shift Logic
@@ -224,14 +232,17 @@
         shiftBtn.addEventListener('click', () => {
             onDuty = !onDuty;
             shiftBtn.innerText = onDuty ? "END SHIFT" : "START SHIFT";
-            shiftBtn.classList.toggle('on-duty');
-            dutyLabel.innerText = onDuty ? "ON-DUTY" : "OFF-DUTY";
+            shiftBtn.classList.toggle('btn-danger');
+            dutyLabel.innerText = onDuty ? "10-41 (ON DUTY)" : "10-42 (OFF DUTY)";
             dutyLabel.style.color = onDuty ? "var(--accent-green)" : "var(--accent-red)";
         });
 
         // Clock
         setInterval(() => {
-            document.getElementById('clock').innerText = new Date().toLocaleString('en-GB');
+            const now = new Date();
+            const date = now.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+            const time = now.toLocaleTimeString('en-GB', { hour12: false });
+            document.getElementById('clock').innerText = `${date} ${time}`;
         }, 1000);
     </script>
 </body>
