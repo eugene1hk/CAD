@@ -29,45 +29,43 @@
             margin: 35px auto 0 auto; 
             overflow-x: auto;
             overflow-y: hidden;
-            /* Detection zone padding */
             padding-bottom: 50px; 
             flex-shrink: 0;
-            /* Smooth transitions for internal scrolling */
             scroll-behavior: smooth;
-            transition: all 0.3s ease-in-out;
         }
 
-        /* IMPROVED SCROLLBAR LOGIC */
+        /* UNIFIED SCROLLBAR SYSTEM */
         .selection-wrapper::-webkit-scrollbar { 
-            height: 6px; /* Slightly thicker unclicked mode for visibility */
+            height: 6px; 
             transition: all 0.3s ease;
         }
 
         .selection-wrapper::-webkit-scrollbar-track { 
-            background: rgba(255, 255, 255, 0.03); 
+            background: rgba(255, 255, 255, 0.02); 
             border-radius: 10px;
         }
 
-        /* Unclicked Mode: More obvious grey, low-profile outline */
+        /* UNIFIED COLOR: Slate Blue (#4a5568) */
         .selection-wrapper::-webkit-scrollbar-thumb { 
-            background: #555; 
+            background: #4a5568; 
             border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.05); 
+            /* Low profile outline matching the bar color but fainter */
+            border: 1px solid rgba(74, 85, 104, 0.3); 
             transition: all 0.3s ease;
         }
 
-        /* Clicked/Hover Mode: The "Pop" */
+        /* HOVER/CLICK MODE: Same color, just brighter and larger */
         .selection-wrapper:hover::-webkit-scrollbar { 
             height: 16px; 
         }
 
         .selection-wrapper:hover::-webkit-scrollbar-thumb { 
-            background: #2b3a67;
-            border: 2px solid #1a1a1a; /* Lighter, low-profile border */
+            background: #718096; /* Brighter version of the same slate color */
+            border: 2px solid #0b0b0b; 
         }
 
         .selection-wrapper::-webkit-scrollbar-thumb:hover {
-            background: #3c6e71;
+            background: #a0aec0; /* Even brighter when touched */
         }
 
         .selection-container {
@@ -131,11 +129,9 @@
     <script>
         const container = document.getElementById('scroll-container');
 
-        // REVERSED SCROLL LOGIC: UP = RIGHT, DOWN = LEFT
+        // Scroll Logic: UP = RIGHT, DOWN = LEFT
         container.addEventListener('wheel', (e) => {
             if (e.deltaY !== 0) {
-                // Multiplied by -1 to reverse direction
-                // Adjust the number (e.deltaY * 1.5) if you want it to scroll faster/slower
                 container.scrollLeft -= (e.deltaY * 1.2); 
                 e.preventDefault(); 
             }
