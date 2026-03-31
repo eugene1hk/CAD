@@ -1,60 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LRPC STORM CAD</title>
+    <title>LRPC STORM CAD | Selection Terminal</title>
     <style>
-        body { background-color: #0d0e11; color: #a0a0a0; font-family: 'Segoe UI', sans-serif; margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; align-items: center; }
+        body { 
+            /* Restored the blue gradient background from the image */
+            background: radial-gradient(circle at top, #2c3e50, #000000);
+            background-attachment: fixed;
+            color: white; 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            margin: 0; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+            align-items: center; 
+        }
 
-        /* Font Color Fixes */
-        h1 { color: #e0e0e0; font-weight: 600; margin: 0; }
-        .sub-header { color: #666; margin-top: 5px; }
+        .header-section { 
+            text-align: center; 
+            margin-top: 60px; 
+            flex-shrink: 0; 
+        }
 
-        .header-section { text-align: center; margin-top: 40px; flex-shrink: 0; }
-        .header-section img { width: 80px; border-radius: 50%; border: 1px solid #3c6e71; margin-bottom: 10px; }
+        .header-section img { 
+            width: 70px; 
+            margin-bottom: 15px;
+        }
 
-        /* Centering adjustment: moved UP */
+        .header-section h1 {
+            font-size: 2.2rem;
+            letter-spacing: 4px;
+            margin: 0;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+
+        .sub-header { 
+            color: #bdc3c7; 
+            font-size: 0.95rem;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Centering the card wrapper */
         .selection-wrapper { 
-            width: 80%; 
-            margin-top: 15px; 
+            width: 90%; 
+            margin-top: 40px;
             overflow-x: auto; 
             overflow-y: hidden; 
-            background: rgba(255, 255, 255, 0.01);
-            border-radius: 15px;
-            padding: 15px 0;
+            padding: 20px 0;
+            /* Hide standard scrollbar for a cleaner look */
+            scrollbar-width: none; 
         }
 
-        /* Defined Low-profile Scrollbar */
-        .selection-wrapper::-webkit-scrollbar { height: 6px; }
-        .selection-wrapper::-webkit-scrollbar-track { background: #16181d; }
-        .selection-wrapper::-webkit-scrollbar-thumb { background: #2d333b; border-radius: 10px; }
+        .selection-wrapper::-webkit-scrollbar { display: none; }
 
-        .selection-container { display: flex; gap: 20px; padding: 20px 40px; min-width: min-content; }
+        .selection-container { 
+            display: flex; 
+            gap: 30px; 
+            padding: 20px 40px; 
+            justify-content: center;
+            min-width: min-content; 
+        }
         
+        /* Glassmorphism Cards */
         .login-card { 
-            background: #16181d; border: 1px solid #2d333b; 
-            border-radius: 12px; padding: 25px; text-align: center; width: 210px; flex-shrink: 0;
-            transition: 0.3s ease;
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 25px; 
+            padding: 40px 20px; 
+            text-align: center; 
+            width: 260px; 
+            flex-shrink: 0;
+            transition: all 0.3s ease;
         }
-        .login-card:hover:not(.disabled) { border-color: #3c6e71; transform: translateY(-5px); }
-        .login-card.disabled { opacity: 0.5; filter: grayscale(1); }
 
-        /* Bolder Online Font & Yellow Maintenance */
-        .status-online { color: #10b981; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
-        .status-locked { color: #ffbc00; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
+        .login-card:hover:not(.disabled) { 
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-10px); 
+            border-color: rgba(255, 255, 255, 0.2);
+        }
 
-        .icon-circle { width: 60px; height: 60px; background: #1c1f26; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 1.8rem; }
-        .btn-enter { background: #232a35; color: #fff; border: 1px solid #3c6e71; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 15px; width: 100%; transition: 0.2s; }
-        .btn-enter:hover { background: #3c6e71; }
+        .login-card.disabled { 
+            opacity: 0.4; 
+            cursor: not-allowed; 
+        }
+
+        .icon-circle { 
+            width: 80px; 
+            height: 80px; 
+            background: rgba(255, 255, 255, 0.1); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin: 0 auto 25px; 
+            font-size: 2.5rem; 
+        }
+
+        .login-card h3 {
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 10px 0 5px 0;
+            color: #ffffff;
+        }
+
+        .dept-desc {
+            font-size: 0.85rem;
+            color: #95a5a6;
+            margin-bottom: 20px;
+        }
+
+        /* Status Styling */
+        .status-online { 
+            color: #2ecc71; 
+            font-size: 0.8rem; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .status-locked { 
+            color: #f1c40f; 
+            font-size: 0.8rem; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .btn-enter { 
+            background: #2c3e50; 
+            color: #ffffff; 
+            border: none; 
+            padding: 12px 40px; 
+            border-radius: 30px; 
+            cursor: pointer; 
+            font-weight: 700; 
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            transition: 0.3s; 
+        }
+
+        .btn-enter:hover { 
+            background: #34495e;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Bottom Scroll Progress Bar */
+        .scroll-progress-container {
+            width: 80%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            margin-top: auto;
+            margin-bottom: 40px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .scroll-bar-fill {
+            width: 30%;
+            height: 100%;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+        }
+
+        .admin-secret-btn { 
+            position: fixed; 
+            bottom: 15px; 
+            left: 15px; 
+            width: 15px; 
+            height: 15px; 
+            background: transparent; 
+            border: none; 
+            cursor: pointer; 
+        }
     </style>
 </head>
 <body>
 
     <div class="header-section">
-        <img src="LRPC_favicon_test.jpeg" alt="Logo">
-        <h1>TERMINAL ACCESS</h1>
+        <img src="Logo_Placeholder.png" alt="Logo" id="main-logo">
+        <h1>Terminal Access</h1>
         <p class="sub-header">Select your department to begin your session</p>
     </div>
 
@@ -62,11 +196,19 @@
         <div id="main-container" class="selection-container"></div>
     </div>
 
+    <div class="scroll-progress-container">
+        <div class="scroll-bar-fill" id="progress-fill"></div>
+    </div>
+
+    <button class="admin-secret-btn" onclick="window.location.href='backend.html'"></button>
+
     <script>
         const scrollContainer = document.getElementById('scroll-container');
+        const progressFill = document.getElementById('progress-fill');
         let targetScroll = 0;
         let currentScroll = 0;
 
+        // Synchronized Scrolling Logic
         scrollContainer.addEventListener('wheel', (e) => {
             const upMapping = localStorage.getItem('hub_dir_up') || 'right';
             const downMapping = localStorage.getItem('hub_dir_down') || 'left';
@@ -78,10 +220,9 @@
 
             let move = e.deltaY * speedMult;
 
-            // Logic Fix: Use Absolute move values to prevent "fighting"
-            if (e.deltaY < 0) { // Physical Scroll UP
+            if (e.deltaY < 0) { 
                 move = (upMapping === 'left') ? -Math.abs(move) : Math.abs(move);
-            } else { // Physical Scroll DOWN
+            } else { 
                 move = (downMapping === 'left') ? -Math.abs(move) : Math.abs(move);
             }
 
@@ -92,30 +233,38 @@
         }, { passive: false });
 
         function animate() {
-            currentScroll += (targetScroll - currentScroll) * 0.12; // Adjusted Friction
+            currentScroll += (targetScroll - currentScroll) * 0.1;
             scrollContainer.scrollLeft = currentScroll;
+            
+            // Update the visual scroll progress bar at the bottom
+            const max = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+            const percent = (currentScroll / max) * 100;
+            progressFill.style.width = (percent || 0) + "%";
+
             requestAnimationFrame(animate);
         }
         animate();
 
         function renderHub() {
             const depts = JSON.parse(localStorage.getItem('master_dept_list')) || [
-                { id: 'police', name: 'Law Enforcement', icon: '🚓' },
-                { id: 'ems', name: 'Medical Service', icon: '🚑' },
-                { id: 'dot', name: 'DOT', icon: '🚧' },
-                { id: 'civ', name: 'Civilian Portal', icon: '👤' }
+                { id: 'police', name: 'Law Enforcement', icon: '🚓', desc: 'MDT Access - MET Police Only' },
+                { id: 'ems', name: 'Medical Service', icon: '🚑', desc: 'Patient Care & Dispatch Logs' },
+                { id: 'dot', name: 'DOT', icon: '🚧', desc: 'Highways Agency & Transport MDT' },
+                { id: 'civ', name: 'Civilian Portal', icon: '👤', desc: 'Character & Vehicle Registration' }
             ];
+            
             const container = document.getElementById('main-container');
             container.innerHTML = depts.map(dept => {
                 const isLocked = localStorage.getItem(dept.id + "_locked") === "true";
                 return `
                     <div class="login-card ${isLocked ? 'disabled' : ''}">
                         <div class="icon-circle">${dept.icon}</div>
-                        <h3 style="margin: 0 0 10px 0; font-size: 1rem; color: #fff;">${dept.name}</h3>
+                        <h3>${dept.name}</h3>
+                        <p class="dept-desc">${dept.desc || ''}</p>
                         <div class="${isLocked ? 'status-locked' : 'status-online'}">
-                            ● ${isLocked ? 'Under Maintenance' : 'System Online'}
+                            ● ${isLocked ? 'Maintenance' : 'System Online'}
                         </div>
-                        ${!isLocked ? `<button class="btn-enter" onclick="window.location.href='login.html'">Authenticate</button>` : ''}
+                        ${!isLocked ? `<button class="btn-enter" onclick="window.location.href='login.html'">Enter</button>` : ''}
                     </div>
                 `;
             }).join('');
