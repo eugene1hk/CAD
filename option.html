@@ -4,56 +4,50 @@
     <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LRPC STORM CAD | Selection Terminal</title>
+    <title>LRPC STORM CAD</title>
     <style>
-        body { 
-            background-color: #0b0b0b; 
-            color: white; 
-            font-family: 'Segoe UI', sans-serif; 
-            margin: 0; 
-            height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; 
-            align-items: center; 
-        }
+        body { background-color: #0d0e11; color: #a0a0a0; font-family: 'Segoe UI', sans-serif; margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; align-items: center; }
 
-        .header-section { text-align: center; margin-top: 50px; flex-shrink: 0; }
-        .header-section img { width: 85px; border-radius: 50%; border: 2px solid #3c6e71; }
+        /* Font Color Fixes */
+        h1 { color: #e0e0e0; font-weight: 600; margin: 0; }
+        .sub-header { color: #666; margin-top: 5px; }
 
-        /* Centering adjustment: moved UP to fit better with scrollbar */
+        .header-section { text-align: center; margin-top: 40px; flex-shrink: 0; }
+        .header-section img { width: 80px; border-radius: 50%; border: 1px solid #3c6e71; margin-bottom: 10px; }
+
+        /* Centering adjustment: moved UP */
         .selection-wrapper { 
             width: 80%; 
-            margin-top: -20px; 
-            margin-bottom: 20px;
+            margin-top: 15px; 
             overflow-x: auto; 
             overflow-y: hidden; 
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 20px;
-            padding: 20px 0;
-            flex-grow: 0;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 15px;
+            padding: 15px 0;
         }
 
-        .selection-wrapper::-webkit-scrollbar { height: 10px; }
-        .selection-wrapper::-webkit-scrollbar-track { background: #1a1a1a; border-radius: 10px; }
-        .selection-wrapper::-webkit-scrollbar-thumb { 
-            background: #444; 
-            border: 2px solid #1a1a1a; 
-            border-radius: 10px; 
-        }
+        /* Defined Low-profile Scrollbar */
+        .selection-wrapper::-webkit-scrollbar { height: 6px; }
+        .selection-wrapper::-webkit-scrollbar-track { background: #16181d; }
+        .selection-wrapper::-webkit-scrollbar-thumb { background: #2d333b; border-radius: 10px; }
 
-        .selection-container { display: flex; gap: 25px; padding: 20px 40px; min-width: min-content; }
+        .selection-container { display: flex; gap: 20px; padding: 20px 40px; min-width: min-content; }
         
         .login-card { 
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 18px; padding: 30px; text-align: center; width: 220px; flex-shrink: 0;
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            background: #16181d; border: 1px solid #2d333b; 
+            border-radius: 12px; padding: 25px; text-align: center; width: 210px; flex-shrink: 0;
+            transition: 0.3s ease;
         }
-        .login-card.disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(1); }
-        .icon-circle { width: 70px; height: 70px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 2.2rem; }
-        .btn-enter { background: #2b3a67; color: white; border: none; padding: 10px 25px; border-radius: 20px; cursor: pointer; font-weight: bold; margin-top: 15px; transition: 0.3s; }
+        .login-card:hover:not(.disabled) { border-color: #3c6e71; transform: translateY(-5px); }
+        .login-card.disabled { opacity: 0.5; filter: grayscale(1); }
+
+        /* Bolder Online Font & Yellow Maintenance */
+        .status-online { color: #10b981; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
+        .status-locked { color: #ffbc00; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
+
+        .icon-circle { width: 60px; height: 60px; background: #1c1f26; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 1.8rem; }
+        .btn-enter { background: #232a35; color: #fff; border: 1px solid #3c6e71; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 15px; width: 100%; transition: 0.2s; }
         .btn-enter:hover { background: #3c6e71; }
-        .admin-secret-btn { position: fixed; bottom: 15px; left: 15px; width: 12px; height: 12px; background: #dc3545; border-radius: 50%; border: none; opacity: 0.05; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -61,14 +55,12 @@
     <div class="header-section">
         <img src="LRPC_favicon_test.jpeg" alt="Logo">
         <h1>TERMINAL ACCESS</h1>
-        <p style="color: #666; margin-bottom: 20px;">Select your department to begin your session</p>
+        <p class="sub-header">Select your department to begin your session</p>
     </div>
 
     <div class="selection-wrapper" id="scroll-container">
         <div id="main-container" class="selection-container"></div>
     </div>
-
-    <button class="admin-secret-btn" onclick="window.location.href='backend.html'"></button>
 
     <script>
         const scrollContainer = document.getElementById('scroll-container');
@@ -81,13 +73,17 @@
             
             const isMouse = Math.abs(e.deltaY) >= 100;
             const speedMult = isMouse ? 
-                (parseFloat(localStorage.getItem('hub_mouse_speed')) || 1) : 
-                (parseFloat(localStorage.getItem('hub_touch_speed')) || 1);
+                (parseFloat(localStorage.getItem('hub_mouse_speed')) || 1.0) : 
+                (parseFloat(localStorage.getItem('hub_touch_speed')) || 1.0);
 
             let move = e.deltaY * speedMult;
 
-            if (e.deltaY < 0) move = (upMapping === 'left') ? -Math.abs(move) : Math.abs(move);
-            else move = (downMapping === 'left') ? -Math.abs(move) : Math.abs(move);
+            // Logic Fix: Use Absolute move values to prevent "fighting"
+            if (e.deltaY < 0) { // Physical Scroll UP
+                move = (upMapping === 'left') ? -Math.abs(move) : Math.abs(move);
+            } else { // Physical Scroll DOWN
+                move = (downMapping === 'left') ? -Math.abs(move) : Math.abs(move);
+            }
 
             e.preventDefault();
             targetScroll += move;
@@ -96,7 +92,7 @@
         }, { passive: false });
 
         function animate() {
-            currentScroll += (targetScroll - currentScroll) * 0.1;
+            currentScroll += (targetScroll - currentScroll) * 0.12; // Adjusted Friction
             scrollContainer.scrollLeft = currentScroll;
             requestAnimationFrame(animate);
         }
@@ -115,11 +111,11 @@
                 return `
                     <div class="login-card ${isLocked ? 'disabled' : ''}">
                         <div class="icon-circle">${dept.icon}</div>
-                        <h3>${dept.name}</h3>
-                        <div style="color:${isLocked ? '#ffbc00' : '#4ade80'}; font-size:0.7rem; margin:10px 0;">
-                            ● ${isLocked ? 'Maintenance' : 'System Online'}
+                        <h3 style="margin: 0 0 10px 0; font-size: 1rem; color: #fff;">${dept.name}</h3>
+                        <div class="${isLocked ? 'status-locked' : 'status-online'}">
+                            ● ${isLocked ? 'Under Maintenance' : 'System Online'}
                         </div>
-                        ${!isLocked ? `<button class="btn-enter" onclick="window.location.href='login.html'">Enter</button>` : ''}
+                        ${!isLocked ? `<button class="btn-enter" onclick="window.location.href='login.html'">Authenticate</button>` : ''}
                     </div>
                 `;
             }).join('');
