@@ -76,6 +76,7 @@
         h1 { color: #ffffff; font-size: 1.6rem; margin: 0 0 5px 0; }
         h2 { color: #666; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
 
+        /* Control Grid & Cards */
         .control-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -107,7 +108,7 @@
         input:checked + .slider { background-color: #2ecc71; }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        /* Management Button Section */
+        /* Management Section */
         .mgmt-section {
             background: #1a1a1a;
             border: 1px solid #333;
@@ -126,16 +127,44 @@
             font-weight: bold;
             text-transform: uppercase;
             font-size: 0.9rem;
-            letter-spacing: 1px;
-            transition: 0.3s ease;
+            transition: 0.3s;
+        }
+        .btn-mgmt:hover { background: #2b3a67; transform: translateY(-2px); }
+
+        /* Placeholder UI */
+        .placeholder-box {
+            background: #151515;
+            border: 1px dashed #333;
+            padding: 50px;
+            border-radius: 10px;
+            text-align: center;
+            color: #555;
+            margin-top: 20px;
         }
 
-        .btn-mgmt:hover { background: #2b3a67; transform: translateY(-2px); }
+        .btn-primary {
+            background: #2b3a67; color: white; border: none;
+            padding: 12px 25px; border-radius: 5px; cursor: pointer;
+            font-weight: bold; text-transform: uppercase; margin-top: 15px;
+        }
+        .btn-primary:hover { background: #3c6e71; }
 
         .btn-exit {
             background: #c0392b; color: white; border: none;
             padding: 12px; border-radius: 5px; cursor: pointer;
             font-weight: bold; margin-top: auto; text-transform: uppercase; font-size: 0.75rem;
+        }
+
+        /* Log styling */
+        .log-container {
+            background: #111; 
+            padding: 20px; 
+            border-radius: 8px; 
+            font-family: monospace; 
+            color: #4ade80; 
+            font-size: 0.85rem; 
+            border: 1px solid #222; 
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -148,7 +177,7 @@
         </div>
         
         <nav class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('controls', this)">⚙️ System Controls</button>
+            <button id="default-btn" class="tab-btn active" onclick="switchTab('controls', this)">⚙️ System Controls</button>
             <button class="tab-btn" onclick="switchTab('database', this)">📂 Master Database</button>
             <button class="tab-btn" onclick="switchTab('map', this)">🗺️ Map Editor</button>
             <button class="tab-btn" onclick="switchTab('logs', this)">📜 System Logs</button>
@@ -162,7 +191,6 @@
         
         <div id="controls" class="tab-content active-tab">
             <h1>System Controls</h1>
-            
             <h2>Maintenance Mode Management</h2>
             <div class="control-grid" id="dynamic-toggle-container">
                 </div>
@@ -174,15 +202,55 @@
             </div>
         </div>
 
-        <div id="database" class="tab-content"><h1>Master Database</h1></div>
-        <div id="map" class="tab-content"><h1>Map Editor</h1></div>
-        <div id="logs" class="tab-content"><h1>System Logs</h1></div>
-        <div id="settings" class="tab-content"><h1>Settings</h1></div>
+        <div id="database" class="tab-content">
+            <h1>Master Database</h1>
+            <h2>Global Citizen & User Management</h2>
+            <div class="placeholder-box">
+                <p>User Directory & Credential Manager</p>
+                <p style="font-size: 0.8rem; color: #888; margin-bottom: 10px;">Access the central registry to modify department assignments, callsigns, and security passwords.</p>
+                <button onclick="window.location.href='database.html'" class="btn-primary">Initialize Master Registry</button>
+            </div>
+        </div>
+
+        <div id="map" class="tab-content">
+            <h1>Map Editor</h1>
+            <h2>Live Dispatch Coordinate Management</h2>
+            <div class="placeholder-box">
+                <p>Map Render Engine Standby</p>
+                <p style="font-size: 0.8rem; color: #666;">Drag and drop dispatch markers to update live MDT maps for all units.</p>
+                <button class="btn-primary" disabled style="opacity: 0.5; cursor: not-allowed;">Open Map Canvas</button>
+            </div>
+        </div>
+
+        <div id="logs" class="tab-content">
+            <h1>System Logs</h1>
+            <h2>Recent Administrative Actions</h2>
+            <div class="log-container">
+                > [INFO] System initialized successfully.<br>
+                > [INFO] Connection to LocalStorage: STABLE.<br>
+                > [AUTH] Administrative Session Started.<br>
+                > [DEBUG] Tab listener active.<br>
+                > [DATA] Master Department List synchronized.
+            </div>
+        </div>
+
+        <div id="settings" class="tab-content">
+            <h1>Settings</h1>
+            <h2>Core Security Configurations</h2>
+            <div class="control-card" style="margin-bottom: 10px;">
+                <div><b>Admin Debug Mode</b><p style="font-size: 0.75rem; color: #666; margin: 0;">Show technical errors in console</p></div>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div class="control-card">
+                <div><b>Auto-Sync LocalStorage</b><p style="font-size: 0.75rem; color: #666; margin: 0;">Update selection page in real-time</p></div>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+        </div>
 
     </div>
 
     <script>
-        // MASTER DEPT LIST (Shared with dept.html)
+        // Shared Department Logic
         const defaultDepts = [
             { id: 'police', name: 'Law Enforcement', icon: '🚓', desc: 'Metropolitan Police' },
             { id: 'ems', name: 'Medical/Fire', icon: '🚑', desc: 'L.A.S / L.F.B' },
@@ -195,11 +263,13 @@
             return saved ? JSON.parse(saved) : defaultDepts;
         }
 
-        // RENDER THE SLIDERS BASED ON CURRENT DEPARTMENTS
+        // Render sliders dynamically based on Department Manager
         function renderToggles() {
             const list = getDepts();
             const container = document.getElementById('dynamic-toggle-container');
-            container.innerHTML = ''; // Clear existing
+            if(!container) return;
+            
+            container.innerHTML = ''; 
 
             list.forEach(dept => {
                 const isOnline = localStorage.getItem(dept.id + "_locked") === "false";
@@ -209,7 +279,7 @@
                 card.innerHTML = `
                     <div>
                         <b>${dept.icon} ${dept.name}</b>
-                        <p style="font-size: 0.75rem; color: #666; margin: 0;">${dept.desc}</p>
+                        <p style="font-size: 0.75rem; color: #666; margin: 0;">${dept.desc || 'System Terminal'}</p>
                     </div>
                     <label class="switch">
                         <input type="checkbox" id="${dept.id}_toggle" 
@@ -224,10 +294,10 @@
 
         function toggleAccess(deptId) {
             const isChecked = document.getElementById(deptId + '_toggle').checked;
-            // checked = online (locked: false), unchecked = maintenance (locked: true)
             localStorage.setItem(deptId + "_locked", isChecked ? "false" : "true");
         }
 
+        // Tab Switcher
         function switchTab(tabId, element) {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-tab'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -235,7 +305,6 @@
             element.classList.add('active');
         }
 
-        // Initialize on load
         window.onload = renderToggles;
     </script>
 </body>
