@@ -7,14 +7,12 @@
     <style>
         body { background-color: #0f0f0f; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        /* Sidebar */
         .sidebar { width: 250px; background-color: #1a1a1a; border-right: 1px solid #333; padding: 20px; display: flex; flex-direction: column; flex-shrink: 0; box-sizing: border-box; }
         .nav-tabs { display: flex; flex-direction: column; gap: 5px; margin-top: 30px; }
         .tab-btn { background: transparent; color: #888; border: none; padding: 12px 15px; text-align: left; border-radius: 6px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
         .tab-btn.active { background: #2b3a67; color: #fff; }
         .tab-btn:hover { background: rgba(255,255,255,0.05); }
 
-        /* Main Panel */
         .main-panel { flex-grow: 1; padding: 40px; overflow-y: auto; box-sizing: border-box; scroll-behavior: smooth; }
         .tab-content { display: none; width: 100%; }
         .tab-content.active-tab { display: block; animation: fadeIn 0.3s ease; }
@@ -23,19 +21,16 @@
         h1 { color: #fff; font-size: 1.6rem; margin-bottom: 20px; }
         h2 { color: #666; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; margin: 30px 0 15px 0; border-bottom: 1px solid #222; padding-bottom: 5px; }
 
-        /* UI Components */
         .control-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .control-card { background: #1a1a1a; border: 1px solid #333; padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
         .setting-row { background: #1a1a1a; border: 1px solid #333; padding: 15px 20px; border-radius: 10px; margin-bottom: 10px; display: flex; align-items: center; gap: 20px; }
         
-        /* Buttons */
         .btn-action { background: #3c6e71; color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; width: 100%; }
         .btn-action:hover { background: #2b3a67; transform: translateY(-2px); }
         .btn-reset { background: transparent; border: 1px solid #c0392b; color: #c0392b; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-top: 40px; transition: 0.2s; }
         .btn-reset:hover { background: #c0392b; color: white; }
         .btn-exit { background: #c0392b; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; margin-top: auto; font-weight: bold; font-size: 0.75rem; text-transform: uppercase; }
 
-        /* Inputs */
         .slider-ctrl { flex: 2; -webkit-appearance: none; height: 4px; background: #333; border-radius: 5px; outline: none; }
         .slider-ctrl::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: #3c6e71; border-radius: 50%; cursor: pointer; border: 2px solid #fff; }
         .num-input { width: 70px; background: #000; border: 1px solid #444; color: #4ade80; padding: 5px; border-radius: 4px; text-align: center; font-family: monospace; }
@@ -44,7 +39,6 @@
         .dir-btn { border: none; background: transparent; color: #555; padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
         .dir-btn.active { background: #3c6e71; color: white; }
 
-        /* Switch */
         .switch { position: relative; width: 40px; height: 20px; flex-shrink: 0; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 20px; }
@@ -75,8 +69,7 @@
             <h1>System Controls</h1>
             
             <h2>1. Department Access & Management</h2>
-            <div class="control-grid" id="dynamic-toggle-container">
-                </div>
+            <div class="control-grid" id="dynamic-toggle-container"></div>
             <div class="setting-row">
                 <div style="flex:1;">
                     <b>Department Manager</b>
@@ -129,47 +122,29 @@
 
         <div id="database" class="tab-content">
             <h1>Master Database</h1>
-            <h2>Global Registry Controls</h2>
             <div class="control-grid">
                 <div class="control-card">
-                    <div><b>Live Database Sync</b><p style="font-size:0.7rem; color:#666;">Real-time data fetching.</p></div>
-                    <label class="switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-                </div>
-                <div class="control-card">
-                    <div><b>Character Encryption</b><p style="font-size:0.7rem; color:#666;">Protect PII data.</p></div>
+                    <div><b>Live Sync</b></div>
                     <label class="switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
                 </div>
             </div>
-            <button class="btn-action" onclick="window.location.href='database.html'">Enter Database.html Interface</button>
+            <button class="btn-action" onclick="window.location.href='database.html'">Open Database Interface</button>
         </div>
 
         <div id="map" class="tab-content">
             <h1>Map Editor</h1>
-            <h2>Dispatch Coordinate Hub</h2>
-            <div class="setting-row">
-                <div style="flex:1;"><b>Map Zoom Speed</b></div>
-                <input type="range" class="slider-ctrl" min="1" max="10" value="5">
-            </div>
-            <div class="control-card">
-                <div><b>Show Unit Blips</b></div>
-                <label class="switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-            </div>
-            <button class="btn-action" style="background:#2b3a67;">Open Map Canvas</button>
+            <button class="btn-action">Open Map Canvas</button>
         </div>
 
         <div id="logs" class="tab-content">
             <h1>System Logs</h1>
-            <div style="background:#000; padding:20px; border-radius:10px; font-family:monospace; color:#4ade80; border:1px solid #333; height:400px; overflow-y:auto;" id="log-box">
-                > Initializing Terminal... OK<br>
-                > Loading Input Profiles... OK<br>
-                > Mechanical Linkage Active.
+            <div style="background:#000; padding:20px; color:#4ade80; border:1px solid #333; height:300px; overflow-y:auto;">
+                > System Online.<br>> Inputs Ready.
             </div>
         </div>
-
     </div>
 
     <script>
-        // Speed Updates
         function updateSpeed(type, val) {
             val = parseFloat(val).toFixed(2);
             localStorage.setItem(`hub_${type}_speed`, val);
@@ -177,7 +152,6 @@
             document.getElementById(`${type}_num`).value = val;
         }
 
-        // Mechanical Linkage (Opposite Logic)
         function setLinkage(trigger, dir) {
             let upDir = (trigger === 'up') ? dir : (dir === 'left' ? 'right' : 'left');
             let downDir = (trigger === 'down') ? dir : (dir === 'left' ? 'right' : 'left');
@@ -202,7 +176,7 @@
         }
 
         function resetSystem() {
-            if(confirm("Reset all speed and direction settings to default?")) {
+            if(confirm("Reset settings?")) {
                 localStorage.setItem('hub_touch_speed', 1.0);
                 localStorage.setItem('hub_mouse_speed', 1.0);
                 localStorage.setItem('hub_dir_up', 'right');
@@ -213,18 +187,11 @@
         }
 
         window.onload = () => {
-            // Load Speed
             updateSpeed('touch', localStorage.getItem('hub_touch_speed') || 1);
             updateSpeed('mouse', localStorage.getItem('hub_mouse_speed') || 1);
-            
-            // Load Smoothness
-            const smooth = localStorage.getItem('hub_smooth') !== 'false';
-            document.getElementById('scroll_smooth').checked = smooth;
-
-            // Load Linkage
+            document.getElementById('scroll_smooth').checked = localStorage.getItem('hub_smooth') !== 'false';
             refreshUI();
-
-            // Load Depts
+            
             const depts = JSON.parse(localStorage.getItem('master_dept_list')) || [
                 { id: 'police', name: 'Law Enforcement', icon: '🚓' },
                 { id: 'ems', name: 'Medical/Fire', icon: '🚑' },
