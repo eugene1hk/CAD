@@ -31,7 +31,7 @@
             padding-bottom: 20px; 
             flex-shrink: 0;
             z-index: 10;
-            /* Using 'smooth' here helps sync the staggered mouse wheel ticks */
+            /* Behavior 'auto' in JS and 'smooth' here creates a nice damped effect */
             scroll-behavior: smooth; 
         }
 
@@ -51,7 +51,7 @@
             border-radius: 10px;
         }
 
-        /* Hover logic restricted to the bar area */
+        /* Hover logic ONLY on the bar area */
         .selection-wrapper::-webkit-scrollbar:hover { height: 16px; }
         .selection-wrapper::-webkit-scrollbar-thumb:hover { background: #718096; }
 
@@ -120,21 +120,19 @@
     <script>
         const scrollContainer = document.getElementById('scroll-container');
 
-        // SYNCED SCROLL LOGIC
+        // SYNCED & BOOSTED SCROLL LOGIC (1.4x Speed)
         scrollContainer.addEventListener('wheel', (e) => {
             if (Math.abs(e.deltaY) > 0) {
-                // Normalize the speed: 
-                // Touchpads usually have small deltaY (1-10)
-                // Mice usually have large deltaY (100+)
-                // We use a mathematical sign check to keep it consistent
-                const speedMultiplier = 1.8; 
-                const direction = e.deltaY > 0 ? 1 : -1;
+                // Base speed calculation
+                const isMouse = Math.abs(e.deltaY) >= 100;
                 
-                // If it's a mouse (huge jump), we dampen it. 
-                // If it's a touchpad (tiny jump), we let it flow.
-                const scrollAmount = Math.abs(e.deltaY) > 50 ? 150 : Math.abs(e.deltaY) * 8;
+                // 1.4x Speed Boosted Logic:
+                // Mouse gets a fixed chunk, Touchpad gets a scaled multiplier
+                const scrollAmount = isMouse ? 210 : Math.abs(e.deltaY) * 11.2;
+                const direction = e.deltaY > 0 ? 1 : -1;
 
-                scrollContainer.scrollLeft -= (direction * scrollAmount * speedMultiplier / 5);
+                // Inverse Scroll: Down = Left, Up = Right
+                scrollContainer.scrollLeft -= (direction * scrollAmount);
                 
                 e.preventDefault(); 
             }
