@@ -9,7 +9,7 @@
         body { 
             background-color: #0b0b0b; 
             color: white; 
-            font-family: 'Segoe UI', sans-serif; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             margin: 0; 
             height: 100vh; 
             display: flex; 
@@ -17,85 +17,99 @@
             overflow: hidden; 
         }
         
-        .top-spacer { height: 10vh; flex-shrink: 0; }
+        .top-spacer { height: 8vh; flex-shrink: 0; }
+
+        /* Restoring Original Header Spacing */
         .header-section { text-align: center; flex-shrink: 0; z-index: 5; }
-        .header-section img { width: 80px; border-radius: 50%; border: 2px solid #3c6e71; margin-bottom: 12px; }
-        .header-section h1 { margin: 0; font-size: 2.1rem; letter-spacing: 5px; text-transform: uppercase; font-weight: 700; }
-        .header-section p { margin: 4px 0 0 0; font-size: 1rem; opacity: 0.5; letter-spacing: 1.5px; }
+        .header-section img { width: 120px; border-radius: 50%; border: 3px solid #3c6e71; margin-bottom: 20px; }
+        .header-section h1 { margin: 0; font-size: 2.2rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; }
+        .header-section p { margin: 10px 0 0 0; font-size: 1rem; opacity: 0.8; }
         
+        /* The Scroll Area */
         .selection-wrapper {
-            width: 85%; 
-            margin: 35px auto 0 auto; 
+            width: 95%; 
+            margin: 50px auto 0 auto; 
             overflow-x: auto;
             overflow-y: hidden;
-            padding-bottom: 20px; 
+            padding-bottom: 30px; 
             flex-shrink: 0;
             z-index: 10;
-            /* Behavior 'auto' in JS and 'smooth' here creates a nice damped effect */
-            scroll-behavior: smooth; 
+            scroll-behavior: auto; /* Essential for smooth JS touchpad control */
         }
 
-        /* SCROLLBAR SYSTEM */
-        .selection-wrapper::-webkit-scrollbar { 
-            height: 6px; 
-            transition: all 0.2s ease;
-        }
-
-        .selection-wrapper::-webkit-scrollbar-track { 
-            background: rgba(255, 255, 255, 0.02); 
-            border-radius: 10px;
-        }
-
-        .selection-wrapper::-webkit-scrollbar-thumb { 
-            background: #4a5568; 
-            border-radius: 10px;
-        }
-
-        /* Hover logic ONLY on the bar area */
+        /* Pro Scrollbar Styling */
+        .selection-wrapper::-webkit-scrollbar { height: 6px; }
+        .selection-wrapper::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); border-radius: 10px; }
+        .selection-wrapper::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 10px; }
         .selection-wrapper::-webkit-scrollbar:hover { height: 16px; }
         .selection-wrapper::-webkit-scrollbar-thumb:hover { background: #718096; }
 
         .selection-container {
             display: flex;
-            gap: 32px;
-            padding: 15px 0;
+            gap: 30px; 
+            padding: 20px 40px;
             min-width: min-content;
         }
 
+        /* RESTORED ORIGINAL CARD SIZING */
         .login-card {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(18px);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 35px; 
+            border-radius: 20px;
+            padding: 40px;
             text-align: center;
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 280px;
-            flex-shrink: 0;
+            justify-content: center;
+            width: 280px;      /* Matches original grid min-width */
+            min-height: 380px; /* Matches original look */
+            flex-shrink: 0;    /* Prevents shrinking */
         }
 
         .login-card:not(.disabled):hover { 
-            transform: translateY(-8px); 
-            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-10px); 
+            background: rgba(255, 255, 255, 0.1);
             border-color: #3c6e71;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
         }
 
-        .icon-circle { width: 75px; height: 75px; background: rgba(255, 255, 255, 0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 2.6rem; }
-        .card-title { font-size: 1.25rem; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
-        .card-desc { font-size: 0.9rem; opacity: 0.45; margin-bottom: 20px; height: 42px; line-height: 1.3; }
-        .btn-enter { padding: 12px 35px; border-radius: 40px; border: none; background: #2b3a67; color: white; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 0.85rem; }
+        .icon-circle { 
+            width: 80px; height: 80px; 
+            background: rgba(255, 255, 255, 0.1); 
+            border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            margin-bottom: 20px; font-size: 2.5em; 
+        }
+        
+        .card-title { font-size: 1.5em; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
+        .card-desc { font-size: 0.9em; opacity: 0.7; margin-bottom: 20px; height: 40px; line-height: 1.4; }
+        
+        .status-tag { 
+            font-size: 0.75em; font-weight: bold; text-transform: uppercase; 
+            letter-spacing: 1px; margin-top: 10px; margin-bottom: 15px;
+        }
+
+        .btn-enter { 
+            padding: 12px 45px; border-radius: 30px; border: none; 
+            background: #2b3a67; color: white; font-weight: bold; 
+            text-transform: uppercase; cursor: pointer; transition: 0.2s;
+            margin-top: 10px;
+        }
+        .btn-enter:hover { background: #3c6e71; }
 
         .bottom-spacer { flex-grow: 1; pointer-events: none; }
+        .disabled { opacity: 0.5; filter: grayscale(1); cursor: not-allowed; }
         
+        /* Fixed Secret Button Access */
         .admin-secret-btn { 
-            position: fixed; bottom: 20px; left: 20px; width: 16px; height: 16px; 
+            position: fixed; bottom: 15px; left: 15px; width: 14px; height: 14px; 
             background: #dc3545; border: none; border-radius: 50%; cursor: pointer; 
-            opacity: 0.15; z-index: 999; transition: opacity 0.3s;
+            opacity: 0.2; z-index: 1000; transition: opacity 0.3s;
         }
-        .admin-secret-btn:hover { opacity: 0.6; }
+        .admin-secret-btn:hover { opacity: 1; }
     </style>
 </head>
 <body>
@@ -104,35 +118,33 @@
 
     <div class="header-section">
         <img src="LRPC_favicon_test.jpeg" alt="Logo">
-        <h1>Terminal Access</h1>
-        <p>Select Department to Initialize Session</p>
+        <h1>TERMINAL ACCESS</h1>
+        <p>Select your department to begin your session</p>
     </div>
 
     <div class="selection-wrapper" id="scroll-container">
-        <div id="main-container" class="selection-container">
-            </div>
+        <div id="main-container" class="selection-container"></div>
     </div>
 
     <div class="bottom-spacer"></div>
 
-    <button class="admin-secret-btn" onclick="window.location.href='backend.html'"></button>
+    <button class="admin-secret-btn" title="Admin Access" onclick="window.location.href='backend.html'"></button>
 
     <script>
         const scrollContainer = document.getElementById('scroll-container');
 
-        // SYNCED & BOOSTED SCROLL LOGIC (1.4x Speed)
+        // REFINED SYNCED SCROLLING
         scrollContainer.addEventListener('wheel', (e) => {
             if (Math.abs(e.deltaY) > 0) {
-                // Base speed calculation
                 const isMouse = Math.abs(e.deltaY) >= 100;
                 
-                // 1.4x Speed Boosted Logic:
-                // Mouse gets a fixed chunk, Touchpad gets a scaled multiplier
-                const scrollAmount = isMouse ? 210 : Math.abs(e.deltaY) * 11.2;
+                // Mouse: Solid chunk for responsiveness
+                // Touchpad: Linear movement to eliminate "jitter/jumping"
+                const moveAmount = isMouse ? 220 : Math.abs(e.deltaY) * 2.5; 
                 const direction = e.deltaY > 0 ? 1 : -1;
 
-                // Inverse Scroll: Down = Left, Up = Right
-                scrollContainer.scrollLeft -= (direction * scrollAmount);
+                // Manual Scroll calculation
+                scrollContainer.scrollLeft -= (direction * moveAmount);
                 
                 e.preventDefault(); 
             }
@@ -142,23 +154,23 @@
             const defaultDepts = [
                 { id: 'police', name: 'Law Enforcement', icon: '🚓', url: 'police.html', desc: 'MDT Access - MET Police Only' },
                 { id: 'ems', name: 'Medical Service', icon: '🚑', url: 'fire.html', desc: 'Patient Care & Dispatch Logs' },
-                { id: 'dot', name: 'DOT', icon: '🚧', url: 'dot.html', desc: 'Highways Agency MDT' },
-                { id: 'civ', name: 'Civilian Portal', icon: '👤', url: 'civ.html', desc: 'Character Registration' }
+                { id: 'dot', name: 'DOT', icon: '🚧', url: 'dot.html', desc: 'Highways Agency & Transport MDT' },
+                { id: 'civ', name: 'Civilian Portal', icon: '👤', url: 'civ.html', desc: 'Character & Vehicle Registration' }
             ];
-            const saved = localStorage.getItem("lrp_departments");
-            const depts = saved ? JSON.parse(saved) : defaultDepts;
+            
             const mainDiv = document.getElementById('main-container');
             mainDiv.innerHTML = ""; 
-            depts.forEach(dept => {
+
+            defaultDepts.forEach(dept => {
                 const isLocked = localStorage.getItem(dept.id + "_locked") === "true";
                 const card = document.createElement('div');
                 card.className = `login-card ${isLocked ? 'disabled' : ''}`;
                 card.innerHTML = `
                     <div class="icon-circle">${dept.icon}</div>
                     <div class="card-title">${dept.name}</div>
-                    <div class="card-desc">${dept.desc || 'Authorized Personnel Only'}</div>
+                    <div class="card-desc">${dept.desc}</div>
                     <div class="status-tag" style="color:${isLocked ? '#ffbc00' : '#4ade80'}">
-                        ${isLocked ? '● Maintenance' : '● System Online'}
+                        ${isLocked ? '● Maintenance In Progress' : '● System Online'}
                     </div>
                     ${!isLocked ? `<button class="btn-enter" onclick="login('${dept.id}', '${dept.name}', '${dept.url}')">Enter</button>` : ''}
                 `;
@@ -172,7 +184,6 @@
             localStorage.setItem("selected_dept_url", url);
             window.location.href = 'login.html';
         }
-
         window.onload = renderHub;
     </script>
 </body>
