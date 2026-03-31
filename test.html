@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LRP | Master Backend Control</title>
+    <title>LRP | Department Management Portal</title>
     <style>
         body {
             background-color: #0f0f0f;
@@ -76,7 +76,7 @@
         h1 { color: #ffffff; font-size: 1.6rem; margin: 0 0 5px 0; }
         h2 { color: #666; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
 
-        /* DYNAMIC MANAGEMENT STYLES */
+        /* MANAGEMENT STYLES */
         .add-form {
             background: #1a1a1a;
             padding: 20px;
@@ -114,7 +114,6 @@
         .btn-delete { background: #c0392b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
         .btn-primary { background: #2b3a67; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.75rem; }
 
-        /* General Utilities */
         .placeholder-box { background: #151515; border: 1px dashed #333; padding: 50px; border-radius: 10px; text-align: center; color: #555; margin-top: 20px; }
         .btn-exit { background: #c0392b; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: auto; text-transform: uppercase; font-size: 0.75rem; }
     </style>
@@ -124,30 +123,29 @@
     <div class="sidebar">
         <div style="text-align: center;">
             <img src="LRPC_favicon_test.jpeg" alt="Logo" style="width: 65px; border-radius: 50%; border: 2px solid #3c6e71;">
-            <h3>STORM BACKEND</h3>
+            <h3>DEPT MANAGER</h3>
         </div>
         
         <nav class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('controls', this)">⚙️ System Controls</button>
-            <button class="tab-btn" onclick="switchTab('database', this)">📂 Master Database</button>
-            <button class="tab-btn" onclick="switchTab('map', this)">🗺️ Map Editor</button>
-            <button class="tab-btn" onclick="switchTab('logs', this)">📜 System Logs</button>
-            <button class="tab-btn" onclick="switchTab('settings', this)">🛡️ Settings</button>
+            <button class="tab-btn active" onclick="switchTab('controls', this)">⚙️ Dept Controls</button>
+            <button class="tab-btn" onclick="switchTab('roster', this)">👥 Unit Roster</button>
+            <button class="tab-btn" onclick="switchTab('announcements', this)">📢 Notices</button>
+            <button class="tab-btn" onclick="switchTab('logs', this)">📜 Dept Logs</button>
         </nav>
 
-        <button class="btn-exit" onclick="window.location.href='option.html'">Exit Terminal</button>
+        <button class="btn-exit" onclick="window.location.href='option.html'">Return to Selection</button>
     </div>
 
     <div class="main-panel">
         
         <div id="controls" class="tab-content active-tab">
-            <h1>System Controls</h1>
-            <h2>Department Management</h2>
+            <h1>Department Controls</h1>
+            <h2>Active Terminal Management</h2>
 
             <div class="add-form">
                 <div class="input-group">
                     <label>ID (Key)</label>
-                    <input type="text" id="new-id" placeholder="police">
+                    <input type="text" id="new-id" placeholder="e.g. police">
                 </div>
                 <div class="input-group">
                     <label>Title</label>
@@ -158,22 +156,22 @@
                     <input type="text" id="new-icon" placeholder="🚓">
                 </div>
                 <div class="input-group">
-                    <label>Page URL</label>
+                    <label>URL</label>
                     <input type="text" id="new-url" placeholder="police.html">
                 </div>
                 <div class="input-group">
-                    <label>Description</label>
+                    <label>Brief Desc</label>
                     <input type="text" id="new-desc" placeholder="MDT Access...">
                 </div>
-                <button class="btn-primary" onclick="addDept()">+ ADD</button>
+                <button class="btn-primary" onclick="addDept()">+ ADD DEPT</button>
             </div>
 
             <table>
                 <thead>
                     <tr>
                         <th>Icon</th>
-                        <th>Department</th>
-                        <th>Status</th>
+                        <th>Department Name</th>
+                        <th>Terminal Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -182,42 +180,35 @@
             </table>
         </div>
 
-        <div id="database" class="tab-content">
-            <h1>Master Database</h1>
-            <h2>Global Citizen & User Management</h2>
+        <div id="roster" class="tab-content">
+            <h1>Unit Roster</h1>
+            <h2>Personnel Directory</h2>
             <div class="placeholder-box">
-                <p>User Directory & Credential Manager</p>
-                <button onclick="window.location.href='database.html'" class="btn-primary" style="margin-top:15px">Initialize Master Registry</button>
+                <p>Loading Active Personnel...</p>
             </div>
         </div>
 
-        <div id="map" class="tab-content">
-            <h1>Map Editor</h1>
-            <h2>Live Dispatch Coordinate Management</h2>
+        <div id="announcements" class="tab-content">
+            <h1>Announcements</h1>
+            <h2>Department-Wide Notices</h2>
             <div class="placeholder-box">
-                <p>Map Render Engine Standby</p>
+                <p>No active announcements.</p>
             </div>
         </div>
 
         <div id="logs" class="tab-content">
-            <h1>System Logs</h1>
-            <h2>Recent Administrative Actions</h2>
+            <h1>Department Logs</h1>
+            <h2>Terminal Activity History</h2>
             <div id="log-output" style="background: #111; padding: 20px; border-radius: 8px; font-family: monospace; color: #4ade80; font-size: 0.85rem; border: 1px solid #222; line-height: 1.6;">
-                > [INFO] System initialized successfully.<br>
-                > [AUTH] Administrative Session Started.
+                > [INFO] Dept Portal initialized.<br>
+                > [AUTH] Admin session established.
             </div>
-        </div>
-
-        <div id="settings" class="tab-content">
-            <h1>Settings</h1>
-            <h2>Core Security Configurations</h2>
-            <div class="placeholder-box"><p>Security modules loading...</p></div>
         </div>
 
     </div>
 
     <script>
-        // MASTER DEPT LIST LOGIC
+        // MASTER DEPT LIST LOGIC (Synced with option.html)
         const defaultDepts = [
             { id: 'police', name: 'Law Enforcement', icon: '🚓', url: 'police.html', desc: 'MDT Access - MET Police Only' },
             { id: 'ems', name: 'Medical Service', icon: '🚑', url: 'fire.html', desc: 'Patient Care & Dispatch Logs' },
@@ -252,7 +243,7 @@
                         </button>
                     </td>
                     <td>
-                        <button class="btn-delete" onclick="deleteDept(${index})">Delete</button>
+                        <button class="btn-delete" onclick="deleteDept(${index})">Remove</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -272,12 +263,11 @@
             list.push({id, name, icon, url, desc});
             saveDepts(list);
 
-            // Clear inputs
             document.querySelectorAll('.add-form input').forEach(i => i.value = '');
         }
 
         function deleteDept(index) {
-            if(!confirm("Remove this department?")) return;
+            if(!confirm("Remove this department from the system?")) return;
             const list = getDepts();
             list.splice(index, 1);
             saveDepts(list);
@@ -289,7 +279,6 @@
             renderAdmin();
         }
 
-        // TAB NAVIGATION
         function switchTab(tabId, element) {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-tab'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
