@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LRPC STORM CAD | Selection Terminal</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: #0b0b0b;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+        }
+
+        .selection-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 350px;
+        }
+
+        .login-card:not(.disabled):hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #3c6e71;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .icon-circle {
+            width: 80px; height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px; font-size: 2.5em;
+        }
+
+        .card-title { font-size: 1.5em; font-weight: bold; margin-bottom: 10px; }
+        .card-desc { font-size: 0.9em; opacity: 0.7; margin-bottom: 15px; height: 40px;}
+
+        .btn-enter {
+            margin-top: 15px; padding: 10px 40px;
+            border-radius: 30px; border: none;
+            background: #2b3a67; color: white;
+            font-weight: bold; text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-enter:hover { background: #3c6e71; }
+
+        .disabled {
+            opacity: 0.5;
+            filter: grayscale(1);
+            cursor: not-allowed;
+        }
+
+        .status-tag {
+            font-size: 0.75em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        /* Tiny Secret Admin Button */
+        .admin-secret-btn {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            width: 12px;
+            height: 12px;
+            background: #dc3545;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+
+        .admin-secret-btn:hover { opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <div style="text-align: center; margin-top: 60px;">
+        <img src="LRPC_favicon_test.jpeg" alt="LRP Logo" style="width: 120px; border-radius: 50%; border: 3px solid #3c6e71;">
+        <h1 style="margin-top: 20px; letter-spacing: 3px;">TERMINAL ACCESS</h1>
+        <p style="opacity: 0.8;">Select your department to begin your session</p>
+    </div>
+
+    <div class="selection-container">
+        <div id="police-card" class="login-card">
+            <div class="icon-circle">🚓</div>
+            <div class="card-title">LAW ENFORCEMENT</div>
+            <div class="card-desc">MDT Access - MET Police Only</div>
+            <div id="police-status" class="status-tag"></div>
+            <button id="police-btn" class="btn-enter" style="display:none;">Enter</button>
+        </div>
+
+        <div id="ems-card" class="login-card">
+            <div class="icon-circle">🚑</div>
+            <div class="card-title">MEDICAL SERVICE</div>
+            <div class="card-desc">Patient Care & Dispatch Logs</div>
+            <div id="ems-status" class="status-tag"></div>
+            <button id="ems-btn" class="btn-enter" style="display:none;">Enter</button>
+        </div>
+
+        <div id="dot-card" class="login-card">
+            <div class="icon-circle">🚧</div>
+            <div class="card-title">DOT</div>
+            <div class="card-desc">Highways Agency & Transport MDT</div>
+            <div id="dot-status" class="status-tag"></div>
+            <button id="dot-btn" class="btn-enter" style="display:none;">Enter</button>
+        </div>
+
+        <div id="civ-card" class="login-card">
+            <div class="icon-circle">👤</div>
+            <div class="card-title">CIVILIAN PORTAL</div>
+            <div class="card-desc">Character & Vehicle Registration</div>
+            <div id="civ-status" class="status-tag"></div>
+            <button id="civ-btn" class="btn-enter" style="display:none;">Enter</button>
+        </div>
+    </div>
+
+    <button class="admin-secret-btn" title="Admin Access" onclick="window.location.href='backend.html'"></button>
+
+    <script>
+    function updateHubUI() {
+        const depts = [
+            { id: 'police', name: 'Law Enforcement', url: 'police.html' },
+            { id: 'ems', name: 'Medical Service', url: 'fire.html' },
+            { id: 'dot', name: 'Department of Transport', url: 'dot.html' },
+            { id: 'civ', name: 'Civilian Portal', url: 'civ.html' }
+        ];
+
+        depts.forEach(dept => {
+            const card = document.getElementById(dept.id + '-card');
+            const statusDiv = document.getElementById(dept.id + '-status');
+            const btn = document.getElementById(dept.id + '-btn');
+            
+            // Check if department is locked in backend
+            const isLocked = localStorage.getItem(dept.id + "_locked") !== "false";
+
+            if (isLocked) {
+                card.classList.add('disabled');
+                statusDiv.innerText = "● Maintenance In Progress";
+                statusDiv.style.color = "#ffbc00";
+                btn.style.display = "none";
+            } else {
+                card.classList.remove('disabled');
+                statusDiv.innerText = "● System Online";
+                statusDiv.style.color = "#4ade80";
+                btn.style.display = "block";
+
+                btn.onclick = () => {
+                    // Save context so login.html knows where we are going
+                    localStorage.setItem("selected_dept_id", dept.id);
+                    localStorage.setItem("selected_dept_name", dept.name);
+                    localStorage.setItem("selected_dept_url", dept.url);
+                    window.location.href = 'login.html';
+                };
+            }
+        });
+    }
+
+    // Run the UI check as soon as the page loads
+    window.onload = updateHubUI;
+    </script>
+</body>
+</html>
