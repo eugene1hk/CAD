@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LRPC STORM CAD | Selection Terminal</title>
     <style>
-        * { box-sizing: border-box; }
-
         body { 
             background-color: #0b0b0b; 
             color: white; 
@@ -19,106 +17,140 @@
             overflow: hidden; 
         }
         
-        /* This spacer pushes the content down from the top */
-        .top-spacer { flex: 0 0 10vh; }
+        /* 1. TOP SPACING - Fixed at 12% of screen height for a consistent "drop" */
+        .top-spacer { 
+            height: 12vh; 
+            flex-shrink: 0; 
+        }
 
         .header-section { 
             text-align: center; 
             flex-shrink: 0;
-            padding: 0 20px;
         }
         
         .header-section img {
-            width: clamp(60px, 8vh, 100px); /* Scales logo based on screen height */
+            width: 90px; 
             border-radius: 50%; 
             border: 2px solid #3c6e71;
-            margin-bottom: 1vh;
+            margin-bottom: 15px;
         }
 
         .header-section h1 { 
-            margin: 5px 0; 
-            font-size: clamp(1.5rem, 4vh, 2.5rem); /* Text scales with screen size */
-            letter-spacing: 5px; 
+            margin: 0; 
+            font-size: 2.4rem; 
+            letter-spacing: 6px; 
             text-transform: uppercase;
+            font-weight: 800;
         }
         
         .header-section p { 
-            margin: 0; 
-            font-size: clamp(0.8rem, 1.5vh, 1rem);
-            opacity: 0.6; 
+            margin: 5px 0 0 0; 
+            font-size: 1.1rem;
+            opacity: 0.5; 
+            letter-spacing: 2px;
         }
         
-        /* THE SELECTION WRAPPER */
+        /* 2. THE SELECTION WRAPPER - Centered at 80% width */
         .selection-wrapper {
-            width: 85%; 
-            margin: 4vh auto 0 auto; /* Added 4% height margin above cards */
+            width: 80%; 
+            margin: 50px auto 0 auto; /* Large fixed gap under header */
             overflow-x: auto;
             overflow-y: hidden;
-            padding-bottom: 20px; 
+            padding-bottom: 30px; 
             flex-shrink: 0;
-            z-index: 2;
         }
 
-        /* Responsive Scrollbar */
+        /* Low Profile Scrollbar */
         .selection-wrapper::-webkit-scrollbar { height: 6px; }
-        .selection-wrapper::-webkit-scrollbar-track { background: #1a1a1a; border-radius: 10px; }
+        .selection-wrapper::-webkit-scrollbar-track { background: #151515; border-radius: 10px; }
         .selection-wrapper::-webkit-scrollbar-thumb { background: #2b3a67; border-radius: 10px; }
 
         .selection-container {
             display: flex;
-            gap: 2vw; /* Gap scales with screen width */
-            padding: 10px 0;
+            gap: 40px; /* Massive spacing between cards */
+            padding: 20px 0;
             min-width: min-content;
         }
 
-        /* DYNAMIC CARDS */
+        /* 3. LARGE PREMIUM CARDS */
         .login-card {
             background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: clamp(20px, 3vh, 40px); /* Padding shrinks on smaller screens */
+            border-radius: 28px;
+            padding: 45px; /* Deep padding for that "expensive" feel */
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: clamp(240px, 20vw, 300px); /* Width scales between 240px and 300px */
+            width: 300px; /* Fixed large width */
             flex-shrink: 0;
         }
 
-        /* 65% POSITIONING LOGIC */
-        /* This pushes the content up so it sits roughly 65% from the bottom */
-        .bottom-spacer { 
-            flex-grow: 1; 
-            min-height: 25vh; /* This ensures there's always "dead space" at the bottom */
+        .login-card:not(.disabled):hover { 
+            transform: translateY(-15px); 
+            background: rgba(255, 255, 255, 0.07);
+            border-color: #3c6e71;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
 
         .icon-circle { 
-            width: clamp(50px, 7vh, 85px); 
-            height: clamp(50px, 7vh, 85px); 
+            width: 90px; 
+            height: 90px; 
             background: rgba(255, 255, 255, 0.05); 
             border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
-            margin-bottom: 2vh; 
-            font-size: clamp(1.5rem, 3vh, 2.5rem); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin-bottom: 25px; 
+            font-size: 3rem; 
         }
         
-        .card-title { font-size: clamp(0.9rem, 2vh, 1.2rem); font-weight: bold; margin-bottom: 0.5vh; text-transform: uppercase; }
-        .card-desc { font-size: 0.85rem; opacity: 0.5; margin-bottom: 1.5vh; height: 3em; overflow: hidden; line-height: 1.2; }
+        .card-title { 
+            font-size: 1.4rem; 
+            font-weight: bold; 
+            margin-bottom: 10px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+        }
+
+        .card-desc { 
+            font-size: 0.95rem; 
+            opacity: 0.4; 
+            margin-bottom: 25px; 
+            height: 50px; 
+            line-height: 1.4; 
+        }
         
         .btn-enter { 
-            padding: 1vh 2.5vw; 
-            border-radius: 30px; border: none; 
-            background: #2b3a67; color: white; 
-            font-weight: bold; cursor: pointer; 
-            text-transform: uppercase; font-size: 0.8rem; 
+            padding: 14px 40px; 
+            border-radius: 40px; 
+            border: none; 
+            background: #2b3a67; 
+            color: white; 
+            font-weight: bold; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            font-size: 0.9rem; 
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .btn-enter:hover {
+            background: #3c6e71;
+            transform: scale(1.05);
         }
         
-        .disabled { opacity: 0.3; filter: grayscale(1); }
-        .status-tag { font-size: 0.7rem; font-weight: bold; margin-bottom: 1vh; text-transform: uppercase; }
-        
-        .admin-secret-btn { position: fixed; bottom: 15px; left: 15px; width: 14px; height: 14px; background: #dc3545; border: none; border-radius: 50%; cursor: pointer; opacity: 0.05; }
+        /* 4. THE 65% POSITIONER */
+        /* This spacer takes up the rest of the bottom screen to keep cards elevated */
+        .bottom-spacer { 
+            flex-grow: 1; 
+        }
+
+        .status-tag { font-size: 0.75rem; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .disabled { opacity: 0.2; filter: grayscale(1); }
+        .admin-secret-btn { position: fixed; bottom: 20px; left: 20px; width: 15px; height: 15px; background: #dc3545; border: none; border-radius: 50%; cursor: pointer; opacity: 0.03; }
     </style>
 </head>
 <body>
@@ -128,7 +160,7 @@
     <div class="header-section">
         <img src="LRPC_favicon_test.jpeg" alt="Logo">
         <h1>Terminal Access</h1>
-        <p>Initialize Secure Department Session</p>
+        <p>Select Department to Initialize Session</p>
     </div>
 
     <div class="selection-wrapper">
@@ -141,6 +173,7 @@
     <button class="admin-secret-btn" onclick="window.location.href='backend.html'"></button>
 
     <script>
+        // ... (Script remains exactly the same as before)
         function renderHub() {
             const defaultDepts = [
                 { id: 'police', name: 'Law Enforcement', icon: '🚓', url: 'police.html', desc: 'MDT Access - MET Police Only' },
@@ -148,12 +181,10 @@
                 { id: 'dot', name: 'DOT', icon: '🚧', url: 'dot.html', desc: 'Highways Agency MDT' },
                 { id: 'civ', name: 'Civilian Portal', icon: '👤', url: 'civ.html', desc: 'Character Registration' }
             ];
-
             const saved = localStorage.getItem("lrp_departments");
             const depts = saved ? JSON.parse(saved) : defaultDepts;
             const container = document.getElementById('main-container');
             container.innerHTML = ""; 
-
             depts.forEach(dept => {
                 const isLocked = localStorage.getItem(dept.id + "_locked") === "true";
                 const card = document.createElement('div');
@@ -170,14 +201,12 @@
                 container.appendChild(card);
             });
         }
-
         function login(id, name, url) {
             localStorage.setItem("selected_dept_id", id);
             localStorage.setItem("selected_dept_name", name);
             localStorage.setItem("selected_dept_url", url);
             window.location.href = 'login.html';
         }
-
         window.onload = renderHub;
     </script>
 </body>
