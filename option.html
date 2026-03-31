@@ -2,274 +2,123 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LRPC STORM CAD | Selection Terminal</title>
+    <title>LRP | Master Backend</title>
     <style>
-        body { 
-            /* Restored the blue gradient background from the image */
-            background: radial-gradient(circle at top, #2c3e50, #000000);
-            background-attachment: fixed;
-            color: white; 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            margin: 0; 
-            height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; 
-            align-items: center; 
-        }
-
-        .header-section { 
-            text-align: center; 
-            margin-top: 60px; 
-            flex-shrink: 0; 
-        }
-
-        .header-section img { 
-            width: 70px; 
-            margin-bottom: 15px;
-        }
-
-        .header-section h1 {
-            font-size: 2.2rem;
-            letter-spacing: 4px;
-            margin: 0;
-            font-weight: 700;
-            color: #ffffff;
-            text-transform: uppercase;
-        }
-
-        .sub-header { 
-            color: #bdc3c7; 
-            font-size: 0.95rem;
-            margin-top: 10px;
-            letter-spacing: 0.5px;
-        }
-
-        /* Centering the card wrapper */
-        .selection-wrapper { 
-            width: 90%; 
-            margin-top: 40px;
-            overflow-x: auto; 
-            overflow-y: hidden; 
-            padding: 20px 0;
-            /* Hide standard scrollbar for a cleaner look */
-            scrollbar-width: none; 
-        }
-
-        .selection-wrapper::-webkit-scrollbar { display: none; }
-
-        .selection-container { 
-            display: flex; 
-            gap: 30px; 
-            padding: 20px 40px; 
-            justify-content: center;
-            min-width: min-content; 
-        }
-        
-        /* Glassmorphism Cards */
-        .login-card { 
-            background: rgba(255, 255, 255, 0.05); 
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 25px; 
-            padding: 40px 20px; 
-            text-align: center; 
-            width: 260px; 
-            flex-shrink: 0;
-            transition: all 0.3s ease;
-        }
-
-        .login-card:hover:not(.disabled) { 
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-10px); 
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .login-card.disabled { 
-            opacity: 0.4; 
-            cursor: not-allowed; 
-        }
-
-        .icon-circle { 
-            width: 80px; 
-            height: 80px; 
-            background: rgba(255, 255, 255, 0.1); 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            margin: 0 auto 25px; 
-            font-size: 2.5rem; 
-        }
-
-        .login-card h3 {
-            font-size: 1.3rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 10px 0 5px 0;
-            color: #ffffff;
-        }
-
-        .dept-desc {
-            font-size: 0.85rem;
-            color: #95a5a6;
-            margin-bottom: 20px;
-        }
-
-        /* Status Styling */
-        .status-online { 
-            color: #2ecc71; 
-            font-size: 0.8rem; 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-            margin-bottom: 20px;
-        }
-
-        .status-locked { 
-            color: #f1c40f; 
-            font-size: 0.8rem; 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-            margin-bottom: 20px;
-        }
-
-        .btn-enter { 
-            background: #2c3e50; 
-            color: #ffffff; 
-            border: none; 
-            padding: 12px 40px; 
-            border-radius: 30px; 
-            cursor: pointer; 
-            font-weight: 700; 
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            transition: 0.3s; 
-        }
-
-        .btn-enter:hover { 
-            background: #34495e;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        /* Bottom Scroll Progress Bar */
-        .scroll-progress-container {
-            width: 80%;
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            margin-top: auto;
-            margin-bottom: 40px;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        
-        .scroll-bar-fill {
-            width: 30%;
-            height: 100%;
-            background: rgba(255,255,255,0.3);
-            border-radius: 10px;
-        }
-
-        .admin-secret-btn { 
-            position: fixed; 
-            bottom: 15px; 
-            left: 15px; 
-            width: 15px; 
-            height: 15px; 
-            background: transparent; 
-            border: none; 
-            cursor: pointer; 
-        }
+        body { background: #0f0f0f; color: #e0e0e0; font-family: sans-serif; display: flex; height: 100vh; margin: 0; }
+        .sidebar { width: 240px; background: #1a1a1a; padding: 20px; border-right: 1px solid #333; }
+        .nav-btn { width: 100%; padding: 12px; margin: 4px 0; background: none; border: none; color: #888; text-align: left; cursor: pointer; border-radius: 5px; }
+        .nav-btn.active { background: #2b3a67; color: white; }
+        .panel { flex: 1; padding: 40px; overflow-y: auto; display: none; }
+        .panel.active { display: block; }
+        .card { background: #1a1a1a; border: 1px solid #333; padding: 20px; border-radius: 10px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+        .slider-wrap { flex: 1; margin: 0 20px; }
+        input[type="range"] { width: 100%; }
+        .num-box { width: 60px; background: #000; border: 1px solid #444; color: #4ade80; text-align: center; padding: 5px; }
+        .dir-btn { background: #222; border: 1px solid #444; color: white; padding: 5px 10px; cursor: pointer; }
+        .dir-btn.active { background: #3c6e71; border-color: #fff; }
     </style>
 </head>
 <body>
-
-    <div class="header-section">
-        <img src="Logo_Placeholder.png" alt="Logo" id="main-logo">
-        <h1>Terminal Access</h1>
-        <p class="sub-header">Select your department to begin your session</p>
+    <div class="sidebar">
+        <h3>STORM BACKEND</h3>
+        <button class="nav-btn active" onclick="showTab('controls')">Controls</button>
+        <button class="nav-btn" onclick="showTab('admin')">Admin</button>
+        <button class="nav-btn" onclick="showTab('database')">Database</button>
+        <button class="nav-btn" onclick="showTab('version')">Version</button>
+        <br><button onclick="window.location.href='option.html'" style="color: red; background: none; border: none; cursor: pointer;">Exit</button>
     </div>
 
-    <div class="selection-wrapper" id="scroll-container">
-        <div id="main-container" class="selection-container"></div>
+    <div id="controls" class="panel active">
+        <h1>System Controls</h1>
+        <div id="dept-locks"></div>
+
+        <h3>Mechanical Speed (Max 10x)</h3>
+        <div class="card">
+            <span>Touchpad</span>
+            <div class="slider-wrap"><input type="range" id="t_slide" min="0.01" max="10" step="0.01" oninput="sync('touch', this.value)"></div>
+            <input type="number" id="t_num" class="num-box" onchange="sync('touch', this.value)">
+        </div>
+        <div class="card">
+            <span>Mouse</span>
+            <div class="slider-wrap"><input type="range" id="m_slide" min="0.01" max="10" step="0.01" oninput="sync('mouse', this.value)"></div>
+            <input type="number" id="m_num" class="num-box" onchange="sync('mouse', this.value)">
+        </div>
+
+        <h3>Scroll Linkage</h3>
+        <div class="card">
+            <span>Scroll UP</span>
+            <div>
+                <button id="up-left" class="dir-btn" onclick="setLink('up','left')">LEFT</button>
+                <button id="up-right" class="dir-btn" onclick="setLink('up','right')">RIGHT</button>
+            </div>
+        </div>
+        <div class="card">
+            <span>Scroll DOWN</span>
+            <div>
+                <button id="down-left" class="dir-btn" onclick="setLink('down','left')">LEFT</button>
+                <button id="down-right" class="dir-btn" onclick="setLink('down','right')">RIGHT</button>
+            </div>
+        </div>
     </div>
 
-    <div class="scroll-progress-container">
-        <div class="scroll-bar-fill" id="progress-fill"></div>
+    <div id="admin" class="panel"><h1>Admin</h1><p>Global Maintenance controls and logs.</p></div>
+    <div id="database" class="panel"><h1>Database</h1><p>Character Encryption Slider Removed.</p></div>
+    <div id="version" class="panel">
+        <h1>System Version</h1>
+        <div class="card">
+            <span id="v-string">Version: 1.0.Fetch...</span>
+            <span id="c-count">Commits: --</span>
+        </div>
     </div>
-
-    <button class="admin-secret-btn" onclick="window.location.href='backend.html'"></button>
 
     <script>
-        const scrollContainer = document.getElementById('scroll-container');
-        const progressFill = document.getElementById('progress-fill');
-        let targetScroll = 0;
-        let currentScroll = 0;
-
-        // Synchronized Scrolling Logic
-        scrollContainer.addEventListener('wheel', (e) => {
-            const upMapping = localStorage.getItem('hub_dir_up') || 'right';
-            const downMapping = localStorage.getItem('hub_dir_down') || 'left';
-            
-            const isMouse = Math.abs(e.deltaY) >= 100;
-            const speedMult = isMouse ? 
-                (parseFloat(localStorage.getItem('hub_mouse_speed')) || 1.0) : 
-                (parseFloat(localStorage.getItem('hub_touch_speed')) || 1.0);
-
-            let move = e.deltaY * speedMult;
-
-            if (e.deltaY < 0) { 
-                move = (upMapping === 'left') ? -Math.abs(move) : Math.abs(move);
-            } else { 
-                move = (downMapping === 'left') ? -Math.abs(move) : Math.abs(move);
-            }
-
-            e.preventDefault();
-            targetScroll += move;
-            const max = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-            targetScroll = Math.max(0, Math.min(targetScroll, max));
-        }, { passive: false });
-
-        function animate() {
-            currentScroll += (targetScroll - currentScroll) * 0.1;
-            scrollContainer.scrollLeft = currentScroll;
-            
-            // Update the visual scroll progress bar at the bottom
-            const max = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-            const percent = (currentScroll / max) * 100;
-            progressFill.style.width = (percent || 0) + "%";
-
-            requestAnimationFrame(animate);
+        function showTab(id) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
         }
-        animate();
 
-        function renderHub() {
-            const depts = JSON.parse(localStorage.getItem('master_dept_list')) || [
-                { id: 'police', name: 'Law Enforcement', icon: '🚓', desc: 'MDT Access - MET Police Only' },
-                { id: 'ems', name: 'Medical Service', icon: '🚑', desc: 'Patient Care & Dispatch Logs' },
-                { id: 'dot', name: 'DOT', icon: '🚧', desc: 'Highways Agency & Transport MDT' },
-                { id: 'civ', name: 'Civilian Portal', icon: '👤', desc: 'Character & Vehicle Registration' }
-            ];
-            
-            const container = document.getElementById('main-container');
-            container.innerHTML = depts.map(dept => {
-                const isLocked = localStorage.getItem(dept.id + "_locked") === "true";
-                return `
-                    <div class="login-card ${isLocked ? 'disabled' : ''}">
-                        <div class="icon-circle">${dept.icon}</div>
-                        <h3>${dept.name}</h3>
-                        <p class="dept-desc">${dept.desc || ''}</p>
-                        <div class="${isLocked ? 'status-locked' : 'status-online'}">
-                            ● ${isLocked ? 'Maintenance' : 'System Online'}
-                        </div>
-                        ${!isLocked ? `<button class="btn-enter" onclick="window.location.href='login.html'">Enter</button>` : ''}
-                    </div>
-                `;
-            }).join('');
+        function sync(type, val) {
+            val = Math.min(val, 10);
+            localStorage.setItem(`hub_${type}_speed`, val);
+            const prefix = type === 'touch' ? 't' : 'm';
+            document.getElementById(prefix+'_slide').value = val;
+            document.getElementById(prefix+'_num').value = val;
         }
-        window.onload = renderHub;
+
+        function setLink(trigger, dir) {
+            localStorage.setItem(`hub_dir_${trigger}`, dir);
+            document.querySelectorAll(`[id^="${trigger}-"]`).forEach(b => b.classList.remove('active'));
+            document.getElementById(`${trigger}-${dir}`).classList.add('active');
+        }
+
+        async function getVersion() {
+            try {
+                // Replace with your actual user/repo
+                const res = await fetch('https://api.github.com/repos/YOUR_USER/YOUR_REPO/commits');
+                const data = await res.json();
+                document.getElementById('v-string').innerText = `Version: 1.0.${data.length}`;
+                document.getElementById('c-count').innerText = `Total Commits: ${data.length}`;
+            } catch { document.getElementById('v-string').innerText = "Version: 1.0.Local"; }
+        }
+
+        window.onload = () => {
+            sync('touch', localStorage.getItem('hub_touch_speed') || 1.0);
+            sync('mouse', localStorage.getItem('hub_mouse_speed') || 1.0);
+            setLink('up', localStorage.getItem('hub_dir_up') || 'right');
+            setLink('down', localStorage.getItem('hub_dir_down') || 'left');
+            getVersion();
+
+            const depts = [{id:'police', n:'LEO'}, {id:'ems', n:'EMS'}, {id:'dot', n:'DOT'}, {id:'civ', n:'CIV'}];
+            document.getElementById('dept-locks').innerHTML = depts.map(d => `
+                <div class="card">
+                    <span>${d.n} Locked</span>
+                    <input type="checkbox" ${localStorage.getItem(d.id+'_locked') === 'true' ? 'checked' : ''} 
+                    onchange="localStorage.setItem('${d.id}_locked', this.checked)">
+                </div>
+            `).join('');
+        };
     </script>
 </body>
 </html>
