@@ -5,167 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LRP | Master Backend Control</title>
     <style>
-        body {
-            background-color: #0f0f0f;
-            color: #e0e0e0;
-            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-            margin: 0;
-            display: flex;
-            min-height: 100vh;
-            overflow: hidden;
-        }
-
-        /* Sidebar Navigation */
-        .sidebar {
-            width: 250px;
-            background-color: #1a1a1a;
-            border-right: 1px solid #333;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-        }
-
-        .sidebar h3 {
-            font-size: 0.8rem;
-            margin-top: 10px;
-            letter-spacing: 1px;
-            text-align: center;
-            color: #fff;
-        }
-
-        .nav-tabs {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            margin-top: 30px;
-        }
-
-        .tab-btn {
-            background: transparent;
-            color: #888;
-            border: none;
-            padding: 12px 15px;
-            text-align: left;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: 0.2s;
-            font-size: 0.85rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .tab-btn:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
-        .tab-btn.active { background: #2b3a67; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-
-        /* Main Content */
-        .main-panel { 
-            flex-grow: 1; 
-            padding: 40px; 
-            overflow-y: auto; 
-            background-color: #0f0f0f;
-        }
-        
+        body { background-color: #0f0f0f; color: #e0e0e0; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; display: flex; min-height: 100vh; overflow: hidden; }
+        .sidebar { width: 250px; background-color: #1a1a1a; border-right: 1px solid #333; padding: 20px; display: flex; flex-direction: column; }
+        .sidebar h3 { font-size: 0.8rem; text-align: center; color: #fff; letter-spacing: 1px; }
+        .nav-tabs { display: flex; flex-direction: column; gap: 5px; margin-top: 30px; }
+        .tab-btn { background: transparent; color: #888; border: none; padding: 12px 15px; text-align: left; border-radius: 6px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; }
+        .tab-btn.active { background: #2b3a67; color: #fff; }
+        .main-panel { flex-grow: 1; padding: 40px; overflow-y: auto; }
         .tab-content { display: none; }
         .tab-content.active-tab { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; } }
+        
+        h1 { color: #fff; font-size: 1.6rem; }
+        h2 { color: #666; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin: 20px 0; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .control-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .control-card { background: #1a1a1a; border: 1px solid #333; padding: 20px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Speed Selector Styling */
+        .speed-track { display: flex; gap: 5px; margin-top: 10px; }
+        .speed-opt { flex: 1; background: #333; padding: 8px; border-radius: 4px; text-align: center; cursor: pointer; font-size: 0.7rem; transition: 0.2s; border: 1px solid transparent; }
+        .speed-opt.active { background: #3c6e71; border-color: #4ade80; color: white; }
 
-        h1 { color: #ffffff; font-size: 1.6rem; margin: 0 0 5px 0; }
-        h2 { color: #666; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
-
-        /* Control Grid & Cards */
-        .control-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .control-card {
-            background-color: #1a1a1a;
-            border: 1px solid #333;
-            padding: 20px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Toggle Switches */
         .switch { position: relative; width: 46px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #333; transition: .4s; border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 16px; width: 16px;
-            left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%;
-        }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: #2ecc71; }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        /* Management Section */
-        .mgmt-section {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .btn-mgmt {
-            background: #3c6e71;
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            transition: 0.3s;
-        }
-        .btn-mgmt:hover { background: #2b3a67; transform: translateY(-2px); }
-
-        /* Placeholder UI */
-        .placeholder-box {
-            background: #151515;
-            border: 1px dashed #333;
-            padding: 50px;
-            border-radius: 10px;
-            text-align: center;
-            color: #555;
-            margin-top: 20px;
-        }
-
-        .btn-primary {
-            background: #2b3a67; color: white; border: none;
-            padding: 12px 25px; border-radius: 5px; cursor: pointer;
-            font-weight: bold; text-transform: uppercase; margin-top: 15px;
-        }
-        .btn-primary:hover { background: #3c6e71; }
-
-        .btn-exit {
-            background: #c0392b; color: white; border: none;
-            padding: 12px; border-radius: 5px; cursor: pointer;
-            font-weight: bold; margin-top: auto; text-transform: uppercase; font-size: 0.75rem;
-        }
-
-        /* Log styling */
-        .log-container {
-            background: #111; 
-            padding: 20px; 
-            border-radius: 8px; 
-            font-family: monospace; 
-            color: #4ade80; 
-            font-size: 0.85rem; 
-            border: 1px solid #222; 
-            line-height: 1.6;
-        }
+        .btn-exit { background: #c0392b; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; margin-top: auto; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -175,137 +44,98 @@
             <img src="LRPC_favicon_test.jpeg" alt="Logo" style="width: 65px; border-radius: 50%; border: 2px solid #3c6e71;">
             <h3>STORM BACKEND</h3>
         </div>
-        
         <nav class="nav-tabs">
-            <button id="default-btn" class="tab-btn active" onclick="switchTab('controls', this)">⚙️ System Controls</button>
-            <button class="tab-btn" onclick="switchTab('database', this)">📂 Master Database</button>
-            <button class="tab-btn" onclick="switchTab('map', this)">🗺️ Map Editor</button>
-            <button class="tab-btn" onclick="switchTab('logs', this)">📜 System Logs</button>
+            <button class="tab-btn active" onclick="switchTab('controls', this)">⚙️ System Controls</button>
             <button class="tab-btn" onclick="switchTab('settings', this)">🛡️ Settings</button>
         </nav>
-
         <button class="btn-exit" onclick="window.location.href='option.html'">Exit Terminal</button>
     </div>
 
     <div class="main-panel">
-        
         <div id="controls" class="tab-content active-tab">
             <h1>System Controls</h1>
-            <h2>Maintenance Mode Management</h2>
-            <div class="control-grid" id="dynamic-toggle-container">
+            
+            <h2>Input Smoothness & Direction</h2>
+            <div class="control-grid">
+                <div class="control-card">
+                    <div><b>Invert Vertical Scroll</b><p style="font-size:0.7rem; color:#666;">Up/Down moves Left/Right</p></div>
+                    <label class="switch">
+                        <input type="checkbox" id="scroll_invert" onchange="saveSettings()">
+                        <span class="slider"></span>
+                    </label>
                 </div>
-
-            <h2>Terminal Structure Management</h2>
-            <div class="mgmt-section">
-                <p style="color: #888; font-size: 0.85rem; margin-bottom: 20px;">Add or remove departments and update their details.</p>
-                <button class="btn-mgmt" onclick="window.location.href='dept.html'">Department Manager</button>
+                <div class="control-card">
+                    <div><b>Kinetic Smoothness</b><p style="font-size:0.7rem; color:#666;">Enables non-detent rolling</p></div>
+                    <label class="switch">
+                        <input type="checkbox" id="scroll_smooth" checked onchange="saveSettings()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
             </div>
+
+            <h2>Touchpad Speed (4 Levels)</h2>
+            <div class="speed-track" id="touchpad-speeds">
+                <div class="speed-opt" onclick="setSpeed('touch', 0.5, this)">Slow</div>
+                <div class="speed-opt active" onclick="setSpeed('touch', 1.0, this)">Normal</div>
+                <div class="speed-opt" onclick="setSpeed('touch', 2.0, this)">Fast</div>
+                <div class="speed-opt" onclick="setSpeed('touch', 4.0, this)">Extreme</div>
+            </div>
+
+            <h2>Mouse Wheel Speed (4 Levels)</h2>
+            <div class="speed-track" id="mouse-speeds">
+                <div class="speed-opt" onclick="setSpeed('mouse', 0.5, this)">Slow</div>
+                <div class="speed-opt active" onclick="setSpeed('mouse', 1.0, this)">Normal</div>
+                <div class="speed-opt" onclick="setSpeed('mouse', 2.5, this)">Fast</div>
+                <div class="speed-opt" onclick="setSpeed('mouse', 5.0, this)">Extreme</div>
+            </div>
+
+            <h2>Dynamic Department Toggles</h2>
+            <div class="control-grid" id="dynamic-toggle-container" style="margin-top:20px;"></div>
         </div>
-
-        <div id="database" class="tab-content">
-            <h1>Master Database</h1>
-            <h2>Global Citizen & User Management</h2>
-            <div class="placeholder-box">
-                <p>User Directory & Credential Manager</p>
-                <p style="font-size: 0.8rem; color: #888; margin-bottom: 10px;">Access the central registry to modify department assignments, callsigns, and security passwords.</p>
-                <button onclick="window.location.href='database.html'" class="btn-primary">Initialize Master Registry</button>
-            </div>
-        </div>
-
-        <div id="map" class="tab-content">
-            <h1>Map Editor</h1>
-            <h2>Live Dispatch Coordinate Management</h2>
-            <div class="placeholder-box">
-                <p>Map Render Engine Standby</p>
-                <p style="font-size: 0.8rem; color: #666;">Drag and drop dispatch markers to update live MDT maps for all units.</p>
-                <button class="btn-primary" disabled style="opacity: 0.5; cursor: not-allowed;">Open Map Canvas</button>
-            </div>
-        </div>
-
-        <div id="logs" class="tab-content">
-            <h1>System Logs</h1>
-            <h2>Recent Administrative Actions</h2>
-            <div class="log-container">
-                > [INFO] System initialized successfully.<br>
-                > [INFO] Connection to LocalStorage: STABLE.<br>
-                > [AUTH] Administrative Session Started.<br>
-                > [DEBUG] Tab listener active.<br>
-                > [DATA] Master Department List synchronized.
-            </div>
-        </div>
-
-        <div id="settings" class="tab-content">
-            <h1>Settings</h1>
-            <h2>Core Security Configurations</h2>
-            <div class="control-card" style="margin-bottom: 10px;">
-                <div><b>Admin Debug Mode</b><p style="font-size: 0.75rem; color: #666; margin: 0;">Show technical errors in console</p></div>
-                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
-            </div>
-            <div class="control-card">
-                <div><b>Auto-Sync LocalStorage</b><p style="font-size: 0.75rem; color: #666; margin: 0;">Update selection page in real-time</p></div>
-                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
-            </div>
-        </div>
-
     </div>
 
     <script>
-        // Shared Department Logic
-        const defaultDepts = [
-            { id: 'police', name: 'Law Enforcement', icon: '🚓', desc: 'Metropolitan Police' },
-            { id: 'ems', name: 'Medical/Fire', icon: '🚑', desc: 'L.A.S / L.F.B' },
-            { id: 'dot', name: 'DOT Access', icon: '🚧', desc: 'Highways Agency' },
-            { id: 'civ', name: 'Civilian Portal', icon: '👤', desc: 'Citizen Registry' }
-        ];
-
-        function getDepts() {
-            const saved = localStorage.getItem('master_dept_list');
-            return saved ? JSON.parse(saved) : defaultDepts;
+        function saveSettings() {
+            localStorage.setItem('hub_invert', document.getElementById('scroll_invert').checked);
+            localStorage.setItem('hub_smooth', document.getElementById('scroll_smooth').checked);
         }
 
-        // Render sliders dynamically based on Department Manager
-        function renderToggles() {
-            const list = getDepts();
-            const container = document.getElementById('dynamic-toggle-container');
-            if(!container) return;
-            
-            container.innerHTML = ''; 
+        function setSpeed(type, val, el) {
+            localStorage.setItem(`hub_${type}_speed`, val);
+            const parent = el.parentElement;
+            parent.querySelectorAll('.speed-opt').forEach(opt => opt.classList.remove('active'));
+            el.classList.add('active');
+        }
 
-            list.forEach(dept => {
-                const isOnline = localStorage.getItem(dept.id + "_locked") === "false";
-                
-                const card = document.createElement('div');
-                card.className = 'control-card';
-                card.innerHTML = `
-                    <div>
-                        <b>${dept.icon} ${dept.name}</b>
-                        <p style="font-size: 0.75rem; color: #666; margin: 0;">${dept.desc || 'System Terminal'}</p>
-                    </div>
+        function loadSettings() {
+            const invert = localStorage.getItem('hub_invert') === "true";
+            const smooth = localStorage.getItem('hub_smooth') !== "false"; // default true
+            document.getElementById('scroll_invert').checked = invert;
+            document.getElementById('scroll_smooth').checked = smooth;
+            
+            // Render depts...
+            const depts = JSON.parse(localStorage.getItem('master_dept_list')) || [];
+            const container = document.getElementById('dynamic-toggle-container');
+            container.innerHTML = depts.map(d => `
+                <div class="control-card">
+                    <div><b>${d.icon} ${d.name}</b></div>
                     <label class="switch">
-                        <input type="checkbox" id="${dept.id}_toggle" 
-                               ${isOnline ? 'checked' : ''} 
-                               onchange="toggleAccess('${dept.id}')">
+                        <input type="checkbox" ${localStorage.getItem(d.id+'_locked') === 'false' ? 'checked' : ''} 
+                        onchange="localStorage.setItem('${d.id}_locked', !this.checked)">
                         <span class="slider"></span>
                     </label>
-                `;
-                container.appendChild(card);
-            });
+                </div>
+            `).join('');
         }
 
-        function toggleAccess(deptId) {
-            const isChecked = document.getElementById(deptId + '_toggle').checked;
-            localStorage.setItem(deptId + "_locked", isChecked ? "false" : "true");
-        }
-
-        // Tab Switcher
-        function switchTab(tabId, element) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-tab'));
+        function switchTab(id, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active-tab');
-            element.classList.add('active');
+            document.getElementById(id).classList.add('active-tab');
+            btn.classList.add('active');
         }
 
-        window.onload = renderToggles;
+        window.onload = loadSettings;
     </script>
 </body>
 </html>
