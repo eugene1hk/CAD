@@ -17,7 +17,6 @@
             overflow: hidden; 
         }
 
-        /* HEADER SPACING */
         .header-section {
             text-align: center;
             margin-top: 40px;
@@ -27,17 +26,15 @@
         .header-section h1 { margin-top: 15px; letter-spacing: 3px; font-size: 1.8em; }
         .header-section p { opacity: 0.6; font-size: 0.9em; }
 
-        /* SELECTION WRAPPER - Scrollbar moved UP */
         .selection-wrapper {
             width: 90%;
             margin: 20px auto 0 auto;
             overflow-x: auto;
             overflow-y: hidden;
-            padding-bottom: 5px; /* Minimum space to pull bar UP */
+            padding-bottom: 5px; 
             flex-shrink: 0;
         }
 
-        /* Scrollbar Styling */
         .selection-wrapper::-webkit-scrollbar { height: 5px; }
         .selection-wrapper::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.01); }
         .selection-wrapper::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 10px; }
@@ -49,22 +46,23 @@
             min-width: min-content;
         }
 
-        /* 0.8x SCALED BOX DIMENSIONS */
+        /* 0.8x SCALED BOX */
         .login-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 18px;
-            padding: 32px; /* Scaled from 40px */
+            padding: 32px;
             text-align: center;
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 280px; /* Scaled from 350px */
-            width: 224px;      /* Scaled from 280px (0.8x) */
+            min-height: 280px; 
+            width: 224px;      
             flex-shrink: 0;
+            position: relative;
         }
 
         .login-card:not(.disabled):hover {
@@ -74,7 +72,6 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
         }
 
-        /* SCALED FONT SIZES */
         .icon-circle {
             width: 65px; height: 65px;
             background: rgba(255, 255, 255, 0.1);
@@ -94,21 +91,21 @@
             cursor: pointer; font-size: 0.75em;
             transition: 0.2s;
         }
-
         .btn-enter:hover { background: #3c6e71; }
 
-        /* MAINTENANCE STATE: Greyed out card, but Yellow text */
+        /* MAINTENANCE STATE */
         .disabled {
-            opacity: 0.6;
+            opacity: 0.7;
             filter: grayscale(1);
             cursor: not-allowed;
         }
 
-        /* Yellow Maintenance Text (Overrides Grayscale for visibility) */
-        .status-tag.maintenance {
+        /* THE FIX: Forcing yellow to ignore the parent's grayscale filter */
+        .status-tag.maintenance-text {
             color: #ffbc00 !important;
-            filter: none; /* Attempt to pop color even in grey card */
-            opacity: 1;
+            filter: brightness(1.2) drop-shadow(0 0 2px rgba(0,0,0,0.5));
+            display: inline-block;
+            transform: translateZ(1px); /* Forces separate layer to bypass grayscale */
         }
 
         .status-tag {
@@ -138,8 +135,7 @@
     </div>
 
     <div class="selection-wrapper" id="scroll-container">
-        <div id="main-container" class="selection-container">
-            </div>
+        <div id="main-container" class="selection-container"></div>
     </div>
 
     <div class="bottom-spacer"></div>
@@ -149,13 +145,11 @@
     <script>
         const scrollContainer = document.getElementById('scroll-container');
 
-        // SYNCED 1.4X SPEED SCROLL
         scrollContainer.addEventListener('wheel', (e) => {
             if (Math.abs(e.deltaY) > 0) {
                 const isMouse = Math.abs(e.deltaY) >= 100;
                 const scrollSpeed = isMouse ? 180 : Math.abs(e.deltaY) * 9;
                 const direction = e.deltaY > 0 ? 1 : -1;
-
                 scrollContainer.scrollLeft -= (direction * scrollSpeed);
                 e.preventDefault(); 
             }
@@ -177,13 +171,17 @@
                 const card = document.createElement('div');
                 card.className = `login-card ${isLocked ? 'disabled' : ''}`;
                 
+                // If locked, we add the "maintenance-text" class to specifically target the color
+                const statusClass = isLocked ? 'status-tag maintenance-text' : 'status-tag';
+                const statusColor = isLocked ? '#ffbc00' : '#4ade80';
+                const statusLabel = isLocked ? '● Maintenance In Progress' : '● System Online';
+
                 card.innerHTML = `
                     <div class="icon-circle">${dept.icon}</div>
                     <div class="card-title">${dept.name}</div>
                     <div class="card-desc">${dept.desc}</div>
-                    <div class="status-tag ${isLocked ? 'maintenance' : ''}" 
-                         style="color:${isLocked ? '#ffbc00' : '#4ade80'}">
-                        ${isLocked ? '● Maintenance In Progress' : '● System Online'}
+                    <div class="${statusClass}" style="color: ${statusColor}">
+                        ${statusLabel}
                     </div>
                     ${!isLocked ? `<button class="btn-enter" onclick="login('${dept.id}', '${dept.name}', '${dept.url}')">Enter</button>` : ''}
                 `;
