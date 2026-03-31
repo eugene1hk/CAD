@@ -1,189 +1,202 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LRPC STORM CAD | Selection Terminal</title>
-    <link rel="stylesheet" href="style.css">
     <style>
+        /* BASE STYLES */
         body {
             background-color: #0b0b0b;
             color: white;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; 
         }
+
+        /* COMPACT HEADER */
+        .header-section {
+            text-align: center;
+            margin-top: 30px;
+            flex-shrink: 0;
+        }
+        .header-section img { width: 85px; border-radius: 50%; border: 2px solid #3c6e71; }
+        .header-section h1 { margin-top: 10px; letter-spacing: 3px; font-size: 1.6em; }
+        .header-section p { opacity: 0.6; font-size: 0.85em; }
+
+        /* SCROLL WRAPPER */
+        .selection-wrapper {
+            width: 95%;
+            margin: 20px auto 0 auto;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 15px; 
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        /* Custom Scrollbar */
+        .selection-wrapper::-webkit-scrollbar { height: 6px; }
+        .selection-wrapper::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); }
+        .selection-wrapper::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 10px; }
+        .selection-wrapper::-webkit-scrollbar-thumb:hover { background: #3c6e71; }
 
         .selection-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            padding: 40px;
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
+            display: flex;
+            gap: 20px;
+            padding: 10px 40px;
+            min-width: min-content;
         }
 
+        /* 0.8x SCALED BOXES */
         .login-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 40px;
+            border-radius: 18px;
+            padding: 30px;
             text-align: center;
-            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 350px;
+            min-height: 280px; 
+            width: 224px;      
+            flex-shrink: 0;
+            transition: all 0.3s ease;
         }
 
         .login-card:not(.disabled):hover {
-            transform: translateY(-10px);
+            transform: translateY(-8px);
             background: rgba(255, 255, 255, 0.1);
             border-color: #3c6e71;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
         }
 
-        .icon-circle {
-            width: 80px; height: 80px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 20px; font-size: 2.5em;
-        }
-
-        .card-title { font-size: 1.5em; font-weight: bold; margin-bottom: 10px; }
-        .card-desc { font-size: 0.9em; opacity: 0.7; margin-bottom: 15px; height: 40px;}
-
-        .btn-enter {
-            margin-top: 15px; padding: 10px 40px;
-            border-radius: 30px; border: none;
-            background: #2b3a67; color: white;
-            font-weight: bold; text-transform: uppercase;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .btn-enter:hover { background: #3c6e71; }
-
-        .disabled {
-            opacity: 0.5;
-            filter: grayscale(1);
+        /* --- SUBTLE MAINTENANCE STATE --- */
+        .login-card.disabled {
+            /* Changed from 0.7 opacity black to 0.2 opacity black (Much lighter) */
+            background: rgba(0, 0, 0, 0.2); 
+            border-color: rgba(255, 255, 255, 0.05);
             cursor: not-allowed;
         }
 
+        .icon-circle {
+            width: 65px; height: 65px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 15px; font-size: 2em;
+            transition: opacity 0.3s;
+        }
+        /* Icon is now 50% visible instead of 20% (Less intense fade) */
+        .disabled .icon-circle { opacity: 0.5; }
+
+        .card-title { font-size: 1.2em; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
+        /* Title is now 70% visible instead of 40% */
+        .disabled .card-title { opacity: 0.7; }
+
+        .card-desc { font-size: 0.8em; opacity: 0.5; margin-bottom: 12px; height: 35px; line-height: 1.3;}
+
+        /* YELLOW TAG */
         .status-tag {
-            font-size: 0.75em;
+            font-size: 0.7em;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
-        /* Tiny Secret Admin Button */
+        .btn-enter {
+            margin-top: 12px; padding: 8px 30px;
+            border-radius: 25px; border: none;
+            background: #2b3a67; color: white;
+            font-weight: bold; text-transform: uppercase;
+            cursor: pointer; font-size: 0.75em;
+            transition: 0.2s;
+        }
+        .btn-enter:hover { background: #3c6e71; }
+
         .admin-secret-btn {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            width: 12px;
-            height: 12px;
-            background: #dc3545;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            opacity: 0.3;
-            transition: opacity 0.3s;
+            position: fixed; bottom: 10px; left: 10px;
+            width: 14px; height: 14px;
+            background: #dc3545; border: none; border-radius: 50%;
+            cursor: pointer; opacity: 0.2; z-index: 1000;
         }
 
-        .admin-secret-btn:hover { opacity: 1; }
+        .bottom-spacer { flex-grow: 1; pointer-events: none; }
     </style>
 </head>
 <body>
 
-    <div style="text-align: center; margin-top: 60px;">
-        <img src="LRPC_favicon_test.jpeg" alt="LRP Logo" style="width: 120px; border-radius: 50%; border: 3px solid #3c6e71;">
-        <h1 style="margin-top: 20px; letter-spacing: 3px;">TERMINAL ACCESS</h1>
-        <p style="opacity: 0.8;">Select your department to begin your session</p>
+    <div class="header-section">
+        <img src="LRPC_favicon_test.jpeg" alt="Logo">
+        <h1>TERMINAL ACCESS</h1>
+        <p>Select your department to begin your session</p>
     </div>
 
-    <div class="selection-container">
-        <div id="police-card" class="login-card">
-            <div class="icon-circle">🚓</div>
-            <div class="card-title">LAW ENFORCEMENT</div>
-            <div class="card-desc">MDT Access - MET Police Only</div>
-            <div id="police-status" class="status-tag"></div>
-            <button id="police-btn" class="btn-enter" style="display:none;">Enter</button>
-        </div>
-
-        <div id="ems-card" class="login-card">
-            <div class="icon-circle">🚑</div>
-            <div class="card-title">MEDICAL SERVICE</div>
-            <div class="card-desc">Patient Care & Dispatch Logs</div>
-            <div id="ems-status" class="status-tag"></div>
-            <button id="ems-btn" class="btn-enter" style="display:none;">Enter</button>
-        </div>
-
-        <div id="dot-card" class="login-card">
-            <div class="icon-circle">🚧</div>
-            <div class="card-title">DOT</div>
-            <div class="card-desc">Highways Agency & Transport MDT</div>
-            <div id="dot-status" class="status-tag"></div>
-            <button id="dot-btn" class="btn-enter" style="display:none;">Enter</button>
-        </div>
-
-        <div id="civ-card" class="login-card">
-            <div class="icon-circle">👤</div>
-            <div class="card-title">CIVILIAN PORTAL</div>
-            <div class="card-desc">Character & Vehicle Registration</div>
-            <div id="civ-status" class="status-tag"></div>
-            <button id="civ-btn" class="btn-enter" style="display:none;">Enter</button>
-        </div>
+    <div class="selection-wrapper" id="scroll-container">
+        <div id="main-container" class="selection-container"></div>
     </div>
 
-    <button class="admin-secret-btn" title="Admin Access" onclick="window.location.href='backend.html'"></button>
+    <div class="bottom-spacer"></div>
+
+    <button class="admin-secret-btn" onclick="window.location.href='backend.html'"></button>
 
     <script>
-    function updateHubUI() {
-        const depts = [
-            { id: 'police', name: 'Law Enforcement', url: 'police.html' },
-            { id: 'ems', name: 'Medical Service', url: 'fire.html' },
-            { id: 'dot', name: 'Department of Transport', url: 'dot.html' },
-            { id: 'civ', name: 'Civilian Portal', url: 'civ.html' }
-        ];
+        const scrollContainer = document.getElementById('scroll-container');
 
-        depts.forEach(dept => {
-            const card = document.getElementById(dept.id + '-card');
-            const statusDiv = document.getElementById(dept.id + '-status');
-            const btn = document.getElementById(dept.id + '-btn');
-            
-            // Check if department is locked in backend
-            const isLocked = localStorage.getItem(dept.id + "_locked") !== "false";
-
-            if (isLocked) {
-                card.classList.add('disabled');
-                statusDiv.innerText = "● Maintenance In Progress";
-                statusDiv.style.color = "#ffbc00";
-                btn.style.display = "none";
-            } else {
-                card.classList.remove('disabled');
-                statusDiv.innerText = "● System Online";
-                statusDiv.style.color = "#4ade80";
-                btn.style.display = "block";
-
-                btn.onclick = () => {
-                    // Save context so login.html knows where we are going
-                    localStorage.setItem("selected_dept_id", dept.id);
-                    localStorage.setItem("selected_dept_name", dept.name);
-                    localStorage.setItem("selected_dept_url", dept.url);
-                    window.location.href = 'login.html';
-                };
+        scrollContainer.addEventListener('wheel', (e) => {
+            if (Math.abs(e.deltaY) > 0) {
+                const isMouse = Math.abs(e.deltaY) >= 100;
+                const scrollSpeed = isMouse ? 210 : Math.abs(e.deltaY) * 11;
+                const direction = e.deltaY > 0 ? 1 : -1;
+                scrollContainer.scrollLeft -= (direction * scrollSpeed);
+                e.preventDefault(); 
             }
-        });
-    }
+        }, { passive: false });
 
-    // Run the UI check as soon as the page loads
-    window.onload = updateHubUI;
+        function renderHub() {
+            const depts = [
+                { id: 'police', name: 'Law Enforcement', icon: '🚓', url: 'police.html', desc: 'MDT Access - MET Police Only' },
+                { id: 'ems', name: 'Medical Service', icon: '🚑', url: 'fire.html', desc: 'Patient Care & Dispatch Logs' },
+                { id: 'dot', name: 'DOT', icon: '🚧', url: 'dot.html', desc: 'Highways Agency & Transport MDT' },
+                { id: 'civ', name: 'Civilian Portal', icon: '👤', url: 'civ.html', desc: 'Character & Vehicle Registration' }
+            ];
+            
+            const mainDiv = document.getElementById('main-container');
+            mainDiv.innerHTML = ""; 
+
+            depts.forEach(dept => {
+                const isLocked = localStorage.getItem(dept.id + "_locked") === "true";
+                const card = document.createElement('div');
+                card.className = `login-card ${isLocked ? 'disabled' : ''}`;
+                
+                card.innerHTML = `
+                    <div class="icon-circle">${dept.icon}</div>
+                    <div class="card-title">${dept.name}</div>
+                    <div class="card-desc">${dept.desc}</div>
+                    <div class="status-tag" style="color:${isLocked ? '#ffbc00' : '#4ade80'}">
+                        ● ${isLocked ? 'Maintenance In Progress' : 'System Online'}
+                    </div>
+                    ${!isLocked ? `<button class="btn-enter" onclick="login('${dept.id}', '${dept.name}', '${dept.url}')">Enter</button>` : ''}
+                `;
+                mainDiv.appendChild(card);
+            });
+        }
+
+        function login(id, name, url) {
+            localStorage.setItem("selected_dept_id", id);
+            localStorage.setItem("selected_dept_name", name);
+            localStorage.setItem("selected_dept_url", url);
+            window.location.href = 'login.html';
+        }
+        window.onload = renderHub;
     </script>
 </body>
 </html>
