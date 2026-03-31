@@ -2,13 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LRPC STORM CAD | Selection Terminal</title>
     <style>
+        /* 1. RESET & BODY */
+        * { box-sizing: border-box; }
         body {
-            background-color: #0b0b0b;
+            background-color: #0b0b0b !important;
             color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             margin: 0;
             height: 100vh;
             display: flex;
@@ -16,110 +18,109 @@
             overflow: hidden; 
         }
 
-        /* COMPACTED HEADER */
+        /* 2. COMPACT HEADER */
         .header-section {
             text-align: center;
-            margin-top: 30px; /* Reduced from 50px */
+            margin-top: 20px; /* Very small top margin */
             flex-shrink: 0;
         }
-        .header-section img { width: 85px; border-radius: 50%; border: 2px solid #3c6e71; }
-        .header-section h1 { margin-top: 10px; letter-spacing: 3px; font-size: 1.5em; }
-        .header-section p { opacity: 0.5; font-size: 0.85em; margin: 2px 0; }
+        .header-section img { width: 70px; border-radius: 50%; border: 2px solid #3c6e71; }
+        .header-section h1 { margin: 5px 0; letter-spacing: 2px; font-size: 1.4em; }
+        .header-section p { opacity: 0.5; font-size: 0.8em; margin: 0; }
 
-        /* SCROLL AREA - Elevated */
+        /* 3. THE HARD-WORKED SCROLLBAR AREA */
         .selection-wrapper {
-            width: 92%;
-            margin: 25px auto 0 auto;
-            overflow-x: auto;
+            width: 95%;
+            margin: 15px auto 0 auto;
+            overflow-x: auto !important; /* Force horizontal scroll */
             overflow-y: hidden;
-            padding-bottom: 12px; /* Pulls scrollbar UP toward cards */
+            padding-bottom: 20px; /* Space for the scrollbar to actually show */
             flex-shrink: 0;
-            z-index: 10;
+            z-index: 999;
+            display: block !important;
         }
 
-        /* Custom Scrollbar Visuals */
-        .selection-wrapper::-webkit-scrollbar { height: 6px; }
-        .selection-wrapper::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); border-radius: 10px; }
-        .selection-wrapper::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 10px; }
-        .selection-wrapper::-webkit-scrollbar-thumb:hover { background: #718096; }
+        /* Scrollbar Visual Style */
+        .selection-wrapper::-webkit-scrollbar { height: 10px !important; display: block !important; }
+        .selection-wrapper::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+        .selection-wrapper::-webkit-scrollbar-thumb { background: #4a5568 !important; border-radius: 10px; border: 1px solid #718096; }
 
         .selection-container {
             display: flex;
             gap: 20px;
-            padding: 10px 30px;
-            min-width: min-content;
+            padding: 10px 20px;
+            width: max-content; /* Critical for horizontal layout */
         }
 
-        /* 0.8x SCALED BOX */
+        /* 4. 0.8x SCALED BOXES */
         .login-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 18px;
-            padding: 30px;
+            border-radius: 15px;
+            padding: 25px;
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 270px; 
-            width: 224px;      
+            min-height: 260px; 
+            width: 220px; /* 0.8x Scale */
             flex-shrink: 0;
-            transition: all 0.3s ease;
+            transition: transform 0.2s;
         }
 
         .login-card:not(.disabled):hover {
-            transform: translateY(-6px);
-            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
             border-color: #3c6e71;
         }
 
-        /* Maintenance Card Style (No Gray Filter to keep Yellow bright) */
+        /* 5. YELLOW MAINTENANCE FIX */
         .login-card.disabled {
-            background: rgba(30, 30, 30, 0.6);
-            border-color: rgba(255, 255, 255, 0.05);
+            background: rgba(20, 20, 20, 0.8) !important; /* Manual darkening */
             cursor: not-allowed;
         }
-
-        .icon-circle {
-            width: 60px; height: 60px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 15px; font-size: 2em;
-        }
-
-        .disabled .icon-circle { opacity: 0.2; } /* Only dims the icon */
-
-        .card-title { font-size: 1.15em; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
-        .card-desc { font-size: 0.8em; opacity: 0.5; margin-bottom: 12px; height: 35px; line-height: 1.3;}
 
         .status-tag {
             font-size: 0.7em;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 5px;
+            margin-top: 10px;
         }
 
-        .btn-enter {
-            margin-top: 12px; padding: 8px 30px;
-            border-radius: 25px; border: none;
-            background: #2b3a67; color: white;
-            font-weight: bold; text-transform: uppercase;
-            cursor: pointer; font-size: 0.75em;
-            transition: 0.2s;
+        /* Forced Yellow - No filters can touch this */
+        .maint-yellow {
+            color: #ffcc00 !important; 
+            opacity: 1 !important;
         }
-        .btn-enter:hover { background: #3c6e71; }
+
+        .online-green { color: #4ade80 !important; }
+
+        .icon-circle {
+            width: 55px; height: 55px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 12px; font-size: 1.8em;
+        }
+        .disabled .icon-circle { opacity: 0.2; }
+
+        .card-title { font-size: 1.1em; font-weight: bold; margin-bottom: 5px; }
+        .card-desc { font-size: 0.75em; opacity: 0.5; height: 35px; overflow: hidden; }
+
+        .btn-enter {
+            margin-top: 10px; padding: 8px 25px;
+            border-radius: 20px; border: none;
+            background: #2b3a67; color: white;
+            font-weight: bold; cursor: pointer; font-size: 0.7em;
+        }
 
         .admin-secret-btn {
             position: fixed; bottom: 10px; left: 10px;
-            width: 14px; height: 14px;
+            width: 12px; height: 12px;
             background: #dc3545; border: none; border-radius: 50%;
-            cursor: pointer; opacity: 0.2; z-index: 1000;
+            opacity: 0.2; z-index: 1000;
         }
-
-        .bottom-spacer { flex-grow: 1; }
     </style>
 </head>
 <body>
@@ -134,19 +135,16 @@
         <div id="main-container" class="selection-container"></div>
     </div>
 
-    <div class="bottom-spacer"></div>
-
     <button class="admin-secret-btn" onclick="window.location.href='backend.html'"></button>
 
     <script>
         const scrollContainer = document.getElementById('scroll-container');
 
-        // --- RESTORED SCROLL LOGIC ---
+        // --- FULL SCROLL & TOUCH LOGIC ---
         scrollContainer.addEventListener('wheel', (e) => {
-            if (Math.abs(e.deltaY) > 0) {
-                // High-speed sync: Balance between mouse wheel and touchpad
+            if (e.deltaY !== 0) {
                 const isMouse = Math.abs(e.deltaY) >= 100;
-                const scrollSpeed = isMouse ? 210 : Math.abs(e.deltaY) * 11;
+                const scrollSpeed = isMouse ? 220 : Math.abs(e.deltaY) * 12;
                 const direction = e.deltaY > 0 ? 1 : -1;
 
                 scrollContainer.scrollLeft -= (direction * scrollSpeed);
@@ -174,7 +172,7 @@
                     <div class="icon-circle">${dept.icon}</div>
                     <div class="card-title">${dept.name}</div>
                     <div class="card-desc">${dept.desc}</div>
-                    <div class="status-tag" style="color:${isLocked ? '#ffbc00' : '#4ade80'}">
+                    <div class="status-tag ${isLocked ? 'maint-yellow' : 'online-green'}">
                         ● ${isLocked ? 'Maintenance In Progress' : 'System Online'}
                     </div>
                     ${!isLocked ? `<button class="btn-enter" onclick="login('${dept.id}', '${dept.name}', '${dept.url}')">Enter</button>` : ''}
