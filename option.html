@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LRPC STORM CAD | Selection Terminal</title>
@@ -20,18 +21,19 @@
         .header-section { text-align: center; margin-top: 50px; flex-shrink: 0; }
         .header-section img { width: 85px; border-radius: 50%; border: 2px solid #3c6e71; }
 
-        /* FIX: 80% Frame and Centering */
+        /* Centering adjustment: moved UP to fit better with scrollbar */
         .selection-wrapper { 
             width: 80%; 
-            margin: 40px auto; 
+            margin-top: -20px; 
+            margin-bottom: 20px;
             overflow-x: auto; 
             overflow-y: hidden; 
             background: rgba(255, 255, 255, 0.02);
             border-radius: 20px;
             padding: 20px 0;
+            flex-grow: 0;
         }
 
-        /* FIX: Defined Grey Scrollbar */
         .selection-wrapper::-webkit-scrollbar { height: 10px; }
         .selection-wrapper::-webkit-scrollbar-track { background: #1a1a1a; border-radius: 10px; }
         .selection-wrapper::-webkit-scrollbar-thumb { 
@@ -39,7 +41,6 @@
             border: 2px solid #1a1a1a; 
             border-radius: 10px; 
         }
-        .selection-wrapper::-webkit-scrollbar-thumb:hover { background: #555; }
 
         .selection-container { display: flex; gap: 25px; padding: 20px 40px; min-width: min-content; }
         
@@ -48,13 +49,10 @@
             border-radius: 18px; padding: 30px; text-align: center; width: 220px; flex-shrink: 0;
             transition: transform 0.3s ease, border-color 0.3s ease;
         }
-        .login-card:hover { transform: translateY(-10px); border-color: #3c6e71; background: rgba(255, 255, 255, 0.08); }
         .login-card.disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(1); }
-        
         .icon-circle { width: 70px; height: 70px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 2.2rem; }
         .btn-enter { background: #2b3a67; color: white; border: none; padding: 10px 25px; border-radius: 20px; cursor: pointer; font-weight: bold; margin-top: 15px; transition: 0.3s; }
         .btn-enter:hover { background: #3c6e71; }
-        
         .admin-secret-btn { position: fixed; bottom: 15px; left: 15px; width: 12px; height: 12px; background: #dc3545; border-radius: 50%; border: none; opacity: 0.05; cursor: pointer; }
     </style>
 </head>
@@ -63,7 +61,7 @@
     <div class="header-section">
         <img src="LRPC_favicon_test.jpeg" alt="Logo">
         <h1>TERMINAL ACCESS</h1>
-        <p style="color: #666;">Select your department to begin your session</p>
+        <p style="color: #666; margin-bottom: 20px;">Select your department to begin your session</p>
     </div>
 
     <div class="selection-wrapper" id="scroll-container">
@@ -78,8 +76,6 @@
         let currentScroll = 0;
 
         scrollContainer.addEventListener('wheel', (e) => {
-            const isSmooth = localStorage.getItem('hub_smooth') !== "false";
-            // Check Mechanical Linkage Keys
             const upMapping = localStorage.getItem('hub_dir_up') || 'right';
             const downMapping = localStorage.getItem('hub_dir_down') || 'left';
             
@@ -90,40 +86,29 @@
 
             let move = e.deltaY * speedMult;
 
-            // Apply direction mapping logic
-            if (e.deltaY < 0) { // Scroll Up
-                move = (upMapping === 'left') ? -Math.abs(move) : Math.abs(move);
-            } else { // Scroll Down
-                move = (downMapping === 'left') ? -Math.abs(move) : Math.abs(move);
-            }
+            if (e.deltaY < 0) move = (upMapping === 'left') ? -Math.abs(move) : Math.abs(move);
+            else move = (downMapping === 'left') ? -Math.abs(move) : Math.abs(move);
 
-            if (isSmooth) {
-                e.preventDefault();
-                targetScroll += move;
-                const max = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-                targetScroll = Math.max(0, Math.min(targetScroll, max));
-            } else {
-                scrollContainer.scrollLeft += move;
-            }
+            e.preventDefault();
+            targetScroll += move;
+            const max = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+            targetScroll = Math.max(0, Math.min(targetScroll, max));
         }, { passive: false });
 
         function animate() {
-            if (localStorage.getItem('hub_smooth') !== "false") {
-                currentScroll += (targetScroll - currentScroll) * 0.1;
-                scrollContainer.scrollLeft = currentScroll;
-            }
+            currentScroll += (targetScroll - currentScroll) * 0.1;
+            scrollContainer.scrollLeft = currentScroll;
             requestAnimationFrame(animate);
         }
         animate();
 
         function renderHub() {
             const depts = JSON.parse(localStorage.getItem('master_dept_list')) || [
-                { id: 'police', name: 'Law Enforcement', icon: '🚓', desc: 'MET Police Only' },
-                { id: 'ems', name: 'Medical Service', icon: '🚑', desc: 'L.A.S / L.F.B' },
-                { id: 'dot', name: 'DOT', icon: '🚧', desc: 'Highways Agency' },
-                { id: 'civ', name: 'Civilian Portal', icon: '👤', desc: 'Character Registry' }
+                { id: 'police', name: 'Law Enforcement', icon: '🚓' },
+                { id: 'ems', name: 'Medical Service', icon: '🚑' },
+                { id: 'dot', name: 'DOT', icon: '🚧' },
+                { id: 'civ', name: 'Civilian Portal', icon: '👤' }
             ];
-            
             const container = document.getElementById('main-container');
             container.innerHTML = depts.map(dept => {
                 const isLocked = localStorage.getItem(dept.id + "_locked") === "true";
@@ -131,7 +116,6 @@
                     <div class="login-card ${isLocked ? 'disabled' : ''}">
                         <div class="icon-circle">${dept.icon}</div>
                         <h3>${dept.name}</h3>
-                        <p style="font-size:0.8rem; opacity:0.6;">${dept.desc}</p>
                         <div style="color:${isLocked ? '#ffbc00' : '#4ade80'}; font-size:0.7rem; margin:10px 0;">
                             ● ${isLocked ? 'Maintenance' : 'System Online'}
                         </div>
